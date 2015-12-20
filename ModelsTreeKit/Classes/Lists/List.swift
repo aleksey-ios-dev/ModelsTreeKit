@@ -42,7 +42,7 @@ public class List<T: ListObject>: Model {
         self.fetchBlock = fetchBlock
     }
     
-    private func performUpdates(@noescape updates: Void -> Void ) {
+    public func performUpdates(@noescape updates: Void -> Void ) {
         beginUpdatesSignal.sendNext()
         updates()
         applyChanges()
@@ -124,7 +124,7 @@ public class List<T: ListObject>: Model {
     }
 }
 
-class UpdatesPool<T: ListObject> {
+internal class UpdatesPool<T: ListObject> {
     private(set) var insertions = Set<T>()
     private(set) var deletions = Set<T>()
     private(set) var updates = Set<T>()
@@ -153,7 +153,7 @@ class UpdatesPool<T: ListObject> {
         deletions.intersectInPlace(objects)
     }
     
-    private func optimizeDuplicatingEntries() {
+    func optimizeDuplicatingEntries() {
         let commonObjects = insertions.intersect(deletions)
         insertions.subtractInPlace(commonObjects)
         deletions.subtractInPlace(commonObjects)

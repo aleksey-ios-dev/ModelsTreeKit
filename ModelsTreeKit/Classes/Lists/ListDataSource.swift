@@ -17,6 +17,9 @@ public protocol GroupingKey: Hashable, Equatable, Comparable {
 extension Int: GroupingKey {
 }
 
+extension Int: ListObject {
+}
+
 public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>: ObjectsDataSource<ObjectType> {
     typealias Section = (objects: [ObjectType], key: GroupKeyType?)
     typealias Sections = [Section]
