@@ -22,7 +22,7 @@ enum SessionEvent {
 public class Session: Model {
     weak var controller: SessionDelegate?
     public
-    var services: ServiceLocator = ServiceLocator()
+    var services: ServiceLocator!
     
     var credentials: SessionCredentials?
     

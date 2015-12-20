@@ -8,26 +8,17 @@
 
 import Foundation
 
-public enum ServiceKey {
-    case Defaults
-    case DataStorage
-    case UserStore
-    case DataLoader
-    case ScanResultsProcessor
-    case Initialization
-}
-
 public class ServiceLocator {
-    private var services = [ServiceKey: Any]()
+    private var services = [String: Any]()
     
     public init() {
     }
     
-    public func registerService(service: Any, forKey key: ServiceKey) {
+    public func registerService(service: Any, forKey key: String) {
         services[key] = service
     }
     
-    public func serviceForKey(key: ServiceKey) -> Any? {
+    public func serviceForKey(key: String) -> Any? {
         return services[key]
     }
     
