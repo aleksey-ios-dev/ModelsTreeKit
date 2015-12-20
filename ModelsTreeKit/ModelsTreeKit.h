@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BridgingHeader.h"
+#import <ModelsTreeKit/BridgingHeader.h>
 
 //! Project version number for ModelsTreeKit.
 FOUNDATION_EXPORT double ModelsTreeKitVersionNumber;
