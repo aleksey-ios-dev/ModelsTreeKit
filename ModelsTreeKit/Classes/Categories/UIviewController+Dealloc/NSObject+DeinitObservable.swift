@@ -1,0 +1,34 @@
+//
+//  UIViewController+DeinitObservable.swift
+//  We Learn English
+//
+//  Created by aleksey on 13.12.15.
+//  Copyright © 2015 aleksey chernish. All rights reserved.
+//
+
+import Foundation
+
+extension NSObject: DeinitObservable {
+    private struct AssociatedKeys {
+        static var DeinitNotifierKey = "DeinitNotifierKey"
+    }
+    
+    public var deinitSignal: Signal<Bool> {
+        get {
+            return deinitNotifier.signal
+        }
+    }
+    
+    private var deinitNotifier: DeinitNotifier {
+        get {
+            var wrapper = objc_getAssociatedObject(self, &AssociatedKeys.DeinitNotifierKey) as? DeinitNotifier
+            
+            if (wrapper == nil) {
+                wrapper = DeinitNotifier()
+                objc_setAssociatedObject(self, &AssociatedKeys.DeinitNotifierKey, wrapper, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
+            
+            return wrapper!
+        }
+    }
+}
