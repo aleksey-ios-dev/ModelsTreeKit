@@ -71,8 +71,6 @@
 		5BB5403A1C25D60500246130 /* TableViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF61C25D60500246130 /* TableViewAdapter.swift */; };
 		5BB5403B1C25D60500246130 /* UITextField+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF71C25D60500246130 /* UITextField+Signal.swift */; };
 		5BB5403C1C25D60500246130 /* UITextField+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF71C25D60500246130 /* UITextField+Signal.swift */; };
-		5BB5403D1C25D60500246130 /* UIViewController+ErrorDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF81C25D60500246130 /* UIViewController+ErrorDisplaying.swift */; };
-		5BB5403E1C25D60500246130 /* UIViewController+ErrorDisplaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF81C25D60500246130 /* UIViewController+ErrorDisplaying.swift */; };
 		5BB540421C25D6F300246130 /* BridgingHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB540411C25D6EF00246130 /* BridgingHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB540E41C26758B00246130 /* ListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB540E31C26758B00246130 /* ListTests.swift */; };
 		5BB540E51C267A9D00246130 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE81C25D60500246130 /* SessionController.swift */; };
@@ -131,7 +129,6 @@
 		5BB53FF51C25D60500246130 /* CollectionViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewAdapter.swift; sourceTree = "<group>"; };
 		5BB53FF61C25D60500246130 /* TableViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewAdapter.swift; sourceTree = "<group>"; };
 		5BB53FF71C25D60500246130 /* UITextField+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Signal.swift"; sourceTree = "<group>"; };
-		5BB53FF81C25D60500246130 /* UIViewController+ErrorDisplaying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+ErrorDisplaying.swift"; sourceTree = "<group>"; };
 		5BB540411C25D6EF00246130 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		5BB540E31C26758B00246130 /* ListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
 		5BBFBDF41C2681870001E5B3 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
@@ -364,7 +361,6 @@
 				5BB53FF51C25D60500246130 /* CollectionViewAdapter.swift */,
 				5BB53FF61C25D60500246130 /* TableViewAdapter.swift */,
 				5BB53FF71C25D60500246130 /* UITextField+Signal.swift */,
-				5BB53FF81C25D60500246130 /* UIViewController+ErrorDisplaying.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -509,7 +505,6 @@
 				5BB540371C25D60500246130 /* CollectionViewAdapter.swift in Sources */,
 				5BB5401A1C25D60500246130 /* Service.swift in Sources */,
 				5BB53FFB1C25D60500246130 /* NSObject+DeinitObservable.swift in Sources */,
-				5BB5403D1C25D60500246130 /* UIViewController+ErrorDisplaying.swift in Sources */,
 				5BB540141C25D60500246130 /* ObjectConsuming.swift in Sources */,
 				5BB53FFD1C25D60500246130 /* UIViewController+Pool.swift in Sources */,
 				5BB540121C25D60500246130 /* ModelAssignable.swift in Sources */,
@@ -536,7 +531,6 @@
 				5BB5400F1C25D60500246130 /* StaticDataSource.swift in Sources */,
 				5BB53FFC1C25D60500246130 /* NSObject+DeinitObservable.swift in Sources */,
 				5BB540361C25D60500246130 /* TSTTransitionViewController.m in Sources */,
-				5BB5403E1C25D60500246130 /* UIViewController+ErrorDisplaying.swift in Sources */,
 				5BB540111C25D60500246130 /* Model.swift in Sources */,
 				5BB5403A1C25D60500246130 /* TableViewAdapter.swift in Sources */,
 				5BB5402B1C25D60500246130 /* UserSession.swift in Sources */,

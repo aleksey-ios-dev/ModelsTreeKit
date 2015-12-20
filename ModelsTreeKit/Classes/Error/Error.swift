@@ -29,11 +29,11 @@ public struct Error: ErrorType, Hashable, Equatable  {
         self.code = code
     }
     
-    func localizedDescription() -> String {
+    public func localizedDescription() -> String {
         return NSLocalizedString(descriptionString(), comment: "")
     }
     
-    func fullDescription() -> String {
+    public func fullDescription() -> String {
         return descriptionString() + ": " + localizedDescription()
     }
     
