@@ -22,6 +22,7 @@ public class List<T: ListObject>: Model {
     let beginUpdatesSignal = Signal<Void>()
     let endUpdatesSignal = Signal<Void>()
     let didChangeContentSignal = Signal<(insertions: Set<T>, deletions: Set<T>, updates: Set<T>)>()
+    let didReplaceContentSignal = Signal<Set<T>>()
     
     public private(set) var objects = Set<T>()
     private var fetchBlock: FetchBlock?
@@ -70,8 +71,8 @@ public class List<T: ListObject>: Model {
     }
     
     public func replaceWith(objects: [T]) {
-        updatesPool.deletions = self.objects
-        updatesPool.insertions = Set(objects)
+        self.objects = Set(objects)
+        didReplaceContentSignal.sendNext(self.objects)
     }
     
     public func reset() {

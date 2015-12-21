@@ -40,13 +40,21 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
             return
         }
         
-        list.beginUpdatesSignal.subscribeNext {[weak self] _ in
+        list.beginUpdatesSignal.subscribeNext { [weak self] _ in
             self?.beginUpdates()
         }.putInto(pool)
         
-        list.endUpdatesSignal.subscribeNext {[weak self] _ in
+        list.endUpdatesSignal.subscribeNext { [weak self] _ in
             self?.endUpdates()
         }.putInto(pool)
+        
+        list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.sections = strongSelf.arrangedSectionsFrom(objects)
+        }
         
         list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
             guard let strongSelf = self else {

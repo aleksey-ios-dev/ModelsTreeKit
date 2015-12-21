@@ -21,7 +21,6 @@ public extension UIViewController {
             if (pool == nil) {
                 pool = AutodisposePool()
                 objc_setAssociatedObject(self, &AssociatedKeys.AutodisposePoolKey, pool, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                
             }
             
             return pool!

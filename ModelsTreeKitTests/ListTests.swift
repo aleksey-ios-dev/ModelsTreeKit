@@ -2,63 +2,98 @@
 //  ListTests.swift
 //  ModelsTreeKit
 //
-//  Created by aleksey on 20.12.15.
+//  Created by aleksey on 21.12.15.
 //  Copyright © 2015 aleksey chernish. All rights reserved.
 //
+
+import Foundation
+
 
 import Foundation
 import XCTest
 @testable import ModelsTreeKit
 
 class ListTests: XCTestCase {
-    func testInstantiationWithArray() {
-        let list = List<Int>(parent: nil, array: [1, 2, 3])
-        XCTAssertEqual(list.objects, [1, 2, 3])
-    }
-    
-    func testInstantiationWithFetchBlock() {
-        let list = List<Int>(parent: nil) {completion, _  in
-            completion(success: true, response: [1,2, 3], error: nil)
-            return nil
-        }
-        list.getNext()
-        
-        XCTAssertEqual(list.objects, [1, 2, 3])
-    }
-    
-    func testInsertion() {
-        let list = List<Int>(parent: nil, array: [1, 2, 3])
+    func testThatListStartsUpdateThenUpdatesAndThenEndsUpdate() {
+        let list = List<Int>(parent: nil, array: [])
+        let dataSource = MockDataSource(list: list)
+
         list.performUpdates() {
-            list.insert([1, 2, 3, 4, 5])
+            list.insert([1])
         }
         
-        XCTAssertEqual(list.objects, [1, 2, 3, 4, 5])
+        XCTAssert(dataSource.performedActions == [.BeginUpdates, .ChangeContent, .EndUpdates])
     }
     
-    func testDeletion() {
+    func testThatListDoesntPushDeletionsOfNotContainedObjects() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates {
-            list.delete([1, 2, 4, 5])
+        let dataSource = MockDataSource(list: list)
+        
+        list.performUpdates() {
+            list.delete([1, 4])
         }
         
-        XCTAssertEqual(list.objects, [3])
+        XCTAssert(dataSource.lastDeletions == [1])
     }
     
-    func testReplacement() {
+    func testThatListPushesUpdatesWhenInsertsContainedObjects() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates {
-            list.replaceWith([4, 5 ,6])
+        let dataSource = MockDataSource(list: list)
+        
+        list.performUpdates() {
+            list.insert([1, 2, 5])
         }
         
-        XCTAssertEqual(list.objects, [4, 5 ,6])
+        XCTAssert(dataSource.lastUpdates == [1, 2])
+        XCTAssert(dataSource.lastInsertions == [5])
     }
     
-    func testResetting() {
+    func testThatListPushesNewObjectsSetWithReplaceSignal() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates {
-            list.reset()
+        let dataSource = MockDataSource(list: list)
+        
+        list.replaceWith([3, 4, 5])
+        
+        XCTAssert(dataSource.objectsPushedForReplacement == [3, 4, 5])
+        XCTAssert(list.objects == [3, 4, 5])
+    }
+}
+
+class MockDataSource {
+    enum ListActions {
+        case BeginUpdates, ChangeContent, EndUpdates
+    }
+    
+    var lastDeletions = Set<Int>()
+    var lastUpdates = Set<Int>()
+    var lastInsertions = Set<Int>()
+    var objectsPushedForReplacement = Set<Int>()
+    
+    var performedActions = Array<ListActions>()
+    
+    private let pool = AutodisposePool()
+    init(list: List<Int>?) {
+        guard let list = list else {
+            return
         }
         
-        XCTAssertEqual(list.objects, [])
+        list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
+                self?.objectsPushedForReplacement = objects
+        }.putInto(pool)
+        
+        list.beginUpdatesSignal.subscribeNext { [weak self] _ in
+            self?.performedActions.append(.BeginUpdates)
+        }.putInto(pool)
+        
+        list.endUpdatesSignal.subscribeNext { [weak self] _ in
+            self?.performedActions.append(.EndUpdates)
+        }.putInto(pool)
+        
+        list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
+            self?.performedActions.append(.ChangeContent)
+            self?.lastDeletions = deletions
+            self?.lastInsertions = insertions
+            self?.lastUpdates = updates
+        }.putInto(pool)
     }
 }
