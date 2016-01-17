@@ -47,7 +47,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
             guard let strongSelf = self else {
                 return
             }
-            
             UIView.animateWithDuration(0.1, animations: {
                 strongSelf.tableView.alpha = 0},
                 completion: { completed in
@@ -62,7 +61,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
             guard let strongSelf = self else {
                 return
             }
-            
             switch changeType {
             case .Insertion:
                 if let toIndexPath = toIndexPath {
@@ -91,7 +89,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
             guard let strongSelf = self else {
                 return
             }
-            
             switch changeType {
             case .Insertion:
                 if let toIndex = toIndex {

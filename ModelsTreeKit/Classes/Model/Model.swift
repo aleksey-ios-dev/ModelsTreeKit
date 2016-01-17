@@ -9,6 +9,8 @@
 import Foundation
 
 public class Model {
+    public private(set) weak var parent: Model?
+
     public weak var representation: DeinitObservable? {
         didSet {
             representation?.deinitSignal.subscribeNext { [weak self] deallocated in
@@ -20,8 +22,6 @@ public class Model {
     public let errorSignal = Signal<Error>()
     public let pool = AutodisposePool()
     
-    public private(set) weak var parent: Model?
-
     private let hash = NSProcessInfo.processInfo().globallyUniqueString
     
     public init(parent: Model?) {

@@ -10,12 +10,22 @@ import Foundation
 import XCTest
 @testable import ModelsTreeKit
 
-class SubscriptionTests: XCTestCase {
-    let signal =
+class SubscriptionDisposingTests: XCTestCase {
+    let signal = Signal<Int>()
     weak var subscription: Disposable?
 
     override func setUp() {
-        subscription =
+        subscription = signal.subscribeNext() { _ in }
+    }
+    
+    func testSubscriptionIsNotNil() {
+        XCTAssert(subscription != nil)
+    }
+    
+    override func tearDown() {
+        subscription?.dispose()
+        
+        XCTAssert(subscription == nil)
     }
     
 }

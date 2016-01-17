@@ -27,7 +27,7 @@ class SignalTests: XCTestCase {
         signal.filter({object in return object > 6
             
         }).subscribeNext() { _ in
-            XCTAssert(false)
+            XCTFail()
         }
         
         signal.sendNext(5)

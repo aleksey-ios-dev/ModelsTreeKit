@@ -46,9 +46,7 @@ class ListBasicTests: XCTestCase {
     
     func testReplacement() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates {
-            list.replaceWith([4, 5 ,6])
-        }
+        list.replaceWith([4, 5 ,6])
         
         XCTAssertEqual(list.objects, [4, 5 ,6])
     }

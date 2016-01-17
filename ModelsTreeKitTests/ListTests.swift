@@ -22,7 +22,7 @@ class ListTests: XCTestCase {
             list.insert([1])
         }
         
-        XCTAssert(dataSource.performedActions == [.BeginUpdates, .ChangeContent, .EndUpdates])
+        XCTAssertEqual(dataSource.performedActions, [.BeginUpdates, .ChangeContent, .EndUpdates])
     }
     
     func testThatListDoesntPushDeletionsOfNotContainedObjects() {
@@ -33,7 +33,7 @@ class ListTests: XCTestCase {
             list.delete([1, 4])
         }
         
-        XCTAssert(dataSource.lastDeletions == [1])
+        XCTAssertEqual(dataSource.lastDeletions, [1])
     }
     
     func testThatListPushesUpdatesWhenInsertsContainedObjects() {
@@ -44,18 +44,18 @@ class ListTests: XCTestCase {
             list.insert([1, 2, 5])
         }
         
-        XCTAssert(dataSource.lastUpdates == [1, 2])
-        XCTAssert(dataSource.lastInsertions == [5])
+        XCTAssertEqual(dataSource.lastUpdates, [1, 2])
+        XCTAssertEqual(dataSource.lastInsertions, [5])
     }
     
-    func testThatListPushesNewObjectsSetWithReplaceSignal() {
+    func testThatListPushesNewObjectsSetByReplaceSignal() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
         let dataSource = MockDataSource(list: list)
         
         list.replaceWith([3, 4, 5])
         
-        XCTAssert(dataSource.objectsPushedForReplacement == [3, 4, 5])
-        XCTAssert(list.objects == [3, 4, 5])
+        XCTAssertEqual(dataSource.objectsPushedForReplacement, [3, 4, 5])
+        XCTAssertEqual(list.objects, [3, 4, 5])
     }
 }
 
@@ -72,6 +72,7 @@ class MockDataSource {
     var performedActions = Array<ListActions>()
     
     private let pool = AutodisposePool()
+    
     init(list: List<Int>?) {
         guard let list = list else {
             return

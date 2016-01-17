@@ -70,6 +70,9 @@ public class List<T: ListObject>: Model {
         updatesPool.insertions.unionInPlace(Set(objects))
     }
     
+    //Call outside the batch update block. Informs subscriber that data should be reloaded
+    //To perform batch-based replacement use removeAllObjects() and insert() methods within the batch update block
+    
     public func replaceWith(objects: [T]) {
         self.objects = Set(objects)
         didReplaceContentSignal.sendNext(self.objects)
@@ -77,6 +80,10 @@ public class List<T: ListObject>: Model {
     
     public func reset() {
         replaceWith([])
+    }
+    
+    public func removeAllObjects() {
+        delete(Array(objects))
     }
     
     //Fetch objects
