@@ -23,6 +23,7 @@ protocol Invocable: class {
 class Subscription<U> : Invocable, Disposable {
     var handler: (U -> Void)?
     var stateHandler: (Bool -> Void)?
+    
     private var signal: Signal<U>
     private var deliversOnMainThread = false
     private var autodisposes = false
@@ -34,9 +35,9 @@ class Subscription<U> : Invocable, Disposable {
     
     func invoke(data: Any) -> Void {
         if deliversOnMainThread {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.handler?(data as! U)
-            })
+            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                self?.handler?(data as! U)
+            }
         } else {
             handler?(data as! U)
         }
@@ -48,9 +49,9 @@ class Subscription<U> : Invocable, Disposable {
     
     func invokeState(data: Bool) -> Void {
         if deliversOnMainThread {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.stateHandler?(data)
-            })
+            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                self?.stateHandler?(data)
+            }
         } else {
             stateHandler?(data)
         }

@@ -20,7 +20,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     public let didSelectCellSignal = Signal<(cell: UICollectionViewCell?, object: ObjectType?)>()
     public let willDisplayCell = Signal<UICollectionViewCell>()
     public let willCalculateSizeSignal = Signal<UICollectionViewCell>()
-
+    
     public let didEndDisplayingCell = Signal<UICollectionViewCell>()
 
     public let willSetObject = Signal<UICollectionViewCell>()

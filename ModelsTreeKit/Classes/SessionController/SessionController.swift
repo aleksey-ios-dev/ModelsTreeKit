@@ -34,7 +34,7 @@ public class SessionController {
         }
     }
     
-    func openSession(session: Session) {
+    private func openSession(session: Session) {
         activeSession = session
         servicesConfigurator.configure(session)
         session.openWithController(self)
@@ -52,6 +52,7 @@ public class SessionController {
                 try archiveUserSession(newValue)
             }
             catch {
+                fatalError()
             }
             
             let hash: Int? = newValue?.credentials?.uid?.hash
@@ -69,7 +70,7 @@ public class SessionController {
             do {
                 return try archivedUserSessionForKey(key)
             } catch {
-                //Handle no session error here
+                fatalError()
             }
             
             return nil
@@ -77,12 +78,14 @@ public class SessionController {
     }
     
     private func archiveUserSession(session: UserSession?) throws {
-        guard let session = session, let sessionKey = session.credentials?.uid as NSString? else {
+        guard
+            let session = session,
+            let sessionKey = session.credentials?.uid as NSString?
+        else {
             throw ArchiverErrors.SessionArchivationFailed
         }
         
         let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session.archivationProxy())
-        
         let keychain = KeychainItemWrapper.init(identifier: String(sessionKey.hash), accessGroup: nil)
         keychain.setObject(sessionData, forKey: kSecAttrService)
     }
@@ -129,10 +132,6 @@ extension SessionController: SessionDelegate {
         }
         
         navigationManager.showRootRepresentation(representation)
-    }
-    
-    func sessionDidOpen() {
-        
     }
 }
 

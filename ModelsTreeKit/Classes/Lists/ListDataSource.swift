@@ -25,20 +25,14 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
     typealias Sections = [Section]
 
     public var groupingCriteria: (ObjectType -> GroupKeyType)?
-    
     public var groupsSortingCriteria: (GroupKeyType, GroupKeyType) -> Bool = { return $0 < $1 }
-    
     public var groupContentsSortingCriteria: ((ObjectType, ObjectType) -> Bool)?
     
     private var sections = Sections()
     private let pool = AutodisposePool()
-
     
-    public init(list: List<ObjectType>?) {
+    public init(list: List<ObjectType>) {
         super.init()
-        guard let list = list else {
-            return
-        }
         
         list.beginUpdatesSignal.subscribeNext { [weak self] _ in
             self?.beginUpdates()
@@ -52,15 +46,13 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
             guard let strongSelf = self else {
                 return
             }
-            
             strongSelf.sections = strongSelf.arrangedSectionsFrom(objects)
-        }
+        }.putInto(pool)
         
         list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
             guard let strongSelf = self else {
                 return
             }
-            
             let oldSections = strongSelf.sections
             
             strongSelf.applyInsertions(insertions, deletions: deletions, updates: updates)
@@ -114,7 +106,6 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
             if groupsDictionary[key] == nil {
                 groupsDictionary[key] = []
             }
-            
             groupsDictionary[key]!.append(object)
         }
 
@@ -128,7 +119,6 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
             }
             result.append((objects, key))
         }
-        
         return result
     }
     
@@ -169,7 +159,8 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
         for object in updates {
             guard
                 let oldIndexPath = indexPathFor(object, inSections: oldSections),
-                let newIndexPath = indexPathFor(object, inSections: oldSections) else {
+                let newIndexPath = indexPathFor(object, inSections: oldSections)
+            else {
                 continue
             }
             
@@ -226,6 +217,8 @@ public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>:
                 objectFound = true
                 section = index
                 row = sectionInfo.objects.indexOf(object)!
+                
+                break
             }
         }
         

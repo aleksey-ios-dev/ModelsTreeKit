@@ -12,15 +12,14 @@ public final class Signal<T> {
     public typealias SignalHandler = T -> Void
     public typealias StateHandler = Bool -> Void
     
-    weak var operation: NSOperation?
-    
-    var pool = AutodisposePool()
-    
-    private(set) var blocked = false
-    
     var lastValue: T?
     var nextHandlers = [Invocable]()
     var completedHandlers = [Invocable]()
+    
+    weak var operation: NSOperation?
+    
+    private var pool = AutodisposePool()
+    private(set) var blocked = false
     
     deinit {
         operation?.cancel()
@@ -81,7 +80,7 @@ public final class Signal<T> {
     }
     
     private func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
-        subscribeCompleted { [weak nextSignal] o in
+        subscribeCompleted { [weak nextSignal] _ in
             nextSignal?.sendCompleted()
         }.putInto(nextSignal.pool)
         
@@ -93,8 +92,8 @@ public final class Signal<T> {
     public func map<U>(handler: T -> U) -> Signal<U> {
         let nextSignal = Signal<U>()
         
-        subscribeNext {[weak nextSignal] o in
-            nextSignal?.sendNext(handler(o))
+        subscribeNext { [weak nextSignal] in
+            nextSignal?.sendNext(handler($0))
         }.putInto(nextSignal.pool)
 
         chainSignal(nextSignal)
@@ -106,9 +105,9 @@ public final class Signal<T> {
     
     public func filter(handler: T -> Bool) -> Signal<T> {
         let nextSignal = Signal<T>()
-        subscribeNext {[weak nextSignal] o in
-                if handler(o) {
-                    nextSignal?.sendNext(o)
+        subscribeNext { [weak nextSignal] in
+                if handler($0) {
+                    nextSignal?.sendNext($0)
                 }
         }.putInto(nextSignal.pool)
         
@@ -122,20 +121,20 @@ public final class Signal<T> {
     public func combineLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
         let nextSignal = Signal<(T?, U?)>()
         
-        otherSignal.subscribeNext { [weak self, weak nextSignal] o in
+        otherSignal.subscribeNext { [weak self, weak nextSignal] in
             guard let strongSelf = self, let nextSignal = nextSignal else {
                 return
             }
             
-            nextSignal.sendNext((strongSelf.lastValue, o))
+            nextSignal.sendNext((strongSelf.lastValue, $0))
         }.putInto(nextSignal.pool)
 
-        subscribeNext { [weak otherSignal, weak nextSignal] o in
+        subscribeNext { [weak otherSignal, weak nextSignal] in
             guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
                 return
             }
             
-            nextSignal.sendNext((o, otherSignal.lastValue))
+            nextSignal.sendNext(($0, otherSignal.lastValue))
         }.putInto(nextSignal.pool)
         
         chainSignal(nextSignal)
@@ -148,24 +147,24 @@ public final class Signal<T> {
     public func combineNoNull<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
         let nextSignal = Signal<(T, U)>()
         
-        otherSignal.subscribeNext { [weak self, weak nextSignal] o in
+        otherSignal.subscribeNext { [weak self, weak nextSignal] in
             guard let strongSelf = self, let nextSignal = nextSignal else {
                 return
             }
             
             if let lastValue = strongSelf.lastValue {
-                nextSignal.sendNext((lastValue, o))
+                nextSignal.sendNext((lastValue, $0))
             }
             
         }.putInto(nextSignal.pool)
         
-        subscribeNext { [weak otherSignal, weak nextSignal] o in
+        subscribeNext { [weak otherSignal, weak nextSignal] in
             guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
                 return
             }
             
             if let otherSignalValue = otherSignal.lastValue {
-                nextSignal.sendNext((o, otherSignalValue))
+                nextSignal.sendNext(($0, otherSignalValue))
             }
         }.putInto(nextSignal.pool)
         
@@ -179,21 +178,21 @@ public final class Signal<T> {
     public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
         let nextSignal = Signal<(T, U)>()
         
-        otherSignal.subscribeNext { [weak self, weak nextSignal, weak otherSignal] o in
+        otherSignal.subscribeNext { [weak self, weak nextSignal, weak otherSignal] in
             guard let strongSelf = self, let nextSignal = nextSignal, let otherSignal = otherSignal else {
                 return
             }
 
             if let lastValue = strongSelf.lastValue {
-                nextSignal.sendNext((lastValue, o))
+                nextSignal.sendNext((lastValue, $0))
                 strongSelf.lastValue = nil
                 otherSignal.lastValue = nil
             }
         }.putInto(nextSignal.pool)
 
-        subscribeNext { [weak self] o in
+        subscribeNext { [weak self] in
             if let otherSignalValue = otherSignal.lastValue {
-                nextSignal.sendNext((o, otherSignalValue))
+                nextSignal.sendNext(($0, otherSignalValue))
                 self?.lastValue = nil
                 otherSignal.lastValue = nil
             }
@@ -220,12 +219,12 @@ public final class Signal<T> {
         let signalA = Signal<U>()
         let signalB = Signal<V>()
 
-        subscribeNext {[weak signalA] o in
-            signalA?.sendNext(splitter(o).a)
+        subscribeNext {[weak signalA] in
+            signalA?.sendNext(splitter($0).a)
         }.putInto(signalA.pool)
 
-        subscribeNext {[weak signalB] o in
-            signalB?.sendNext(splitter(o).b)
+        subscribeNext {[weak signalB] in
+            signalB?.sendNext(splitter($0).b)
         }.putInto(signalB.pool)
         
         chainSignal(signalA)

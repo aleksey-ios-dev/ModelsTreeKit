@@ -43,7 +43,6 @@ public class Model {
     
     final func removeChild(childModel: Model) {
         childModelsSet.remove(childModel)
-        printSessionTree()
     }
     
     public final func removeFromParent() {

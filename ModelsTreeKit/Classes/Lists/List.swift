@@ -25,21 +25,25 @@ public class List<T: ListObject>: Model {
     let didReplaceContentSignal = Signal<Set<T>>()
     
     public private(set) var objects = Set<T>()
+    
     private var fetchBlock: FetchBlock?
-    private weak var fetchOperation: NSOperation?
     private var updatesPool = UpdatesPool<T>()
+    
+    private weak var fetchOperation: NSOperation?
     
     deinit {
         fetchOperation?.cancel()
     }
     
     public init(parent: Model?, array: [T]) {
-         super.init(parent: parent)
+        super.init(parent: parent)
+        
         objects = Set(array)
     }
     
     public init(parent: Model?, fetchBlock: FetchBlock) {
         super.init(parent: parent)
+        
         self.fetchBlock = fetchBlock
     }
     
@@ -58,7 +62,6 @@ public class List<T: ListObject>: Model {
         if objects.isEmpty {
             return
         }
-        
         updatesPool.deletions.unionInPlace(Set(objects))
     }
     
@@ -66,7 +69,6 @@ public class List<T: ListObject>: Model {
         if objects.isEmpty {
             return
         }
-        
         updatesPool.insertions.unionInPlace(Set(objects))
     }
     
@@ -93,7 +95,6 @@ public class List<T: ListObject>: Model {
     }
     
     public func didFinishFetchingObjects() {
-        
     }
     
     //Private

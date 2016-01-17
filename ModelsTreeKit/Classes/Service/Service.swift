@@ -5,8 +5,6 @@
 
 import Foundation
 
-//TODO: make protocol
-
 public class Service {
     public let locator: ServiceLocator
 
