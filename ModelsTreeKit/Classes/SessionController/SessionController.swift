@@ -52,15 +52,14 @@ public class SessionController {
                 try archiveUserSession(newValue)
             }
             catch {
-                fatalError()
             }
             
             let hash: Int? = newValue?.credentials?.uid?.hash
             
             let uidString: String? = hash == nil ? nil : String(hash!)
 
-                userDefaults.setValue(uidString, forKey: SessionController.lastSessionKey)
-                userDefaults.synchronize()
+            userDefaults.setValue(uidString, forKey: SessionController.lastSessionKey)
+            userDefaults.synchronize()
         }
 
         get {
