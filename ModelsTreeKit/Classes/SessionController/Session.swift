@@ -20,10 +20,11 @@ enum SessionEvent {
 }
 
 public class Session: Model {
+  
+    public var services: ServiceLocator!
+  
     weak var controller: SessionDelegate?
-    public
-    var services: ServiceLocator!
-    
+  
     var credentials: SessionCredentials?
     
     public init() {
