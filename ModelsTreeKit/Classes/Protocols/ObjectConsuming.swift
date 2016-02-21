@@ -6,5 +6,29 @@
 import Foundation
 
 public protocol ObjectConsuming {
-    var object: Any? { get set }
+  typealias ObjectType
+  
+  var object: ObjectType? { get }
+  func applyObject(object: ObjectType) -> Void
+}
+
+public extension ObjectConsuming {
+  var object: ObjectType {
+    set {
+      self.object = object
+      if let object = self.object {
+        applyObject(object)
+      }
+    }
+    
+    get {
+      return self.object
+    }
+  }
+  
+  func reapplyObject() {
+    if let object = self.object {
+      applyObject(object)
+    }
+  }
 }

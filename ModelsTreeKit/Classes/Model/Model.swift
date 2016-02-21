@@ -52,11 +52,8 @@ public class Model {
     //Session Helpers
     
     public final func session() -> Session? {
-        if let session = parent as? Session {
-            return session
-        } else {
-            return parent?.session()
-        }
+        if let session = parent as? Session { return session }
+        else { return parent?.session() }
     }
     
     //Errors
@@ -82,11 +79,8 @@ public class Model {
     }
     
     public func raiseError(error: Error) {
-        if isRegisteredForError(error) {
-            errorSignal.sendNext(error)
-        } else {
-            parent?.raiseError(error)
-        }
+        if isRegisteredForError(error) { errorSignal.sendNext(error) }
+        else { parent?.raiseError(error) }
     }
     
     //Session events
@@ -112,6 +106,9 @@ public class Model {
                 wrapper.handler(object: object)
             }
         }
+      
+      childModels().forEach { $0.propagateEvent(event, withObject: object)
+      }
         
         for child in childModels() {
             child.propagateEvent(event, withObject: object)

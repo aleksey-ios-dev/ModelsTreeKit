@@ -14,10 +14,11 @@ public protocol ListObject: Equatable, Hashable {
 public protocol GroupingKey: Hashable, Equatable, Comparable {
 }
 
-extension Int: GroupingKey {
+extension Int: ListObject {
 }
 
-extension Int: ListObject {
+
+extension Int: GroupingKey {
 }
 
 public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>: ObjectsDataSource<ObjectType> {
