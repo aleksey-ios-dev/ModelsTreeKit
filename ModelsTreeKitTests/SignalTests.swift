@@ -75,6 +75,116 @@ class SignalTests: XCTestCase {
         blocker.sendNext(true)
         testSignal.sendNext(4)
     }
+  
+  func testThatSkipRepeatingWorks() {
+    let testSignal = Signal<Int>()
+    let expectedResult = [1, 2, 3, 2]
+    var actualResult = [Int]()
+
+    testSignal.skipRepeating().subscribeNext {
+      actualResult.append($0)
+    }
+    
+    testSignal.sendNext(1)
+    testSignal.sendNext(2)
+    testSignal.sendNext(2)
+    testSignal.sendNext(3)
+    testSignal.sendNext(3)
+    testSignal.sendNext(2)
+    
+    XCTAssertEqual(expectedResult, actualResult)
+    
+  }
+  
+  func testThatPassAscendingWorks() {
+    let testSignal = Signal<Int>()
+    let expectedResult = [-4, 1, 3, 4]
+    var actualResult = [Int]()
+    
+    testSignal.passAscending().subscribeNext {
+      actualResult.append($0)
+    }
+    
+    testSignal.sendNext(-4)
+    testSignal.sendNext(1)
+    testSignal.sendNext(3)
+    testSignal.sendNext(2)
+    testSignal.sendNext(2)
+    testSignal.sendNext(1)
+    testSignal.sendNext(0)
+    testSignal.sendNext(4)
+    testSignal.sendNext(-4)
+    
+    XCTAssertEqual(expectedResult, actualResult)
+    
+  }
+  
+  func testThatPassDescendingWorks() {
+    let testSignal = Signal<Int>()
+    let expectedResult = [5, 3, 1, 0, -4]
+    var actualResult = [Int]()
+    
+    testSignal.passDescending().subscribeNext {
+      actualResult.append($0)
+    }
+    
+    testSignal.sendNext(5)
+    testSignal.sendNext(5)
+    testSignal.sendNext(3)
+    testSignal.sendNext(1)
+    testSignal.sendNext(100)
+    testSignal.sendNext(1)
+    testSignal.sendNext(0)
+    testSignal.sendNext(4)
+    testSignal.sendNext(-4)
+    
+    XCTAssertEqual(expectedResult, actualResult)
+    
+  }
+  
+  func testThatReduceWorksForDifferentType() {
+    let testSignal = Signal<Int>()
+    let expectedResult = [1, 2, 3]
+    var actualResult = [Int]()
+    
+    testSignal.reduce { (newValue, reducedValue) -> [Int] in
+      var unwrappedReduced: [Int] = reducedValue ?? [Int]()
+      unwrappedReduced.append(newValue)
+  
+      return unwrappedReduced
+      }.subscribeNext {
+        actualResult = $0
+        print($0)
+    }
+    
+    testSignal.sendNext(1)
+    testSignal.sendNext(2)
+    testSignal.sendNext(3)
+    
+    XCTAssertEqual(expectedResult, actualResult)
+  }
+  
+  func testThatReduceWorksForSameType() {
+    let testSignal = Signal<Int>()
+    let expectedResult = 18
+    var actualResult = 0
+    
+    testSignal.reduce { (newValue, reducedValue) -> Int in
+      var unwrappedReduced = reducedValue ?? 0
+      unwrappedReduced += newValue
+      
+      return unwrappedReduced
+      }.subscribeNext {
+        actualResult = $0
+        print($0)
+    }
+    
+    testSignal.sendNext(5)
+    testSignal.sendNext(6)
+    testSignal.sendNext(7)
+    
+    XCTAssertEqual(expectedResult, actualResult)
+  }
 }
 
 
