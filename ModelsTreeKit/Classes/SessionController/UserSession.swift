@@ -12,7 +12,7 @@ public class UserSession: Session {
     public init(params: SessionCompletionParams<LoginSessionCompletion>) {
         super.init()
         
-        credentials = SessionCredentials(params: params)
+        credentials = SessionCredentials()
     }
     
     public required init(archivationProxy: ArchivationProxy) {

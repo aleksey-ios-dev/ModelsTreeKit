@@ -8,18 +8,18 @@
 
 import Foundation
 
-public struct SessionCompletionParams<T: Hashable> {
-    private var parameters = [T: AnyObject]()
-    
-    public init() {
-    }
-    
-    public subscript(n: T) -> AnyObject? {
-        get {
-            return parameters[n]
-        }
-        set {
-            parameters[n] = newValue
-        }
-    }
-}
+//public struct SessionCompletionParams<T: Hashable> {
+//    private var parameters = [T: AnyObject]()
+//    
+//    public init() {
+//    }
+//    
+//    public subscript(n: T) -> AnyObject? {
+//        get {
+//            return parameters[n]
+//        }
+//        set {
+//            parameters[n] = newValue
+//        }
+//    }
+//}

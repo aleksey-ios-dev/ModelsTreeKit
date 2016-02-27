@@ -16,13 +16,16 @@ public class SessionController {
   
   public static let controller = SessionController()
   
+  //Decoration on start
+  
+  public var configuration: SessionControllerConfiguration!
+  
   public var navigationManager: RootNavigationManager!
   public var representationsRouter: RootRepresentationsRouter!
   public var modelsRouter: RootModelsRouter!
   public var sessionsRouter: SessionsGenerator!
   public var servicesConfigurator: ServicesConfigurator!
   
-  private static let lastSessionKey = "MTKLastSessionKey"
   private let userDefaults = NSUserDefaults.standardUserDefaults()
   private var activeSession: Session?
   
@@ -54,16 +57,16 @@ public class SessionController {
       catch {
       }
       
-      let hash: Int? = newValue?.credentials?.uid?.hash
+      let hash: Int? = newValue?.credentials?[configuration.credentialsPrimaryKey]?.hash
       
       let uidString: String? = hash == nil ? nil : String(hash!)
       
-      userDefaults.setValue(uidString, forKey: SessionController.lastSessionKey)
+      userDefaults.setValue(uidString, forKey: configuration.keychainAccessKey)
       userDefaults.synchronize()
     }
     
     get {
-      guard let key = userDefaults.valueForKey(SessionController.lastSessionKey) as? String else {
+      guard let key = userDefaults.valueForKey(configuration.keychainAccessKey) as? String else {
         return nil
       }
       do {
@@ -79,7 +82,7 @@ public class SessionController {
   private func archiveUserSession(session: UserSession?) throws {
     guard
       let session = session,
-      let sessionKey = session.credentials?.uid as NSString?
+      let sessionKey = session.credentials?[configuration.credentialsPrimaryKey] as! String?
       else {
         throw ArchiverErrors.SessionArchivationFailed
     }
