@@ -20,7 +20,7 @@ public protocol ErrorDomain {
     var domainTitle: String { get }
 }
 
-public struct Error: ErrorType, Hashable, Equatable  {
+public struct Error: ErrorType {
     let domain: ErrorDomain
     let code: ErrorCode
     
@@ -44,6 +44,10 @@ public struct Error: ErrorType, Hashable, Equatable  {
     public var hashValue: Int {
         return (code.codeValue().hashValue + domain.domainTitle.hashValue).hashValue
     }
+}
+
+extension Error: Hashable, Equatable {
+  
 }
 
 public func ==(a: Error, b: Error) -> Bool {

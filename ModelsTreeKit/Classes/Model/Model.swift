@@ -13,7 +13,6 @@ public class Model {
   public private(set) weak var parent: Model?
   
   public let pushChildSignal = Signal<Model>()
-  
   public let errorSignal = Signal<Error>()
   public let pool = AutodisposePool()
   
@@ -59,6 +58,36 @@ public class Model {
     else { return parent?.session() }
   }
   
+  //Bubble Notifications
+  
+  //TODO: extensions
+
+  private var registeredBubbles = Set<Bubble>()
+  
+  public final func registerForBubbleNotification(bubble: Bubble) {
+    registeredBubbles.insert(bubble)
+  }
+  
+  public final func unregisterFromBubbleNotification(bubble: Bubble) {
+    registeredBubbles.remove(bubble)
+  }
+  
+  public final func isRegisteredForBubbleNotification(bubble: Bubble) -> Bool {
+    return registeredBubbles.contains(bubble)
+  }
+  
+  public func raiseBubbleNotification(bubble: Bubble, sender: Model) {
+    if isRegisteredForBubbleNotification(bubble) {
+      handleBubbleNotification(bubble, sender: sender)
+    } else {
+      parent?.raiseBubbleNotification(bubble, sender: sender)
+    }
+  }
+  
+  public func handleBubbleNotification(bubble: Bubble, sender: Model) {
+    //Implemented by subclasses
+  }
+  
   //Errors
   
   //TODO: extensions
@@ -87,7 +116,7 @@ public class Model {
     else { parent?.raiseError(error) }
   }
   
-  //Session events
+  //Global events
   
   private var eventHandlerWrappers = [SessionEventWrapper]()
   
@@ -170,5 +199,3 @@ private class SessionEventWrapper {
     self.handler = handler
   }
 }
-
-

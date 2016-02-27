@@ -14,7 +14,7 @@ protocol SessionDelegate: class {
     func sessionDidOpen(session: Session) -> Void
 }
 
-enum SessionEvent {
+enum SessionEvent { //TODO: remove it!!!
     case ContentReloadNeeded
     case PushNotificationsUpdated
 }
@@ -25,7 +25,7 @@ public class Session: Model {
   
     weak var controller: SessionDelegate? //TODO: Signal! (или private свойство)
   
-    var credentials: SessionCredentials?
+    public var credentials: SessionCredentials?
     
     public init() {
         super.init(parent: nil)
