@@ -1,17 +1,17 @@
 //
-//  SignalObjcWrapper.swift
-//  We Learn English
+//  Signal.swift
+//  SessionSwift
 //
-//  Created by aleksey on 13.12.15.
+//  Created by aleksey on 14.10.15.
 //  Copyright © 2015 aleksey chernish. All rights reserved.
 //
 
 import Foundation
 
 class DeinitNotifier: NSObject {
-    var signal = Signal<Bool>()
+    var signal = Signal<Void>()
     
     deinit {
-        signal.sendNext(true)
+        signal.sendCompleted()
     }
 }

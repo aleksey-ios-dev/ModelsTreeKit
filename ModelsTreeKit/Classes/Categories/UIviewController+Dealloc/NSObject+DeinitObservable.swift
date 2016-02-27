@@ -13,7 +13,7 @@ extension NSObject: DeinitObservable {
     static var DeinitNotifierKey = "DeinitNotifierKey"
   }
   
-  public var deinitSignal: Signal<Bool> {
+  public var deinitSignal: Signal<Void> {
     get {
       return deinitNotifier.signal
     }

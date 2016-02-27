@@ -12,7 +12,7 @@ public protocol ModelAssignable: class {
     func assignModel(model: Model) -> Void
 }
 
-public protocol DeinitObservable: class { // TODO: remove!
-    var deinitSignal: Signal<Bool> { get }
+public protocol DeinitObservable: class {
+    var deinitSignal: Signal<Void> { get }
 }
 

@@ -62,8 +62,8 @@
 		5BB5402F1C25D60500246130 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEE1C25D60500246130 /* Disposable.swift */; };
 		5BB540301C25D60500246130 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEF1C25D60500246130 /* Signal.swift */; };
 		5BB540311C25D60500246130 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEF1C25D60500246130 /* Signal.swift */; };
-		5BB540321C25D60500246130 /* SignalObjcWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF01C25D60500246130 /* SignalObjcWrapper.swift */; };
-		5BB540331C25D60500246130 /* SignalObjcWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF01C25D60500246130 /* SignalObjcWrapper.swift */; };
+		5BB540321C25D60500246130 /* DeinitNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF01C25D60500246130 /* DeinitNotifier.swift */; };
+		5BB540331C25D60500246130 /* DeinitNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF01C25D60500246130 /* DeinitNotifier.swift */; };
 		5BB540341C25D60500246130 /* TSTTransitionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FF21C25D60500246130 /* TSTTransitionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */; };
 		5BB540361C25D60500246130 /* TSTTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */; };
@@ -129,7 +129,7 @@
 		5BB53FED1C25D60500246130 /* AutodisposePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePool.swift; sourceTree = "<group>"; };
 		5BB53FEE1C25D60500246130 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		5BB53FEF1C25D60500246130 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
-		5BB53FF01C25D60500246130 /* SignalObjcWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalObjcWrapper.swift; sourceTree = "<group>"; };
+		5BB53FF01C25D60500246130 /* DeinitNotifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitNotifier.swift; sourceTree = "<group>"; };
 		5BB53FF21C25D60500246130 /* TSTTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTTransitionViewController.h; sourceTree = "<group>"; };
 		5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTTransitionViewController.m; sourceTree = "<group>"; };
 		5BB53FF51C25D60500246130 /* CollectionViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewAdapter.swift; sourceTree = "<group>"; };
@@ -353,7 +353,7 @@
 				5BB53FED1C25D60500246130 /* AutodisposePool.swift */,
 				5BB53FEE1C25D60500246130 /* Disposable.swift */,
 				5BB53FEF1C25D60500246130 /* Signal.swift */,
-				5BB53FF01C25D60500246130 /* SignalObjcWrapper.swift */,
+				5BB53FF01C25D60500246130 /* DeinitNotifier.swift */,
 			);
 			path = Signal;
 			sourceTree = "<group>";
@@ -489,7 +489,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BB5402C1C25D60500246130 /* AutodisposePool.swift in Sources */,
-				5BB540321C25D60500246130 /* SignalObjcWrapper.swift in Sources */,
+				5BB540321C25D60500246130 /* DeinitNotifier.swift in Sources */,
 				5BB540301C25D60500246130 /* Signal.swift in Sources */,
 				5BB5402E1C25D60500246130 /* Disposable.swift in Sources */,
 				5BB540201C25D60500246130 /* Session.swift in Sources */,
@@ -559,7 +559,7 @@
 				5BB5403C1C25D60500246130 /* UITextField+Signal.swift in Sources */,
 				5BB540211C25D60500246130 /* Session.swift in Sources */,
 				5BB540001C25D60500246130 /* Error.swift in Sources */,
-				5BB540331C25D60500246130 /* SignalObjcWrapper.swift in Sources */,
+				5BB540331C25D60500246130 /* DeinitNotifier.swift in Sources */,
 				5BB5401D1C25D60500246130 /* ServiceLocator.swift in Sources */,
 				5BB540191C25D60500246130 /* RootProtocols.swift in Sources */,
 				5BFBD4C81C27D8A6002B17F0 /* SubscriptionTests.swift in Sources */,
