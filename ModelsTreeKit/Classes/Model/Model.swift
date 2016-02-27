@@ -9,9 +9,10 @@
 import Foundation
 
 public class Model {
+  
     public private(set) weak var parent: Model?
 
-    public weak var representation: DeinitObservable? {
+    public weak var representation: DeinitObservable? { //Signal!
         didSet {
             representation?.deinitSignal.subscribeNext { [weak self] deallocated in
                 self?.parent?.removeChild(self!)

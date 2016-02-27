@@ -26,7 +26,7 @@ public protocol SessionsGenerator {
     func newUserSessionWithParams(params: SessionCompletionParams<LoginSessionCompletion>) -> UserSession
 }
 
-public  protocol ServicesConfigurator {
+public protocol ServicesConfigurator {
     func configure(session: Session) -> Void
 }
 

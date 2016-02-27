@@ -23,7 +23,7 @@ public class Session: Model {
   
     public var services: ServiceLocator!
   
-    weak var controller: SessionDelegate?
+    weak var controller: SessionDelegate? //TODO: Signal! (или private свойство)
   
     var credentials: SessionCredentials?
     

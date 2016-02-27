@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AutodisposePool: NSObject {
+public class AutodisposePool: NSObject { //TODO: избавься от NSObject
     private var disposables = [WeakRef]()
     
     public func add(disposable: Disposable) {

@@ -27,7 +27,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UITableViewCell]()
   private var identifiersForIndexPaths = [NSIndexPath: String]()
-  private var pool = AutodisposePool()
   private var mappings: [String: (ObjectType, UITableViewCell, NSIndexPath) -> Void] = [:]
   
   public init(dataSource: ObjectsDataSource<ObjectType>, tableView: UITableView) {
@@ -120,14 +119,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       if let consumer = cell as? U { consumer.applyObject(object) }
     }
   }
-  
-  
-//  public func registerNibNamed(nibName: String) {
-//    let nib = UINib(nibName: nibName, bundle: nil)
-//    tableView.registerNib(nib, forCellReuseIdentifier: nibName)
-//    nibs[nibName] = nib
-//    instances[nibName] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewCell
-//  }
   
   //UITableViewDataSource
   

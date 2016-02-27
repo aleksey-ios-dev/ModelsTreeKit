@@ -300,4 +300,5 @@ extension Signal where T: Comparable {
     
     return nextSignal
   }
+  
 }

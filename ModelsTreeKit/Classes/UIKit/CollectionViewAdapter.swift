@@ -29,7 +29,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UICollectionViewCell]()
   private var identifiersForIndexPaths = [NSIndexPath: String]()
-  private var pool = AutodisposePool()
+
   private var mappings: [String: (ObjectType, UICollectionViewCell, NSIndexPath) -> Void] = [:]
   
   private var updateActions = [UpdateAction]()
