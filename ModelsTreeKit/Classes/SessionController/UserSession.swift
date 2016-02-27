@@ -9,7 +9,7 @@
 import Foundation
 
 public class UserSession: Session {
-    public init(params: SessionCompletionParams<LoginSessionCompletion>) {
+    public init(params: SessionCompletionParams) {
         super.init()
         
         credentials = SessionCredentials()

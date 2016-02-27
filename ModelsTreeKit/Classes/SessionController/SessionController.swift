@@ -109,7 +109,7 @@ extension SessionController: SessionDelegate {
   }
   
   func session(session: Session, didCloseWithParams params: Any?) {
-    guard let _ = session as? LoginSession, let loginParams = params as? SessionCompletionParams<LoginSessionCompletion> else {
+    guard let _ = session as? LoginSession, let loginParams = params as? SessionCompletionParams else {
       lastOpenedUserSession = nil
       openSession(sessionsRouter.newLoginSession())
       
@@ -117,7 +117,7 @@ extension SessionController: SessionDelegate {
     }
     
     do {
-      let uidString = loginParams[.Token]!
+      let uidString = loginParams[configuration.credentialsPrimaryKey]!
       let session = try archivedUserSessionForKey(String(uidString.hash))
       openSession(session)
     } catch {

@@ -9,6 +9,7 @@
 import Foundation
 
 typealias Representation = ModelAssignable
+
 public protocol RootRepresentationsRouter {
     func representationFor(session session: Session) -> AnyObject;
 }
@@ -24,7 +25,7 @@ public protocol RootNavigationManager {
 public protocol SessionsGenerator {
     func newLoginSession() -> LoginSession
     func newUserSessionFrom(proxy: ArchivationProxy) -> UserSession
-    func newUserSessionWithParams(params: SessionCompletionParams<LoginSessionCompletion>) -> UserSession
+    func newUserSessionWithParams(params: SessionCompletionParams) -> UserSession
 }
 
 public protocol ServicesConfigurator {

@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias SessionCompletionParams = [String: AnyObject]
+
 protocol SessionDelegate: class {
     func sessionDidPrepareToShowRootRepresenation(session: Session) -> Void
     func session(session: Session, didCloseWithParams params: Any?) -> Void
