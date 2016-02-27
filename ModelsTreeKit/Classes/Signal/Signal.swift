@@ -16,6 +16,8 @@ public final class Signal<T> {
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
+  //Destructor is executed before the signal's deallocation. Good place to cancel a network operation.
+  
   var destructor: (Void -> Void)?
   
   private var pool = AutodisposePool()

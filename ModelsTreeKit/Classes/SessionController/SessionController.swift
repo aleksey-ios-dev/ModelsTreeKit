@@ -124,12 +124,14 @@ extension SessionController: SessionDelegate {
   
   func sessionDidPrepareToShowRootRepresenation(session: Session) {
     let representation = representationsRouter.representationFor(session: session)
+    let model = modelsRouter.modelFor(session: session)
+
     if let assignable = representation as? ModelAssignable {
-      let model = modelsRouter.modelFor(session: session)
-      if let deinitObservable = representation as? DeinitObservable {
-        model.applyRepresentation(deinitObservable)
-      }
       assignable.assignModel(model)
+    }
+    
+    if let deinitObservable = representation as? DeinitObservable {
+      model.applyRepresentation(deinitObservable)
     }
     
     navigationManager.showRootRepresentation(representation)

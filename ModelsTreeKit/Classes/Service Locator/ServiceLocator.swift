@@ -9,32 +9,38 @@
 import Foundation
 
 public class ServiceLocator {
-    private var services = [String: Any]()
-    
-    public init() {
+  
+  private var services: [String: Any] = [:]
+  
+  public init() {}
+  
+  //Access
+  
+  func registerService<T>(service: T) {
+    let key = "\(T.self)"
+    services[key] = service
+  }
+  
+  public func getService<T>() -> T! {
+    let key = "\(T.self)"
+    return services[key] as! T
+  }
+  
+  //Lifecycle
+  
+  public func takeOff() {
+    for service in services.values {
+      if let service = service as? Service {
+        service.takeOff()
+      }
     }
-    
-    public func registerService(service: Any, forKey key: String) {
-        services[key] = service
+  }
+  
+  func prepareToClose() {
+    for service in services.values {
+      if let service = service as? Service {
+        service.prepareToClose()
+      }
     }
-    
-    public func serviceForKey(key: String) -> Any? {
-        return services[key]
-    }
-    
-    public func takeOff() {
-        for service in services.values {
-            if let service = service as? Service {
-                service.takeOff()
-            }
-        }
-    }
-    
-    func prepareToClose() {
-        for service in services.values {
-            if let service = service as? Service {
-                service.prepareToClose()
-            }
-        }
-    }
+  }
 }

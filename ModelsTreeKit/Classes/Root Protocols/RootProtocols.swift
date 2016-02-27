@@ -8,6 +8,7 @@
 
 import Foundation
 
+typealias Representation = ModelAssignable
 public protocol RootRepresentationsRouter {
     func representationFor(session session: Session) -> AnyObject;
 }

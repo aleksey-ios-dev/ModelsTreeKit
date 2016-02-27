@@ -81,6 +81,7 @@
 		5BBFBDF81C2681870001E5B3 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBDF51C2681870001E5B3 /* KeychainItemWrapper.m */; };
 		5BBFBE011C268AEE0001E5B3 /* UpdatesPoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBDFF1C268AEE0001E5B3 /* UpdatesPoolTests.swift */; };
 		5BBFBE041C26A2750001E5B3 /* SignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBE021C26A2750001E5B3 /* SignalTests.swift */; };
+		5BD081A21C818A8D00269752 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081A11C818A8D00269752 /* DeinitObservable.swift */; };
 		5BD958941C27DB7700B5A3C0 /* AutodisposePoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */; };
 		5BFBD4C81C27D8A6002B17F0 /* SubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */; };
 /* End PBXBuildFile section */
@@ -141,6 +142,7 @@
 		5BBFBDF51C2681870001E5B3 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		5BBFBDFF1C268AEE0001E5B3 /* UpdatesPoolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatesPoolTests.swift; sourceTree = "<group>"; };
 		5BBFBE021C26A2750001E5B3 /* SignalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalTests.swift; sourceTree = "<group>"; };
+		5BD081A11C818A8D00269752 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePoolTests.swift; sourceTree = "<group>"; };
 		5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -296,6 +298,7 @@
 			children = (
 				5BB53FD91C25D60500246130 /* Model.swift */,
 				5BB53FDA1C25D60500246130 /* ModelAssignable.swift */,
+				5BD081A11C818A8D00269752 /* DeinitObservable.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				5BB540161C25D60500246130 /* TableViewCell.swift in Sources */,
 				5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */,
 				5BB53FFF1C25D60500246130 /* Error.swift in Sources */,
+				5BD081A21C818A8D00269752 /* DeinitObservable.swift in Sources */,
 				5BB5403B1C25D60500246130 /* UITextField+Signal.swift in Sources */,
 				5BB5401E1C25D60500246130 /* LoginSession.swift in Sources */,
 				5BB5400E1C25D60500246130 /* StaticDataSource.swift in Sources */,

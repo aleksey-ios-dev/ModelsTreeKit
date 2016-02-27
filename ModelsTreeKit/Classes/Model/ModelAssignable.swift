@@ -1,5 +1,5 @@
 //
-//  ModelAssignabl.swift
+//  ModelAssignable.swift
 //  SessionSwift
 //
 //  Created by aleksey on 26.10.15.
@@ -9,10 +9,5 @@
 import Foundation
 
 public protocol ModelAssignable: class {
-    func assignModel(model: Model) -> Void
+  func assignModel(model: Model)
 }
-
-public protocol DeinitObservable: class {
-    var deinitSignal: Signal<Void> { get }
-}
-
