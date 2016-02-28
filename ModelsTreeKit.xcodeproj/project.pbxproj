@@ -47,13 +47,9 @@
 		5BB5401F1C25D60500246130 /* LoginSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE51C25D60500246130 /* LoginSession.swift */; };
 		5BB540201C25D60500246130 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE61C25D60500246130 /* Session.swift */; };
 		5BB540211C25D60500246130 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE61C25D60500246130 /* Session.swift */; };
-		5BB540221C25D60500246130 /* SessionCompletionParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE71C25D60500246130 /* SessionCompletionParams.swift */; };
-		5BB540231C25D60500246130 /* SessionCompletionParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE71C25D60500246130 /* SessionCompletionParams.swift */; };
 		5BB540241C25D60500246130 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE81C25D60500246130 /* SessionController.swift */; };
 		5BB540261C25D60500246130 /* SessionCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE91C25D60500246130 /* SessionCredentials.swift */; };
 		5BB540271C25D60500246130 /* SessionCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE91C25D60500246130 /* SessionCredentials.swift */; };
-		5BB540281C25D60500246130 /* SessionParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEA1C25D60500246130 /* SessionParams.swift */; };
-		5BB540291C25D60500246130 /* SessionParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEA1C25D60500246130 /* SessionParams.swift */; };
 		5BB5402A1C25D60500246130 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEB1C25D60500246130 /* UserSession.swift */; };
 		5BB5402B1C25D60500246130 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEB1C25D60500246130 /* UserSession.swift */; };
 		5BB5402C1C25D60500246130 /* AutodisposePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FED1C25D60500246130 /* AutodisposePool.swift */; };
@@ -124,10 +120,8 @@
 		5BB53FE31C25D60500246130 /* ServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
 		5BB53FE51C25D60500246130 /* LoginSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSession.swift; sourceTree = "<group>"; };
 		5BB53FE61C25D60500246130 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		5BB53FE71C25D60500246130 /* SessionCompletionParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCompletionParams.swift; sourceTree = "<group>"; };
 		5BB53FE81C25D60500246130 /* SessionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 		5BB53FE91C25D60500246130 /* SessionCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCredentials.swift; sourceTree = "<group>"; };
-		5BB53FEA1C25D60500246130 /* SessionParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionParams.swift; sourceTree = "<group>"; };
 		5BB53FEB1C25D60500246130 /* UserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		5BB53FED1C25D60500246130 /* AutodisposePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePool.swift; sourceTree = "<group>"; };
 		5BB53FEE1C25D60500246130 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
@@ -346,11 +340,9 @@
 			children = (
 				5BB53FE51C25D60500246130 /* LoginSession.swift */,
 				5BB53FE61C25D60500246130 /* Session.swift */,
-				5BB53FE71C25D60500246130 /* SessionCompletionParams.swift */,
 				5BB53FE81C25D60500246130 /* SessionController.swift */,
 				5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */,
 				5BB53FE91C25D60500246130 /* SessionCredentials.swift */,
-				5BB53FEA1C25D60500246130 /* SessionParams.swift */,
 				5BB53FEB1C25D60500246130 /* UserSession.swift */,
 			);
 			path = SessionController;
@@ -525,10 +517,8 @@
 				5BB540101C25D60500246130 /* Model.swift in Sources */,
 				5BB540031C25D60500246130 /* Array+Extensions.swift in Sources */,
 				5BB53FF91C25D60500246130 /* Archivable.swift in Sources */,
-				5BB540221C25D60500246130 /* SessionCompletionParams.swift in Sources */,
 				5BB540181C25D60500246130 /* RootProtocols.swift in Sources */,
 				5BB540241C25D60500246130 /* SessionController.swift in Sources */,
-				5BB540281C25D60500246130 /* SessionParams.swift in Sources */,
 				5BB540391C25D60500246130 /* TableViewAdapter.swift in Sources */,
 				5BD081AF1C819EA000269752 /* Bubble.swift in Sources */,
 				5BB5400A1C25D60500246130 /* ListDataSource.swift in Sources */,
@@ -556,7 +546,6 @@
 				5BB540311C25D60500246130 /* Signal.swift in Sources */,
 				5BB540151C25D60500246130 /* ObjectConsuming.swift in Sources */,
 				5BB5402F1C25D60500246130 /* Disposable.swift in Sources */,
-				5BB540291C25D60500246130 /* SessionParams.swift in Sources */,
 				5BBFBDF81C2681870001E5B3 /* KeychainItemWrapper.m in Sources */,
 				5BB5401B1C25D60500246130 /* Service.swift in Sources */,
 				5BB5400B1C25D60500246130 /* ListDataSource.swift in Sources */,
@@ -570,7 +559,6 @@
 				5BB5403A1C25D60500246130 /* TableViewAdapter.swift in Sources */,
 				5BB5402B1C25D60500246130 /* UserSession.swift in Sources */,
 				5BB540E41C26758B00246130 /* ListBasicTests.swift in Sources */,
-				5BB540231C25D60500246130 /* SessionCompletionParams.swift in Sources */,
 				5BB540041C25D60500246130 /* Array+Extensions.swift in Sources */,
 				5BB5402D1C25D60500246130 /* AutodisposePool.swift in Sources */,
 				5BB540271C25D60500246130 /* SessionCredentials.swift in Sources */,

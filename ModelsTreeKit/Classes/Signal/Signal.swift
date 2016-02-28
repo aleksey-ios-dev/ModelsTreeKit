@@ -16,7 +16,7 @@ public final class Signal<T> {
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
-  //Destructor is executed before the signal's deallocation. Good place to cancel a network operation.
+  //Destructor is executed before the signal's deallocation. A good place to cancel your network operation.
   
   var destructor: (Void -> Void)?
   
@@ -84,7 +84,7 @@ public final class Signal<T> {
   private func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
     subscribeCompleted { [weak nextSignal] _ in
       nextSignal?.sendCompleted()
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     return nextSignal
   }
@@ -96,7 +96,7 @@ public final class Signal<T> {
     
     subscribeNext { [weak nextSignal] in
       nextSignal?.sendNext(handler($0))
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -111,7 +111,7 @@ public final class Signal<T> {
       if handler($0) {
         nextSignal?.sendNext($0)
       }
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -140,17 +140,15 @@ public final class Signal<T> {
       guard let strongSelf = self, let nextSignal = nextSignal else {
         return
       }
-      
       nextSignal.sendNext((strongSelf.lastValue, $0))
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     subscribeNext { [weak otherSignal, weak nextSignal] in
       guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
         return
       }
-      
       nextSignal.sendNext(($0, otherSignal.lastValue))
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -166,22 +164,20 @@ public final class Signal<T> {
       guard let strongSelf = self, let nextSignal = nextSignal else {
         return
       }
-      
       if let lastValue = strongSelf.lastValue {
         nextSignal.sendNext((lastValue, $0))
       }
       
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     subscribeNext { [weak otherSignal, weak nextSignal] in
       guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
         return
       }
-      
       if let otherSignalValue = otherSignal.lastValue {
         nextSignal.sendNext(($0, otherSignalValue))
       }
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -197,13 +193,12 @@ public final class Signal<T> {
       guard let strongSelf = self, let nextSignal = nextSignal, let otherSignal = otherSignal else {
         return
       }
-      
       if let lastValue = strongSelf.lastValue {
         nextSignal.sendNext((lastValue, $0))
         strongSelf.lastValue = nil
         otherSignal.lastValue = nil
       }
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     subscribeNext { [weak self] in
       if let otherSignalValue = otherSignal.lastValue {
@@ -211,7 +206,7 @@ public final class Signal<T> {
         self?.lastValue = nil
         otherSignal.lastValue = nil
       }
-      }.putInto(otherSignal.pool)
+    }.putInto(otherSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -223,7 +218,7 @@ public final class Signal<T> {
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
     blocker.subscribeNext { [weak self] blocked in
       self?.blocked = blocked
-      }.putInto(pool)
+    }.putInto(pool)
     
     return self
   }

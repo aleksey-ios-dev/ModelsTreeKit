@@ -13,6 +13,7 @@ public class Model {
   public private(set) weak var parent: Model?
   
   public let pushChildSignal = Signal<Model>()
+  public let removeChildSignal = Signal<Model>()
   public let errorSignal = Signal<Error>()
   public let pool = AutodisposePool()
   
@@ -120,31 +121,22 @@ public class Model {
   
   private var eventHandlerWrappers = [SessionEventWrapper]()
   
-  final func registerForEvent(event: SessionEvent, handler: EventHandler) {
+  public final func registerForEvent(event: SessionEvent, handler: EventHandler) {
     unregisterFromEvent(event)
     eventHandlerWrappers.append(SessionEventWrapper(event: event, handler: handler))
   }
   
-  final func unregisterFromEvent(event: SessionEvent) {
+  public final func unregisterFromEvent(event: SessionEvent) {
     eventHandlerWrappers = eventHandlerWrappers.filter {$0.event != event}
   }
   
-  final func raiseSessionEvent(event: SessionEvent, withObject object: Any?) {
+  public final func raiseSessionEvent(event: SessionEvent, withObject object: Any?) {
     session()?.propagateEvent(event, withObject: object)
   }
   
   private func propagateEvent(event: SessionEvent, withObject object: Any?) {
-    for wrapper in eventHandlerWrappers {
-      if wrapper.event == event {
-        wrapper.handler(object: object)
-      }
-    }
-    
+    eventHandlerWrappers.forEach { $0.handler(object: object) }
     childModels().forEach { $0.propagateEvent(event, withObject: object) }
-    
-    for child in childModels() {
-      child.propagateEvent(event, withObject: object)
-    }
   }
 }
 
@@ -188,7 +180,7 @@ extension Model {
   }
 }
 
-typealias EventHandler = (object: Any?) -> (Void)
+public typealias EventHandler = (object: Any?) -> (Void) //TODO: убери куда-то
 
 private class SessionEventWrapper {
   var event: SessionEvent
