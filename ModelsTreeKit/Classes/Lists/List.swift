@@ -35,7 +35,7 @@ public class List<T where T: Hashable, T: Equatable>: Model {
         fetchOperation?.cancel()
     }
     
-    public init(parent: Model?, array: [T]) {
+    public init(parent: Model?, array: [T] = []) {
         super.init(parent: parent)
         
         objects = Set(array)

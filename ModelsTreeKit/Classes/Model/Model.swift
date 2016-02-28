@@ -174,9 +174,7 @@ extension Model {
     output += "\(self)"
     print(output)
     
-    for child in childModels() {
-      child.printTreeLevel(level + 1)
-    }
+    childModels().forEach { $0.printTreeLevel(level + 1) }
   }
 }
 
