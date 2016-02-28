@@ -8,20 +8,10 @@
 
 import Foundation
 
-public protocol ListObject: Equatable, Hashable {
-}
+public class ListDataSource <ObjectType, GroupKeyType where
+ObjectType: Hashable, ObjectType: Equatable,
+GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType> {
 
-public protocol GroupingKey: Hashable, Equatable, Comparable {
-}
-
-extension Int: ListObject {
-}
-
-
-extension Int: GroupingKey {
-}
-
-public class ListDataSource <ObjectType: ListObject, GroupKeyType: GroupingKey>: ObjectsDataSource<ObjectType> {
   typealias Section = (objects: [ObjectType], key: GroupKeyType?)
   typealias Sections = [Section]
   

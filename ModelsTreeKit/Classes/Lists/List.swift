@@ -15,7 +15,7 @@ enum ListChangeType {
     case Move
 }
 
-public class List<T: ListObject>: Model {
+public class List<T where T: Hashable, T: Equatable>: Model {
     public typealias FetchCompletionBlock = (success: Bool, response: [T]?, error: Error?) -> Void
     public typealias FetchBlock = (completion: FetchCompletionBlock, offset: Int) -> NSOperation?
 
@@ -133,7 +133,7 @@ public class List<T: ListObject>: Model {
     }
 }
 
-internal class UpdatesPool<T: ListObject> {
+internal class UpdatesPool<T where T: protocol <Hashable, Equatable>> {
     private(set) var insertions = Set<T>()
     private(set) var deletions = Set<T>()
     private(set) var updates = Set<T>()
