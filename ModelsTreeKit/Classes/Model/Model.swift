@@ -182,7 +182,7 @@ extension Model {
   }
 }
 
-public typealias EventHandler = (object: Any?) -> (Void) //TODO: убери куда-то
+public typealias EventHandler = (object: Any?) -> (Void)
 
 private class SessionEventWrapper {
   var event: SessionEvent

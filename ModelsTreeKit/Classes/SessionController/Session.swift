@@ -16,20 +16,28 @@ protocol SessionDelegate: class {
   func sessionDidOpen(session: Session) -> Void
 }
 
-public enum SessionEvent { //TODO: remove it!!!
-  case ContentReloadNeeded
-  case PushNotificationsUpdated
-  case StartExam
-  case ExamCreated
+public struct SessionEvent {
+  var name: String
+  
+  public init(name: String) {
+    self.name = name
+  }
 }
+
+extension SessionEvent: Equatable {
+}
+
+public func ==(lhs: SessionEvent, rhs: SessionEvent) -> Bool {
+  return lhs.name == rhs.name
+}
+
 
 public class Session: Model {
   
   public var services: ServiceLocator!
-  
-  weak var controller: SessionDelegate? //TODO: Signal! (или private свойство)
-  
   public var credentials: SessionCredentials?
+  
+  private weak var controller: SessionDelegate?
   
   public init() {
     super.init(parent: nil)
