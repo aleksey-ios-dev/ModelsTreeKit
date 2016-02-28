@@ -21,8 +21,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public let willDisplayCell = Signal<UITableViewCell>()
   public let didEndDisplayingCell = Signal<UITableViewCell>()
   
-  public let willSetObject = Signal<UITableViewCell>()
-  public let didSetObject = Signal<UITableViewCell>()
+  public let willSetObjectSignal = Signal<UITableViewCell>()
+  public let didSetObjectSignal = Signal<UITableViewCell>()
   
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UITableViewCell]()
@@ -141,12 +141,12 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
         cell = (nibs[identifier]!.instantiateWithOwner(nil, options: nil).last as! UITableViewCell)
       }
       
-      willSetObject.sendNext(cell!)
+      willSetObjectSignal.sendNext(cell!)
       
       let mapping = mappings[identifier]!
       mapping(object, cell!, indexPath)
       
-      didSetObject.sendNext(cell!)
+      didSetObjectSignal.sendNext(cell!)
       
       return cell!
   }

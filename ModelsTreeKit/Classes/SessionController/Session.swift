@@ -20,6 +20,7 @@ public enum SessionEvent { //TODO: remove it!!!
   case ContentReloadNeeded
   case PushNotificationsUpdated
   case StartExam
+  case ExamCreated
 }
 
 public class Session: Model {

@@ -135,7 +135,11 @@ public class Model {
   }
   
   private func propagateEvent(event: SessionEvent, withObject object: Any?) {
-    eventHandlerWrappers.forEach { $0.handler(object: object) }
+    eventHandlerWrappers.forEach {
+      if $0.event == event {
+        $0.handler(object: object)
+      }
+    }
     childModels().forEach { $0.propagateEvent(event, withObject: object) }
   }
 }
@@ -171,7 +175,7 @@ extension Model {
       output += indent
     }
     
-    output += "\(self)"
+    output += "\(String(self).componentsSeparatedByString(".").last!)"
     print(output)
     
     childModels().forEach { $0.printTreeLevel(level + 1) }
