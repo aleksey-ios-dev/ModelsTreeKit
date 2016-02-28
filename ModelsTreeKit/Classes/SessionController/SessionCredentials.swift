@@ -18,6 +18,10 @@ public final class SessionCredentials {
     fields = archivationProxy
   }
   
+  public init(params: SessionCompletionParams) {
+    fields = params
+  }
+  
   public subscript(n: String) -> AnyObject? {
     get { return fields[n] }
     set { fields[n] = newValue }
