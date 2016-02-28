@@ -16,22 +16,6 @@ protocol SessionDelegate: class {
   func sessionDidOpen(session: Session) -> Void
 }
 
-public struct SessionEvent {
-  var name: String
-  
-  public init(name: String) {
-    self.name = name
-  }
-}
-
-extension SessionEvent: Equatable {
-}
-
-public func ==(lhs: SessionEvent, rhs: SessionEvent) -> Bool {
-  return lhs.name == rhs.name
-}
-
-
 public class Session: Model {
   
   public var services: ServiceLocator!
