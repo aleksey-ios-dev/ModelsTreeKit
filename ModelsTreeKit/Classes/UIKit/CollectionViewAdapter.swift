@@ -1,6 +1,6 @@
 //
 //  CollectionViewAdapter.swift
-//  We Learn English
+//  ModelsTreeKit
 //
 //  Created by aleksey on 06.12.15.
 //  Copyright © 2015 aleksey chernish. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  TableViewCell.swift
-//  We Learn English
+//  ModelsTreeKit
 //
 //  Created by aleksey on 21.11.15.
 //  Copyright © 2015 aleksey chernish. All rights reserved.

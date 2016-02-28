@@ -8,32 +8,32 @@
 
 import Foundation
 
-public class AutodisposePool: NSObject { //TODO: избавься от NSObject
-    private var disposables = [WeakRef]()
-    
-    public func add(disposable: Disposable) {
-        disposables.append(WeakRef(object: disposable))
-    }
-
-    public func drain() {
-        for weakRef in disposables {
-            if let disposable = weakRef.object as? Disposable {
-                disposable.dispose()
-            }
-        }
-        
-        disposables.removeAll()
+public class AutodisposePool {
+  private var disposables = [WeakRef]()
+  
+  public func add(disposable: Disposable) {
+    disposables.append(WeakRef(object: disposable))
+  }
+  
+  public func drain() {
+    for weakRef in disposables {
+      if let disposable = weakRef.object as? Disposable {
+        disposable.dispose()
+      }
     }
     
-    deinit {
-        drain()
-    }
+    disposables.removeAll()
+  }
+  
+  deinit {
+    drain()
+  }
 }
 
 private class WeakRef {
-    weak var object: AnyObject?
-    
-    init(object: AnyObject?) {
-        self.object = object
-    }
+  weak var object: AnyObject?
+  
+  init(object: AnyObject?) {
+    self.object = object
+  }
 }
