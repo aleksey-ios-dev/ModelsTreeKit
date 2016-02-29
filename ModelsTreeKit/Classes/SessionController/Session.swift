@@ -35,6 +35,7 @@ public class Session: Model {
   }
   
   public func closeWithParams(params: Any?) {
+    sessionWillClose()
     services.prepareToClose()
     controller?.session(self, didCloseWithParams: params)
   }

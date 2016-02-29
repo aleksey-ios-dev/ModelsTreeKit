@@ -32,6 +32,12 @@ public class Model {
     }.putInto(pool)
   }
   
+  //Lifecycle
+  
+  public func sessionWillClose() {
+    childModels().forEach { $0.sessionWillClose() }
+  }
+  
   //Child models
   
   private lazy var childModelsSet = Set<Model>()
