@@ -119,8 +119,14 @@ public class Model {
   }
   
   public func raiseError(error: Error) {
-    if isRegisteredForError(error) { errorSignal.sendNext(error) }
+    if isRegisteredForError(error) { handleError(error) }
     else { parent?.raiseError(error) }
+  }
+  
+  //Override to achieve custom behavior
+  
+  public func handleError(error: Error) {
+    errorSignal.sendNext(error)
   }
   
   //Global events
@@ -148,6 +154,7 @@ public class Model {
     }
     childModels().forEach { $0.propagateEvent(event, withObject: object) }
   }
+  
 }
 
 extension Model: Hashable, Equatable {
