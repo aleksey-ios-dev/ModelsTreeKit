@@ -9,25 +9,25 @@
 import Foundation
 
 public class UserSession: Session {
-    public init(params: SessionCompletionParams) {
-        super.init()
-        
-        credentials = SessionCredentials(params: params)
-    }
+  public init(params: SessionCompletionParams) {
+    super.init()
     
-    public required init(archivationProxy: ArchivationProxy) {
-        super.init()
-        if let credentialsProxy = archivationProxy["credentials"] as? ArchivationProxy {
-            credentials = SessionCredentials(archivationProxy: credentialsProxy)
-        }
+    credentials = SessionCredentials(params: params)
+  }
+  
+  public required init(archivationProxy: ArchivationProxy) {
+    super.init()
+    if let credentialsProxy = archivationProxy["credentials"] as? ArchivationProxy {
+      credentials = SessionCredentials(archivationProxy: credentialsProxy)
     }
+  }
 }
 
 extension UserSession: Archivable {
-    public func archivationProxy() -> ArchivationProxy {
-        var proxy = ArchivationProxy()
-        proxy["credentials"] = credentials?.archivationProxy()
-        
-        return proxy
-    }
+  public func archivationProxy() -> ArchivationProxy {
+    var proxy = ArchivationProxy()
+    proxy["credentials"] = credentials?.archivationProxy()
+    
+    return proxy
+  }
 }

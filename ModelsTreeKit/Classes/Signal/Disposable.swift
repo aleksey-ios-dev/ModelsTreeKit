@@ -9,75 +9,75 @@
 import Foundation
 
 public protocol Disposable: class {
-    func dispose()
-    func deliverOnMainThread() -> Disposable
-    func autodispose() -> Disposable
-    func putInto(pool: AutodisposePool) -> Disposable
+  func dispose()
+  func deliverOnMainThread() -> Disposable
+  func autodispose() -> Disposable
+  func putInto(pool: AutodisposePool) -> Disposable
 }
 
 protocol Invocable: class {
-    func invoke(data: Any) -> Void
-    func invokeState(data: Bool) -> Void
+  func invoke(data: Any) -> Void
+  func invokeState(data: Bool) -> Void
 }
 
 class Subscription<U> : Invocable, Disposable {
-    var handler: (U -> Void)?
-    var stateHandler: (Bool -> Void)?
-    
-    private var signal: Signal<U>
-    private var deliversOnMainThread = false
-    private var autodisposes = false
-    
-    init(handler: (U -> Void)?, signal: Signal<U>) {
-        self.handler = handler
-        self.signal = signal;
+  var handler: (U -> Void)?
+  var stateHandler: (Bool -> Void)?
+  
+  private var signal: Signal<U>
+  private var deliversOnMainThread = false
+  private var autodisposes = false
+  
+  init(handler: (U -> Void)?, signal: Signal<U>) {
+    self.handler = handler
+    self.signal = signal;
+  }
+  
+  func invoke(data: Any) -> Void {
+    if deliversOnMainThread {
+      dispatch_async(dispatch_get_main_queue()) { [weak self] in
+        self?.handler?(data as! U)
+      }
+    } else {
+      handler?(data as! U)
     }
     
-    func invoke(data: Any) -> Void {
-        if deliversOnMainThread {
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                self?.handler?(data as! U)
-            }
-        } else {
-            handler?(data as! U)
-        }
-        
-        if autodisposes {
-            dispose()
-        }
+    if autodisposes {
+      dispose()
     }
+  }
+  
+  func invokeState(data: Bool) -> Void {
+    if deliversOnMainThread {
+      dispatch_async(dispatch_get_main_queue()) { [weak self] in
+        self?.stateHandler?(data)
+      }
+    } else {
+      stateHandler?(data)
+    }
+  }
+  
+  func dispose() {
+    signal.nextHandlers = signal.nextHandlers.filter { $0 !== self }
+    signal.completedHandlers = signal.completedHandlers.filter { $0 !== self }
+    handler = nil
+  }
+  
+  func deliverOnMainThread() -> Disposable {
+    deliversOnMainThread = true
     
-    func invokeState(data: Bool) -> Void {
-        if deliversOnMainThread {
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                self?.stateHandler?(data)
-            }
-        } else {
-            stateHandler?(data)
-        }
-    }
+    return self
+  }
+  
+  func autodispose() -> Disposable {
+    autodisposes = true
     
-    func dispose() {
-        signal.nextHandlers = signal.nextHandlers.filter { $0 !== self }
-        signal.completedHandlers = signal.completedHandlers.filter { $0 !== self }
-        handler = nil
-    }
+    return self
+  }
+  
+  func putInto(pool: AutodisposePool) -> Disposable {
+    pool.add(self)
     
-    func deliverOnMainThread() -> Disposable {
-        deliversOnMainThread = true
-        
-        return self
-    }
-    
-    func autodispose() -> Disposable {
-        autodisposes = true
-        
-        return self
-    }
-    
-    func putInto(pool: AutodisposePool) -> Disposable {
-        pool.add(self)
-        
-        return self
-    }
+    return self
+  }
 }

@@ -16,7 +16,7 @@ public class ServiceLocator {
   
   //Access
   
-  func registerService<T>(service: T) {
+  public func registerService<T>(service: T) {
     let key = "\(T.self)"
     services[key] = service
   }
@@ -28,7 +28,7 @@ public class ServiceLocator {
   
   //Lifecycle
   
-  public func takeOff() {
+  func takeOff() {
     for service in services.values {
       if let service = service as? Service {
         service.takeOff()

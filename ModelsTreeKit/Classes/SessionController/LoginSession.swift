@@ -9,6 +9,5 @@
 import Foundation
 
 public class LoginSession: Session {
-    public override init() {
-    }
+  public override init() {}
 }
