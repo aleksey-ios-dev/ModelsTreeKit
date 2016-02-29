@@ -117,7 +117,7 @@ extension SessionController: SessionDelegate {
     }
     
     do {
-      let uidString = loginParams[configuration.credentialsPrimaryKey]!
+      let uidString = loginParams[configuration.credentialsPrimaryKey.rawValue]!
       let session = try archivedUserSessionForKey(String(uidString.hash))
       openSession(session)
     } catch {

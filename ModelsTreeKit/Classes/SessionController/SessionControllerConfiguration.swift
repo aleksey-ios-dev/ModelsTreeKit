@@ -10,9 +10,9 @@ import Foundation
 
 public struct SessionControllerConfiguration {
   var keychainAccessKey: String
-  var credentialsPrimaryKey: String
+  var credentialsPrimaryKey: CredentialsKey
   
-  public init(keychainAccessKey: String, credentialsPrimaryKey: String) {
+  public init(keychainAccessKey: String, credentialsPrimaryKey: CredentialsKey) {
     self.keychainAccessKey = keychainAccessKey
     self.credentialsPrimaryKey = credentialsPrimaryKey
   }

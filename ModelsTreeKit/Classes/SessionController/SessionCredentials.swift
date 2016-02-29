@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol CredentialsKey {
+  var rawValue: String { get }
+}
+
 public final class SessionCredentials {
   
   private var fields = [String: AnyObject]()
@@ -22,9 +26,9 @@ public final class SessionCredentials {
     fields = params
   }
   
-  public subscript(n: String) -> AnyObject? {
-    get { return fields[n] }
-    set { fields[n] = newValue }
+  public subscript(n: CredentialsKey) -> AnyObject? {
+    get { return fields[n.rawValue] }
+    set { fields[n.rawValue] = newValue }
   }
   
 }
