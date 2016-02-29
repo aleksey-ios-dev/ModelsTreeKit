@@ -45,7 +45,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.updateActions.removeAll()
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else {
