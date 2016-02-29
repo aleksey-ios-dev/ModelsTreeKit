@@ -13,7 +13,7 @@ public class Model {
   public private(set) weak var parent: Model?
   
   public let pushChildSignal = Signal<Model>()
-  public let removeChildSignal = Signal<Model>()
+  public let wantsRemoveChildSignal = Signal<Model>()
   public let errorSignal = Signal<Error>()
   public let pool = AutodisposePool()
   
