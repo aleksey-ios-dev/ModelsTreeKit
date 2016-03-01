@@ -185,6 +185,24 @@ class SignalTests: XCTestCase {
     
     XCTAssertEqual(expectedResult, actualResult)
   }
+  
+  func testThatZipWorks() {
+    let signalA = Signal<Int>()
+    let signalB = Signal<String>()
+    
+    let zippedAB = signalA.zip(signalB)
+    
+    zippedAB.subscribeNext { print("\($0) : \($1)") }.putInto(pool)
+    
+    signalB.sendNext("a")
+    signalA.sendNext(1)
+    signalA.sendNext(2)
+    signalB.sendNext("b")
+    signalA.sendNext(3)
+    signalB.sendNext("c")
+    signalB.sendNext("d")
+    signalA.sendNext(4)
+  }
 }
 
 

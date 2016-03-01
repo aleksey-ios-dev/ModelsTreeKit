@@ -16,7 +16,7 @@ class ValuesStackTests: XCTestCase {
   func testStackCanKeepValues() {
 
     let stack = ValuesStack<Int>()
-    stack.putValue(5)
+    stack.put(5)
     
     XCTAssertEqual(stack.values, [5])
     
@@ -25,8 +25,8 @@ class ValuesStackTests: XCTestCase {
   func testStackCanKeepOnlyOneValueByDefault() {
     
     let stack = ValuesStack<Int>()
-    stack.putValue(5)
-    stack.putValue(2)
+    stack.put(5)
+    stack.put(2)
     
     XCTAssertEqual(stack.values, [2])
     
@@ -36,23 +36,23 @@ class ValuesStackTests: XCTestCase {
     
     let stack = ValuesStack<Int>()
     
-    XCTAssertNil(stack.takeValue())
+    XCTAssertNil(stack.takeFromTop())
     
   }
   
   func testThatTakeValueRemovesItFromStack() {
     
     let stack = ValuesStack<Int>()
-    stack.putValue(4)
+    stack.put(4)
     
-    XCTAssertEqual(4, stack.takeValue())
-    XCTAssertNil(stack.takeValue())
+    XCTAssertEqual(4, stack.takeFromTop())
+    XCTAssertNil(stack.takeFromTop())
     
   }
   
   func testThatTopValueDoesntChangeStack() {
     let stack = ValuesStack<Int>()
-    stack.putValue(5)
+    stack.put(5)
     XCTAssertEqual(5, stack.topValue)
     XCTAssertEqual(5, stack.topValue)
 
@@ -61,36 +61,36 @@ class ValuesStackTests: XCTestCase {
   func testThatStackCapacityCanBeIncreased() {
     let stack = ValuesStack<Int>(capacity: 5)
 
-    stack.putValue(5)
-    stack.putValue(6)
-    stack.putValue(7)
-    stack.putValue(20)
-    stack.putValue(30)
+    stack.put(5)
+    stack.put(6)
+    stack.put(7)
+    stack.put(20)
+    stack.put(30)
     XCTAssertEqual([5, 6, 7, 20, 30], stack.values)
   }
   
   func testThatStackPopsOutOldestValues() {
     let stack = ValuesStack<Int>(capacity: 5)
-    stack.putValue(5)
-    stack.putValue(6)
-    stack.putValue(7)
-    stack.putValue(20)
-    stack.putValue(30)
-    stack.putValue(50)
-    stack.putValue(100)
+    stack.put(5)
+    stack.put(6)
+    stack.put(7)
+    stack.put(20)
+    stack.put(30)
+    stack.put(50)
+    stack.put(100)
     XCTAssertEqual([7, 20, 30, 50, 100], stack.values)
   }
   
   func testThatZeroCapacityMakesStackInfinite() {
     let stack = ValuesStack<Int>()
     stack.capacity = 0
-    stack.putValue(5)
-    stack.putValue(6)
-    stack.putValue(7)
-    stack.putValue(20)
-    stack.putValue(30)
-    stack.putValue(50)
-    stack.putValue(100)
+    stack.put(5)
+    stack.put(6)
+    stack.put(7)
+    stack.put(20)
+    stack.put(30)
+    stack.put(50)
+    stack.put(100)
     XCTAssertEqual([5, 6, 7, 20, 30, 50, 100], stack.values)
   }
 

@@ -33,21 +33,16 @@ public final class Signal<T> {
   }
   
   public init(value: T?) {
-    stack.putValue(value)
+    stack.put(value)
 //    lastValue = value
   }
   
   public func sendNext(data: T) {
-    if blocked {
-      return
-    }
+    if blocked { return }
     
-    for handler in nextHandlers {
-      handler.invoke(data)
-    }
+    nextHandlers.forEach { $0.invoke(data) }
     
-    stack.putValue(data)
-//    lastValue = data
+    stack.put(data)
   }
   
   public func sendCompleted() {
@@ -214,6 +209,37 @@ public final class Signal<T> {
     chainSignal(nextSignal)
     
     return nextSignal
+  }
+  
+  //Zip
+  
+  public func zip<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
+    let zippedSelf = Signal<T>()
+    zippedSelf.stack.capacity = 0
+    
+    let zippedOther = Signal<U>()
+    zippedSelf.stack.capacity = 0
+    
+    subscribeNext { zippedSelf.sendNext($0) }.putInto(zippedSelf.pool)
+    otherSignal.subscribeNext { zippedOther.sendNext($0) }.putInto(zippedOther.pool)
+    
+    let combinedZipped = Signal<(T, U)>()
+    
+    zippedSelf.subscribeNext {
+      zippedSelf.stack.locked = false
+      guard let otherValue = zippedOther.stack.takeFromBottom() else { return }
+      combinedZipped.sendNext($0, otherValue)
+      zippedSelf.stack.locked = true
+    }.putInto(combinedZipped.pool)
+    
+    zippedOther.subscribeNext {
+      zippedOther.stack.locked = false
+      guard let otherValue = zippedSelf.stack.takeFromBottom() else { return }
+      combinedZipped.sendNext(otherValue, $0)
+      zippedOther.stack.locked = true
+    }.putInto(combinedZipped.pool)
+    
+    return combinedZipped
   }
   
   //Adds blocking signal
