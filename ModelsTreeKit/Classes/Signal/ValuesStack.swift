@@ -14,15 +14,16 @@ public class ValuesStack<T> {
   
   var values = [T]()
   
-  var topValue: T? {
+  public var topValue: T? {
     return values.last
   }
   
-  init(capacity: Int = 1) {
+  public init(capacity: Int = 1) {
     self.capacity = capacity
   }
   
-  func putValue(value: T) {
+  public func putValue(value: T?) {
+    guard let value = value else { return }
     values.append(value)    
     if values.count > capacity && capacity != 0 { values.removeFirst() }
   }
@@ -33,6 +34,10 @@ public class ValuesStack<T> {
     if !values.isEmpty { values.removeLast() }
     
     return value
+  }
+  
+  public func drain() {
+    values = []
   }
   
 }

@@ -12,8 +12,8 @@ public final class Signal<T> {
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
-//  var valuesStack = ValuesStack<T>()
-  var lastValue: T?
+  var stack = ValuesStack<T>()
+
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
@@ -33,7 +33,8 @@ public final class Signal<T> {
   }
   
   public init(value: T?) {
-    lastValue = value
+    stack.putValue(value)
+//    lastValue = value
   }
   
   public func sendNext(data: T) {
@@ -45,7 +46,8 @@ public final class Signal<T> {
       handler.invoke(data)
     }
     
-    lastValue = data
+    stack.putValue(data)
+//    lastValue = data
   }
   
   public func sendCompleted() {
@@ -67,7 +69,7 @@ public final class Signal<T> {
     
     nextHandlers.append(wrapper)
     
-    if let lastValue = lastValue {
+    if let lastValue = stack.topValue {
       wrapper.handler?(lastValue)
     }
     
@@ -124,7 +126,7 @@ public final class Signal<T> {
   public func reduce<U>(handler: (newValue: T, reducedValue: U?) -> U) -> Signal<U> {
     let nextSignal = Signal<U>()
     subscribeNext { [weak nextSignal] in
-      nextSignal?.sendNext(handler(newValue: $0, reducedValue: nextSignal?.lastValue))
+      nextSignal?.sendNext(handler(newValue: $0, reducedValue: nextSignal?.stack.topValue))
     }.putInto(nextSignal.pool)
 
     chainSignal(nextSignal)
@@ -141,14 +143,14 @@ public final class Signal<T> {
       guard let strongSelf = self, let nextSignal = nextSignal else {
         return
       }
-      nextSignal.sendNext((strongSelf.lastValue, $0))
+      nextSignal.sendNext((strongSelf.stack.topValue, $0))
     }.putInto(nextSignal.pool)
     
     subscribeNext { [weak otherSignal, weak nextSignal] in
       guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
         return
       }
-      nextSignal.sendNext(($0, otherSignal.lastValue))
+      nextSignal.sendNext(($0, otherSignal.stack.topValue))
     }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
@@ -165,7 +167,7 @@ public final class Signal<T> {
       guard let strongSelf = self, let nextSignal = nextSignal else {
         return
       }
-      if let lastValue = strongSelf.lastValue {
+      if let lastValue = strongSelf.stack.topValue {
         nextSignal.sendNext((lastValue, $0))
       }
       
@@ -175,7 +177,7 @@ public final class Signal<T> {
       guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
         return
       }
-      if let otherSignalValue = otherSignal.lastValue {
+      if let otherSignalValue = otherSignal.stack.topValue {
         nextSignal.sendNext(($0, otherSignalValue))
       }
     }.putInto(nextSignal.pool)
@@ -194,18 +196,18 @@ public final class Signal<T> {
       guard let strongSelf = self, let nextSignal = nextSignal, let otherSignal = otherSignal else {
         return
       }
-      if let lastValue = strongSelf.lastValue {
+      if let lastValue = strongSelf.stack.topValue {
         nextSignal.sendNext((lastValue, $0))
-        strongSelf.lastValue = nil
-        otherSignal.lastValue = nil
+        strongSelf.stack.drain()
+        otherSignal.stack.drain()
       }
     }.putInto(nextSignal.pool)
     
     subscribeNext { [weak self] in
-      if let otherSignalValue = otherSignal.lastValue {
+      if let otherSignalValue = otherSignal.stack.topValue {
         nextSignal.sendNext(($0, otherSignalValue))
-        self?.lastValue = nil
-        otherSignal.lastValue = nil
+        self?.stack.drain()
+        otherSignal.stack.drain()
       }
     }.putInto(otherSignal.pool)
     
@@ -261,7 +263,7 @@ extension Signal where T: Equatable {
   
   public func skipRepeating() -> Signal<T> {
     return self.filter { [weak self] newValue in
-      return newValue != self?.lastValue
+      return newValue != self?.stack.topValue
     }
   }
   
@@ -274,7 +276,7 @@ extension Signal where T: Comparable {
   public func passAscending() -> Signal<T> {
     let nextSignal = Signal<T>()
     subscribeNext { [weak nextSignal] newValue in
-      if nextSignal?.lastValue == nil || nextSignal?.lastValue < newValue {
+      if nextSignal?.stack.topValue == nil || nextSignal?.stack.topValue < newValue {
         nextSignal?.sendNext(newValue)
       }
     }.putInto(nextSignal.pool)
@@ -289,7 +291,7 @@ extension Signal where T: Comparable {
   public func passDescending() -> Signal<T> {
     let nextSignal = Signal<T>()
     subscribeNext { [weak nextSignal] newValue in
-      if nextSignal?.lastValue == nil || nextSignal?.lastValue > newValue {
+      if nextSignal?.stack.topValue == nil || nextSignal?.stack.topValue > newValue {
         nextSignal?.sendNext(newValue)
       }
     }.putInto(nextSignal.pool)
