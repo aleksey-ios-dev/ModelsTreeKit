@@ -16,9 +16,7 @@ class AutodisposePoolTests: XCTestCase {
     
     weak var subscriptionA: Disposable?
     weak var subscriptionB: Disposable?
-    
-    var pool = AutodisposePool()
-    
+  
     override func setUp() {
         subscriptionA = signalA.subscribeNext() { _ in }
         subscriptionB = signalB.subscribeNext() { _ in }

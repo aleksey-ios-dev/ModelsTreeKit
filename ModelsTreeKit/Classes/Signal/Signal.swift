@@ -12,6 +12,7 @@ public final class Signal<T> {
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
+//  var valuesStack = ValuesStack<T>()
   var lastValue: T?
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()

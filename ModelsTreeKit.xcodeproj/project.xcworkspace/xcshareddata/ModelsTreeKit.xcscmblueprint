@@ -4,12 +4,12 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "D37C4CFF91C1C68CA794F59769162C89B447C189" : 0,
+    "6498907ABFE6E5FEC33551B4FE01E8425B5B2068" : 0,
     "6E9ED8FA8253E3095B64F4AAC4DA6606FDC1FEE8" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CBF63DF1-F5EC-4053-BF3D-54D8C79A430A",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "D37C4CFF91C1C68CA794F59769162C89B447C189" : "",
+    "6498907ABFE6E5FEC33551B4FE01E8425B5B2068" : "",
     "6E9ED8FA8253E3095B64F4AAC4DA6606FDC1FEE8" : "TreeKit\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "ModelsTreeKit",
@@ -17,14 +17,14 @@
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ModelsTreeKit.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:mmrmmlrr\/welearnenglish.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6498907ABFE6E5FEC33551B4FE01E8425B5B2068"
+    },
+    {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mmrmmlrr\/ModelsTreeKit",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6E9ED8FA8253E3095B64F4AAC4DA6606FDC1FEE8"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:mmrmmlrr\/welearnenglish.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D37C4CFF91C1C68CA794F59769162C89B447C189"
     }
   ]
 }

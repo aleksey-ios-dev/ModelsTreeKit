@@ -40,11 +40,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.beginUpdates()
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.endUpdates()
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else {
