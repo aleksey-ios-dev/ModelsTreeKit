@@ -129,8 +129,8 @@ extension SessionController: SessionDelegate {
     let representation = representationsRouter.representationFor(session: session)
     let model = modelsRouter.modelFor(session: session)
 
-    if let assignable = representation as? ModelAssignable {
-      assignable.assignModel(model)
+    if let assignable = representation as? RootModelAssignable {
+      assignable.assignRootModel(model)
     }
     
     if let deinitObservable = representation as? DeinitObservable {

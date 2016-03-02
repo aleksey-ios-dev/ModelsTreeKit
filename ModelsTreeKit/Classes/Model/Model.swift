@@ -19,6 +19,11 @@ public class Model {
   
   private let hash = NSProcessInfo.processInfo().globallyUniqueString
   
+  deinit {
+    print("DEINIT" +  " \(self)")
+    representationDeinitDisposable?.dispose()
+  }
+  
   public init(parent: Model?) {
     self.parent = parent
     parent?.addChild(self)
@@ -26,10 +31,12 @@ public class Model {
   
   //Connection with representation
   
+  private weak var representationDeinitDisposable: Disposable?
+  
   public func applyRepresentation(representation: DeinitObservable) {
-    representation.deinitSignal.subscribeCompleted { [weak self] _ in
+    representationDeinitDisposable = representation.deinitSignal.subscribeCompleted { [weak self] _ in
       self?.parent?.removeChild(self!)
-    }.putInto(pool)
+    }.autodispose()
   }
   
   //Lifecycle
@@ -170,17 +177,21 @@ public func ==(lhs: Model, rhs: Model) -> Bool {
 }
 
 extension Model {
-  public final func printSubtree() {
+  public enum PrintParams {
+    case HasRepresentation
+  }
+  
+  public final func printSubtree(params: [PrintParams] = []) {
     print("\n")
-    printTreeLevel(0)
+    printTreeLevel(0, params: params)
     print("\n")
   }
   
-  public final func printSessionTree() {
-    session()?.printSubtree()
+  public final func printSessionTree(params: [PrintParams] = []) {
+    session()?.printSubtree(params)
   }
   
-  private func printTreeLevel(level: Int) {
+  private func printTreeLevel(level: Int, params: [PrintParams] = []) {
     var output = "|"
     let indent = "  |"
     
@@ -189,9 +200,13 @@ extension Model {
     }
     
     output += "\(String(self).componentsSeparatedByString(".").last!)"
+    
+    if params.contains(.HasRepresentation) && representationDeinitDisposable != nil {
+      output += " (R)"
+    }
     print(output)
     
-    childModels().forEach { $0.printTreeLevel(level + 1) }
+    childModels().forEach { $0.printTreeLevel(level + 1, params:  params) }
   }
 }
 

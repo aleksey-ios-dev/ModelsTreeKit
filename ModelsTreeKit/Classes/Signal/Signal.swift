@@ -34,7 +34,6 @@ public final class Signal<T> {
   
   public init(value: T?) {
     stack.put(value)
-//    lastValue = value
   }
   
   public func sendNext(data: T) {
@@ -281,6 +280,7 @@ public final class Signal<T> {
   public func unblock() {
     blocked = false
   }
+  
 }
 
 extension Signal where T: Equatable {
