@@ -190,7 +190,9 @@ class SignalTests: XCTestCase {
     let signalA = Signal<Int>()
     let signalB = Signal<String>()
     
-    signalA.zip(signalB).subscribeNext { print("\($0) : \($1)") }.putInto(pool)
+    var result = [String]()
+    
+    signalA.zip(signalB).subscribeNext { result.append(("\($0) : \($1)")) }.putInto(pool)
     
     signalB.sendNext("a")
     signalA.sendNext(1)
@@ -201,25 +203,10 @@ class SignalTests: XCTestCase {
     signalB.sendNext("d")
     signalA.sendNext(4)
     
+    XCTAssertEqual(result, ["1 : a", "2 : b", "3 : c", "4 : d"])
+    
   }
   
-//  func testThatZipWithReduceWorks() {
-//    let signalA = Signal<Int>()
-//    let signalB = Signal<String>()
-//    
-//    let zippedAB = signalA.zipWithReduce(signalB)
-//    
-//    zippedAB.subscribeNext { print("\($0) : \($1)") }.putInto(pool)
-//    
-//    signalB.sendNext("a")
-//    signalA.sendNext(1)
-//    signalA.sendNext(2)
-//    signalB.sendNext("b")
-//    signalA.sendNext(3)
-//    signalB.sendNext("c")
-//    signalB.sendNext("d")
-//    signalA.sendNext(4)
-//  }
 }
 
 
