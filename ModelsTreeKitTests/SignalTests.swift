@@ -52,7 +52,6 @@ class SignalTests: XCTestCase {
         numberSignal.combineLatest(textSignal).filter { number, text in
             return number != nil && text != nil
             }.map { number, string in
-                print(string)
                 return "\(number!) \(string!)"
         }.subscribeNext() { result in
             XCTAssertEqual("50 hello", result)
@@ -61,7 +60,33 @@ class SignalTests: XCTestCase {
         numberSignal.sendNext(50)
         textSignal.sendNext("hello")
     }
+  
+  
+  func testThatCombineBoundWorks() {
+    let numberSignal = Signal<Int>()
+    let textSignal = Signal<String>()
     
+    numberSignal.combineBound(textSignal).filter { number, text in
+      return number != nil && text != nil
+      }.map { number, string in
+        return "\(number) \(string)"
+      }.subscribeNext() { result in
+        print(result)
+    }
+    
+    numberSignal.sendNext(50)
+    textSignal.sendNext("hello")
+    textSignal.sendNext("there")
+    textSignal.sendNext("how")
+    numberSignal.sendNext(20)
+    numberSignal.sendNext(10)
+    textSignal.sendNext("hoho")
+    
+    //TODO: add check
+    
+  }
+  
+  
     func testThatBlockerBlocksSignal() {
         let testSignal = Signal<Int>()
         let blocker = Signal<Bool>()
@@ -190,7 +215,9 @@ class SignalTests: XCTestCase {
     
     var result = [String]()
     
-    signalA.zip(signalB).subscribeNext { result.append(("\($0)\($1)")) }.putInto(pool)
+    signalA.zip(signalB).subscribeNext {
+      result.append(("\($0)\($1)"))
+      }.putInto(pool)
     
     signalB.sendNext("a")
     signalA.sendNext(1)

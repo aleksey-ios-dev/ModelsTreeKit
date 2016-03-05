@@ -41,23 +41,15 @@ public final class Signal<T> {
   }
   
   public func sendCompleted() {
-    
-    for handler in completedHandlers {
-      handler.invokeState(true)
-    }
-    
+    completedHandlers.forEach { $0.invokeState(true) }
   }
   
   //Adds handler to signal and returns subscription
   
   public func subscribeNext(handler: SignalHandler) -> Disposable {
     let wrapper = Subscription(handler: handler, signal: self)
-    
     nextHandlers.append(wrapper)
-    
-    if let value = value {
-      wrapper.handler?(value)
-    }
+    if let value = value { wrapper.handler?(value) }
     
     return wrapper
   }
@@ -71,9 +63,7 @@ public final class Signal<T> {
   }
   
   private func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
-    subscribeCompleted { [weak nextSignal] _ in
-      nextSignal?.sendCompleted()
-    }.putInto(nextSignal.pool)
+    subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.putInto(nextSignal.pool)
     
     return nextSignal
   }
@@ -82,11 +72,7 @@ public final class Signal<T> {
   
   public func map<U>(handler: T -> U) -> Signal<U> {
     let nextSignal = Signal<U>()
-    
-    subscribeNext { [weak nextSignal] in
-      nextSignal?.sendNext(handler($0))
-    }.putInto(nextSignal.pool)
-    
+    subscribeNext { [weak nextSignal] in nextSignal?.sendNext(handler($0)) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
     
     return nextSignal
@@ -94,11 +80,7 @@ public final class Signal<T> {
   
   private func transientMap() -> Signal<T> {
     let nextSignal = Signal<T>(transient: true)
-    
-    subscribeNext { [weak nextSignal] in
-      nextSignal?.sendNext($0)
-    }.putInto(nextSignal.pool)
-    
+    subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
     
     return nextSignal
@@ -109,9 +91,7 @@ public final class Signal<T> {
   public func filter(handler: T -> Bool) -> Signal<T> {
     let nextSignal = Signal<T>()
     subscribeNext { [weak nextSignal] in
-      if handler($0) {
-        nextSignal?.sendNext($0)
-      }
+      if handler($0) { nextSignal?.sendNext($0) }
     }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
@@ -138,16 +118,12 @@ public final class Signal<T> {
     let nextSignal = Signal<(T?, U?)>()
     
     otherSignal.subscribeNext { [weak self, weak nextSignal] in
-      guard let strongSelf = self, let nextSignal = nextSignal else {
-        return
-      }
+      guard let strongSelf = self, let nextSignal = nextSignal else { return }
       nextSignal.sendNext((strongSelf.value, $0))
     }.putInto(nextSignal.pool)
     
     subscribeNext { [weak otherSignal, weak nextSignal] in
-      guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
-        return
-      }
+      guard let otherSignal = otherSignal, let nextSignal = nextSignal else { return }
       nextSignal.sendNext(($0, otherSignal.value))
     }.putInto(nextSignal.pool)
     
@@ -159,56 +135,31 @@ public final class Signal<T> {
   //Sends combined value when any of signals fires and both signals have last passed value
   
   public func combineNoNull<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let nextSignal = Signal<(T, U)>()
-    
-    otherSignal.subscribeNext { [weak self, weak nextSignal] in
-      guard let strongSelf = self, let nextSignal = nextSignal else {
-        return
-      }
-      if let lastValue = strongSelf.value {
-        nextSignal.sendNext((lastValue, $0))
-      }
-      
-    }.putInto(nextSignal.pool)
-    
-    subscribeNext { [weak otherSignal, weak nextSignal] in
-      guard let otherSignal = otherSignal, let nextSignal = nextSignal else {
-        return
-      }
-      if let otherSignalValue = otherSignal.value {
-        nextSignal.sendNext(($0, otherSignalValue))
-      }
-    }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
-    
-    return nextSignal
+    return combineLatest(otherSignal).filter { $0 != nil && $1 != nil }.map { ($0!, $1!) }
   }
   
   //Sends combined value every time when both signals fire at least once
   
   public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let nextSignal = Signal<(T, U)>()
+    let nextSignal = transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
+      let newSelfValue = newValue.0
+      let newOtherValue = newValue.1
+
+      var reducedSelfValue: T? = reducedValue?.0.1
+      var reducedOtherValue: U? = reducedValue?.1.1
+
+      if let newSelfValue = newSelfValue { reducedSelfValue = newSelfValue }
+      if let newOtherValue = newOtherValue { reducedOtherValue = newOtherValue }
+      
+      if let reducedSelfValue = reducedSelfValue, let otherReducedValue = reducedOtherValue {
+          return ((reducedSelfValue, nil), (otherReducedValue, nil))
+      }
+      
+      return ((nil, reducedSelfValue), (nil, reducedOtherValue))
     
-    otherSignal.subscribeNext { [weak self, weak nextSignal, weak otherSignal] in
-      guard let strongSelf = self, let nextSignal = nextSignal, let otherSignal = otherSignal else {
-        return
-      }
-      if let lastValue = strongSelf.value {
-        nextSignal.sendNext((lastValue, $0))
-        //TODO: BAD!!!
-        strongSelf.value = nil
-        otherSignal.value = nil
-      }
-    }.putInto(nextSignal.pool)
-    
-    subscribeNext { [weak self] in
-      if let otherSignalValue = otherSignal.value {
-        nextSignal.sendNext(($0, otherSignalValue))
-        self?.value = nil //BAD
-        otherSignal.value = nil //BAD
-      }
-    }.putInto(otherSignal.pool)
+      }.map { ($0.0.0, $0.1.0)
+      }.filter { $0.0 != nil && 0.1 != nil
+      }.map { ($0.0!, $0.1!) }
     
     chainSignal(nextSignal)
     
@@ -218,7 +169,7 @@ public final class Signal<T> {
   //Zip
   
   public func zip<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    return transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
+    let nextSignal = transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
       
@@ -245,6 +196,10 @@ public final class Signal<T> {
       }.filter { $0.0 != nil && 0.1 != nil
       }.map { ($0.0!, $0.1!)
     }
+    
+    chainSignal(nextSignal)
+    
+    return nextSignal
   }
 
   //Adds blocking signal
@@ -262,13 +217,8 @@ public final class Signal<T> {
     let signalA = Signal<U>()
     let signalB = Signal<V>()
     
-    subscribeNext {[weak signalA] in
-      signalA?.sendNext(splitter($0).a)
-      }.putInto(signalA.pool)
-    
-    subscribeNext {[weak signalB] in
-      signalB?.sendNext(splitter($0).b)
-      }.putInto(signalB.pool)
+    subscribeNext { [weak signalA] in signalA?.sendNext(splitter($0).a) }.putInto(signalA.pool)
+    subscribeNext { [weak signalB] in signalB?.sendNext(splitter($0).b) }.putInto(signalB.pool)
     
     chainSignal(signalA)
     chainSignal(signalB)
@@ -283,9 +233,7 @@ extension Signal where T: Equatable {
   //Stops the value from being passed more than once
   
   public func skipRepeating() -> Signal<T> {
-    return self.filter { [weak self] newValue in
-      return newValue != self?.value
-    }
+    return self.filter { [weak self] newValue in return newValue != self?.value }
   }
   
 }
