@@ -12,7 +12,6 @@ public final class Signal<T> {
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
-//  var stack = ValuesStack<T>()
   var value: T?
 
   var nextHandlers = [Invocable]()
@@ -24,17 +23,16 @@ public final class Signal<T> {
   
   private var pool = AutodisposePool()
   private(set) var blocked = false
+  private var transient = false
   
   deinit {
     destructor?()
     pool.drain()
   }
   
-  public init() {
-  }
-  
-  public init(value: T?) {
+  public init(value: T? = nil, transient: Bool = false) {
     self.value = value
+    self.transient = transient
   }
   
   public func sendNext(data: T) {
@@ -94,6 +92,18 @@ public final class Signal<T> {
     
     subscribeNext { [weak nextSignal] in
       nextSignal?.sendNext(handler($0))
+    }.putInto(nextSignal.pool)
+    
+    chainSignal(nextSignal)
+    
+    return nextSignal
+  }
+  
+  private func transientMap() -> Signal<T> {
+    let nextSignal = Signal<T>(transient: true)
+    
+    subscribeNext { [weak nextSignal] in
+      nextSignal?.sendNext($0)
     }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
@@ -215,10 +225,7 @@ public final class Signal<T> {
   //Zip
   
   public func zip<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let transientSelf = self.map { $0 }.makeTransient()
-    let transientOther = otherSignal.map { $0 }.makeTransient()
-
-    return transientSelf.combineLatest(transientOther).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
+    return transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
       
@@ -240,7 +247,6 @@ public final class Signal<T> {
         reducedSelf!.removeFirst()
         reducedOther!.removeFirst()
       }
-      
       return ((zippedSelfValue, reducedSelf!), (zippedOtherValue, reducedOther!))
       }.map { return ($0.0.0, $0.1.0)
       }.filter { return $0.0 != nil && 0.1 != nil
@@ -287,15 +293,6 @@ public final class Signal<T> {
   
   public func unblock() {
     blocked = false
-  }
-  
-  //
-  
-  var transient = false
-  
-  func makeTransient() -> Signal<T> {
-    transient = true
-    return self
   }
   
 }

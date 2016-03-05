@@ -12,8 +12,8 @@ public class Model {
   
   public private(set) weak var parent: Model?
   
-  public let pushChildSignal = Signal<Model>().makeTransient()
-  public let wantsRemoveChildSignal = Signal<Model>().makeTransient()
+  public let pushChildSignal = Signal<Model>(transient: true)
+  public let wantsRemoveChildSignal = Signal<Model>(transient: true)
   public let errorSignal = Signal<Error>()
   public let pool = AutodisposePool()
   
