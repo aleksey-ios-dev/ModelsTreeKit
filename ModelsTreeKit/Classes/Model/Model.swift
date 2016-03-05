@@ -12,8 +12,8 @@ public class Model {
   
   public private(set) weak var parent: Model?
   
-  public let pushChildSignal = Signal<Model>()
-  public let wantsRemoveChildSignal = Signal<Model>()
+  public let pushChildSignal = Signal<Model>().makeTransient()
+  public let wantsRemoveChildSignal = Signal<Model>().makeTransient()
   public let errorSignal = Signal<Error>()
   public let pool = AutodisposePool()
   
@@ -61,7 +61,7 @@ public class Model {
     childModelsSet.remove(childModel)
   }
   
-  public final func removeFromParent() {
+  public func removeFromParent() {
     parent?.removeChild(self)
   }
   

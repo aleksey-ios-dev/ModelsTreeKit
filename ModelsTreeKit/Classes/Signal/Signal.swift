@@ -41,7 +41,7 @@ public final class Signal<T> {
     
     nextHandlers.forEach { $0.invoke(data) }
     
-    stack.put(data)
+    if !transient { stack.put(data) }
   }
   
   public func sendCompleted() {
@@ -213,37 +213,43 @@ public final class Signal<T> {
   //Zip
   
   public func zip<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let zippedSelf = Signal<T>()
-    zippedSelf.stack.capacity = 0
-    
-    let zippedOther = Signal<U>()
-    zippedSelf.stack.capacity = 0
-    
-    subscribeNext { zippedSelf.sendNext($0) }.putInto(zippedSelf.pool)
-    otherSignal.subscribeNext { zippedOther.sendNext($0) }.putInto(zippedOther.pool)
-    
-    let combinedZipped = Signal<(T, U)>()
-    
-    zippedSelf.subscribeNext {
-      zippedSelf.stack.locked = false
-      guard let otherValue = zippedOther.stack.takeFromBottom() else { return }
-      combinedZipped.sendNext($0, otherValue)
-      zippedSelf.stack.locked = true
-    }.putInto(combinedZipped.pool)
-    
-    zippedOther.subscribeNext {
-      zippedOther.stack.locked = false
-      guard let otherValue = zippedSelf.stack.takeFromBottom() else { return }
-      combinedZipped.sendNext(otherValue, $0)
-      zippedOther.stack.locked = true
-    }.putInto(combinedZipped.pool)
-    
-    return combinedZipped
+    let transientSelf = self.map { $0 }.makeTransient()
+    let transientOther = otherSignal.map { $0 }.makeTransient()
+
+    return transientSelf.combineLatest(transientOther).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
+      let newSelfValue = newValue.0
+      let newOtherValue = newValue.1
+      
+      var reducedSelf = reducedValue?.0.1
+      if reducedSelf == nil { reducedSelf = [T]() }
+      
+      var reducedOther = reducedValue?.1.1
+      if reducedOther == nil { reducedOther = [U]() }
+      
+      if let newSelfValue = newSelfValue { reducedSelf?.append(newSelfValue) }
+      if let newOtherValue = newOtherValue { reducedOther?.append(newOtherValue) }
+      
+      var zippedSelfValue: T? = nil
+      var zippedOtherValue: U? = nil
+      
+      if !reducedSelf!.isEmpty && !reducedOther!.isEmpty {
+        zippedSelfValue = reducedSelf!.first
+        zippedOtherValue = reducedOther!.first
+        reducedSelf!.removeFirst()
+        reducedOther!.removeFirst()
+      }
+      
+      return ((zippedSelfValue, reducedSelf!), (zippedOtherValue, reducedOther!))
+      }.map { return ($0.0.0, $0.1.0)
+      }.filter { return $0.0 != nil && 0.1 != nil
+      }.map { return ($0.0!, $0.1!)
+    }
   }
-  
+
   //Adds blocking signal
   
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
+    //TODO: BAD!!!
     blocker.subscribeNext { [weak self] blocked in
       self?.blocked = blocked
     }.putInto(pool)
@@ -279,6 +285,15 @@ public final class Signal<T> {
   
   public func unblock() {
     blocked = false
+  }
+  
+  //
+  
+  var transient = false
+  
+  func makeTransient() -> Signal<T> {
+    transient = true
+    return self
   }
   
 }
