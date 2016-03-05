@@ -66,9 +66,7 @@ class SignalTests: XCTestCase {
         let testSignal = Signal<Int>()
         let blocker = Signal<Bool>()
         
-        testSignal.blockWith(blocker)
-        
-        testSignal.subscribeNext { _ in
+        testSignal.blockWith(blocker).subscribeNext { _ in
             XCTFail()
         }
         
@@ -192,7 +190,7 @@ class SignalTests: XCTestCase {
     
     var result = [String]()
     
-    signalA.zip(signalB).subscribeNext { result.append(("\($0) : \($1)")) }.putInto(pool)
+    signalA.zip(signalB).subscribeNext { result.append(("\($0)\($1)")) }.putInto(pool)
     
     signalB.sendNext("a")
     signalA.sendNext(1)
@@ -203,7 +201,7 @@ class SignalTests: XCTestCase {
     signalB.sendNext("d")
     signalA.sendNext(4)
     
-    XCTAssertEqual(result, ["1 : a", "2 : b", "3 : c", "4 : d"])
+    XCTAssertEqual(result, ["1a", "2b", "3c", "4d"])
     
   }
   

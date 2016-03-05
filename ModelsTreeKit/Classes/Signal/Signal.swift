@@ -22,7 +22,6 @@ public final class Signal<T> {
   var destructor: (Void -> Void)?
   
   private var pool = AutodisposePool()
-  private(set) var blocked = false
   private var transient = false
   
   deinit {
@@ -36,23 +35,17 @@ public final class Signal<T> {
   }
   
   public func sendNext(data: T) {
-    if blocked { return }
-    
     nextHandlers.forEach { $0.invoke(data) }
     
     if !transient { value = data }
   }
   
   public func sendCompleted() {
-    if blocked {
-      return
-    }
     
     for handler in completedHandlers {
       handler.invokeState(true)
     }
     
-    block()
   }
   
   //Adds handler to signal and returns subscription
@@ -248,21 +241,19 @@ public final class Signal<T> {
         reducedOther!.removeFirst()
       }
       return ((zippedSelfValue, reducedSelf!), (zippedOtherValue, reducedOther!))
-      }.map { return ($0.0.0, $0.1.0)
-      }.filter { return $0.0 != nil && 0.1 != nil
-      }.map { return ($0.0!, $0.1!)
+      }.map { ($0.0.0, $0.1.0)
+      }.filter { $0.0 != nil && 0.1 != nil
+      }.map { ($0.0!, $0.1!)
     }
   }
 
   //Adds blocking signal
   
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
-    //TODO: BAD!!!
-    blocker.subscribeNext { [weak self] blocked in
-      self?.blocked = blocked
-    }.putInto(pool)
-    
-    return self
+    return filter { [weak blocker] newValue in
+      guard let blocker = blocker else { return true }
+      return blocker.value == false
+    }
   }
   
   //Splits signal into two
@@ -283,16 +274,6 @@ public final class Signal<T> {
     chainSignal(signalB)
     
     return (signalA, signalB)
-  }
-  
-  //Blocking
-  
-  public func block() {
-    blocked = true
-  }
-  
-  public func unblock() {
-    blocked = false
   }
   
 }
