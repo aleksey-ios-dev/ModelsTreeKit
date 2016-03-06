@@ -9,6 +9,8 @@
 import Foundation
 
 public final class Signal<T> {
+  public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash
+  
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
@@ -19,6 +21,7 @@ public final class Signal<T> {
   
   //Destructor is executed before the signal's deallocation. A good place to cancel your network operation.
   
+
   var destructor: (Void -> Void)?
   
   private var pool = AutodisposePool()
@@ -142,21 +145,18 @@ public final class Signal<T> {
   
   public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
     let nextSignal = transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
-      let newSelfValue = newValue.0
-      let newOtherValue = newValue.1
 
       var reducedSelfValue: T? = reducedValue?.0.1
       var reducedOtherValue: U? = reducedValue?.1.1
 
-      if let newSelfValue = newSelfValue { reducedSelfValue = newSelfValue }
-      if let newOtherValue = newOtherValue { reducedOtherValue = newOtherValue }
-      
-      if let reducedSelfValue = reducedSelfValue, let otherReducedValue = reducedOtherValue {
-          return ((reducedSelfValue, nil), (otherReducedValue, nil))
+      if let newSelfValue = newValue.0 { reducedSelfValue = newSelfValue }
+      if let newOtherValue = newValue.1 { reducedOtherValue = newOtherValue }
+      if let reducedSelfValue = reducedSelfValue, let reducedOtherValue = reducedOtherValue {
+          return ((reducedSelfValue, nil), (reducedOtherValue, nil))
+      } else {
+        return ((nil, reducedValue?.0.1), (nil, reducedValue?.1.1))
       }
       
-      return ((nil, reducedSelfValue), (nil, reducedOtherValue))
-    
       }.map { ($0.0.0, $0.1.0)
       }.filter { $0.0 != nil && 0.1 != nil
       }.map { ($0.0!, $0.1!) }
@@ -191,6 +191,7 @@ public final class Signal<T> {
         reducedSelf!.removeFirst()
         reducedOther!.removeFirst()
       }
+      
       return ((zippedSelfValue, reducedSelf!), (zippedOtherValue, reducedOther!))
       }.map { ($0.0.0, $0.1.0)
       }.filter { $0.0 != nil && 0.1 != nil
@@ -232,8 +233,9 @@ extension Signal where T: Equatable {
   
   //Stops the value from being passed more than once
   
+  //BUG: locks propagation of initial value
   public func skipRepeating() -> Signal<T> {
-    return self.filter { [weak self] newValue in return newValue != self?.value }
+    return filter { [weak self] newValue in return newValue != self?.value }
   }
   
 }
@@ -271,3 +273,11 @@ extension Signal where T: Comparable {
   }
   
 }
+
+extension Signal: Hashable, Equatable {
+}
+
+public func ==<T>(lhs: Signal<T>, rhs: Signal<T>) -> Bool {
+  return lhs.hashValue == rhs.hashValue
+}
+
