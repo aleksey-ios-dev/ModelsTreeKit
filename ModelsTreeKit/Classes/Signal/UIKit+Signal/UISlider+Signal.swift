@@ -14,4 +14,16 @@ extension UISlider {
     get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0.0 as! UISlider).value } }
   }
   
+  public var reachMaximumSignal: Signal<Bool> {
+    get {
+      return valueChangeSignal.map { _ in return true }
+    }
+  }
+  
+  public var reachMinimumSignal: Signal<Bool> {
+    get {
+      return valueChangeSignal.map { [weak self] in self?.minimumValue == $0 }.skipRepeating()
+    }
+  }
+  
 }

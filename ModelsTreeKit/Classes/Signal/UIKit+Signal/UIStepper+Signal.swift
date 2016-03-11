@@ -9,9 +9,22 @@
 import Foundation
 
 extension UIStepper {
-//  public var valueChangeSignal: Signal<Double> { get { return signalEmitter.valueChangeSignal } }
-//  public var reachMinimumSignal: Signal<Bool> { get { return signalEmitter.reachMinimumSignal } }
-//  public var reachMaximumSignal: Signal<Bool> { get { return signalEmitter.reachMaximumSignal } }
+  public var valueChangeSignal: Signal<Double> {
+    get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0.0 as! UIStepper).value } }
+  }
+  
+  public var reachMaximumSignal: Signal<Bool> {
+    get {
+      return valueChangeSignal.map { [weak self] in self?.maximumValue == $0 }.skipRepeating()
+    }
+  }
+  
+  public var reachMinimumSignal: Signal<Bool> {
+    get {
+      return valueChangeSignal.map { [weak self] in self?.minimumValue == $0 }.skipRepeating()
+    }
+  }
+  
 }
 
 //private class StepperSignalEmitter: NSObject {

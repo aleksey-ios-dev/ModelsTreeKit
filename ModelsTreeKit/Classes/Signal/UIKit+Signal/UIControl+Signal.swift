@@ -18,35 +18,38 @@ extension UIControl {
 
 class ControlSignalEmitter: NSObject {
   
-  private static var EmitterHandler: UInt8 = 0
+  private static var EmitterHandler: Int = 0
   private weak var control: UIControl!
-  private var signalsMap = [UInt: [Signal<(UIControl, UIControlEvents)>]]()
+  private var signalsMap = [UInt: Signal<(UIControl, UIControlEvents)>]()
   
   init(control: UIControl) {
     self.control = control
     super.init()
+    print("create emitter\(self)")
+
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<(UIControl, UIControlEvents)> {
-    control.addTarget(self, action: "handleControlEvent:controlEvent:", forControlEvents: events)
-
-    let signal = Signal<(UIControl, UIControlEvents)>()
-    var correspondingSignalsArray = signalsMap[events.rawValue] ?? []
-    correspondingSignalsArray.append(signal)
-    signalsMap[events.rawValue] = correspondingSignalsArray
-    return signal
+    if !signalsMap.keys.contains(events.rawValue) {
+      control.addTarget(self, action: "handleControlEvent:controlEvent:", forControlEvents: events)
+    }
+  
+    let correspondingSignal = signalsMap[events.rawValue] ?? Signal<(UIControl, UIControlEvents)>()
+    signalsMap[events.rawValue] = correspondingSignal
+    
+    return correspondingSignal
   }
   
   @objc
-  func handleControlEvent(control: UIControl, controlEvent: UIControlEvents) {
-//    guard controlEvent.rawValue != 0 else {
-//      signalsMap.values.forEach { $0.forEach { $0.sendNext((control, controlEvent)) } }
-//      return
-//    }
+  func handleControlEvent(control: UIControl, controlEvent: UIEvent) {
+    guard controlEvent.type.rawValue != 0 else {
+      signalsMap.values.forEach { $0.sendNext((control, controlEvent.type)) }
+      return
+    }
     
     signalsMap.keys.forEach { events in
-      if controlEvent.contains(UIControlEvents(rawValue: events)) {
-        signalsMap[events]?.forEach { $0.sendNext(control, controlEvent) }
+      if controlEvent.type.contains(UIControlEvents(rawValue: events)) {
+        signalsMap[events]?.sendNext(control, controlEvent.type)
       }
     }
   }
