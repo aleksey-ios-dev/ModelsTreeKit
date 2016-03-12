@@ -20,7 +20,6 @@ public class Model {
   private let hash = NSProcessInfo.processInfo().globallyUniqueString
   
   deinit {
-    print("DEINIT" +  " \(self)")
     representationDeinitDisposable?.dispose()
   }
   
@@ -187,7 +186,7 @@ extension Model {
     print("\n")
   }
   
-  public final func printSessionTree(params: [PrintParams] = []) {
+  public final func printSessionTree(withParams params: [PrintParams] = []) {
     session()?.printSubtree(params)
   }
   

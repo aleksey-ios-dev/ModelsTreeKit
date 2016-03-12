@@ -8,6 +8,19 @@
 
 import Foundation
 
+public struct Signals {
+  static func merge<U>(signals: [Signal<U>]) -> Signal<U> {
+    let nextSignal = Signal<U>()
+    
+        signals.forEach { signal in
+          signal.subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0)
+            }.putInto(nextSignal.pool)
+        }
+    
+    return nextSignal
+  }
+}
+
 public final class Signal<T> {
   public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash
   
@@ -202,7 +215,7 @@ public final class Signal<T> {
     
     return nextSignal
   }
-
+  
   //Adds blocking signal
   
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {

@@ -12,7 +12,7 @@ extension UISegmentedControl {
   public var selectedSegmentIndexSignal: Signal<Int> {
     get {
       return signalEmitter.signalForControlEvents(.ValueChanged).map { (
-        $0.0 as! UISegmentedControl).selectedSegmentIndex
+        $0 as! UISegmentedControl).selectedSegmentIndex
       }
     }
   }
