@@ -232,6 +232,26 @@ class SignalTests: XCTestCase {
     
   }
   
+  func testThatMergeWorks() {
+    let sigA = Signal<Int>()
+    let sigB = Signal<Int>()
+    let sigC = Signal<Int>()
+    
+    var summary = [Int]()
+    
+    let signals: [Signal<Int>] = [sigA, sigB, sigC]
+    
+    Signals.merge(signals).subscribeNext { summary.append($0) }
+    
+    sigC.sendNext(1)
+    sigB.sendNext(2)
+    sigA.sendNext(3)
+    sigC.sendNext(4)
+    sigA.sendNext(5)
+    
+    XCTAssertEqual(summary, [1, 2, 3, 4, 5])
+  }
+  
 }
 
 

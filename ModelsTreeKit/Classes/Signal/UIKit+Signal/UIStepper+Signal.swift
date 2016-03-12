@@ -15,19 +15,17 @@ extension UIStepper {
   
   public var reachMaximumSignal: Signal<Bool> {
     get {
-      return valueChangeSignal.filter {
-        [weak self] in return self?.maximumValue == $0
-        }.map { [weak self] in self?.maximumValue == $0
-      }.skipRepeating()
+      return valueChangeSignal.filter { [weak self] in
+        return self!.maximumValue == $0
+        }.map { _ in return true}
     }
   }
   
   public var reachMinimumSignal: Signal<Bool> {
     get {
-      return valueChangeSignal.filter {
-        [weak self] in return self?.minimumValue == $0
-        }.map { [weak self] in self?.minimumValue == $0
-      }.skipRepeating()
+      return valueChangeSignal.filter { [weak self] in
+        return self!.minimumValue == $0
+        }.map { _ in return true}
     }
   }
   

@@ -25,25 +25,35 @@ class ControlSignalEmitter: NSObject {
   init(control: UIControl) {
     self.control = control
     super.init()
+    
+    initializeSignalsMap()
+  }
+  
+  func initializeSignalsMap() {
+    let events = [UIControlEvents.EditingChanged.rawValue, UIControlEvents.ValueChanged.rawValue]
+    for event in events {
+      signalsMap[event] = Signal<UIControl>()
+    }
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
-    //REWRITE WITH MERGE
+    var correspondingSignals = [Signal<UIControl>]()
     
-    
-    let correspondingSignal = signalsMap[events.rawValue] ?? Signal<UIControl>(value: control, transient: true)
-    signalsMap[events.rawValue] = correspondingSignal
-    
-    
+    for (key, signal) in signalsMap {
+      if events.contains(UIControlEvents(rawValue: key)) {
+        correspondingSignals.append(signal)
+      }
+    }
+
     if events.contains(.ValueChanged) {
       control.addTarget(self, action: "handleValueChanged:", forControlEvents: .ValueChanged)
     }
-    
+
     if events.contains(.EditingChanged) {
       control.addTarget(self, action: "handleEditingChanged:", forControlEvents: .EditingChanged)
     }
     
-    return correspondingSignal
+    return Signals.merge(correspondingSignals)
   }
   
   @objc
