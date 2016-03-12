@@ -10,6 +10,6 @@ import Foundation
 
 extension UISwitch {
   public var onSignal: Signal<Bool> {
-    get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0.0 as! UISwitch).on } }
+    get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0 as! UISwitch).on } }
   }
 }

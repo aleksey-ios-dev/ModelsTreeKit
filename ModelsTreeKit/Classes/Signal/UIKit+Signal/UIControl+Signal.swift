@@ -10,7 +10,7 @@ import Foundation
 
 extension UIControl {
   
-  public func signalForControlEvents(events: UIControlEvents) -> Signal<(UIControl, UIControlEvents)> {
+  public func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
     return signalEmitter.signalForControlEvents(events)
   }
   
@@ -20,40 +20,41 @@ class ControlSignalEmitter: NSObject {
   
   private static var EmitterHandler: Int = 0
   private weak var control: UIControl!
-  private var signalsMap = [UInt: Signal<(UIControl, UIControlEvents)>]()
+  private var signalsMap = [UInt: Signal<UIControl>]()
   
   init(control: UIControl) {
     self.control = control
     super.init()
-    print("create emitter\(self)")
-
   }
   
-  func signalForControlEvents(events: UIControlEvents) -> Signal<(UIControl, UIControlEvents)> {
-    if !signalsMap.keys.contains(events.rawValue) {
-      control.addTarget(self, action: "handleControlEvent:controlEvent:", forControlEvents: events)
-    }
-  
-    let correspondingSignal = signalsMap[events.rawValue] ?? Signal<(UIControl, UIControlEvents)>()
+  func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
+    //REWRITE WITH MERGE
+    
+    
+    let correspondingSignal = signalsMap[events.rawValue] ?? Signal<UIControl>(value: control, transient: true)
     signalsMap[events.rawValue] = correspondingSignal
+    
+    
+    if events.contains(.ValueChanged) {
+      control.addTarget(self, action: "handleValueChanged:", forControlEvents: .ValueChanged)
+    }
+    
+    if events.contains(.EditingChanged) {
+      control.addTarget(self, action: "handleEditingChanged:", forControlEvents: .EditingChanged)
+    }
     
     return correspondingSignal
   }
   
   @objc
-  func handleControlEvent(control: UIControl, controlEvent: UIEvent) {
-    guard controlEvent.type.rawValue != 0 else {
-      signalsMap.values.forEach { $0.sendNext((control, controlEvent.type)) }
-      return
-    }
-    
-    signalsMap.keys.forEach { events in
-      if controlEvent.type.contains(UIControlEvents(rawValue: events)) {
-        signalsMap[events]?.sendNext(control, controlEvent.type)
-      }
-    }
+  func handleValueChanged(control: UIControl) {
+    signalsMap[UIControlEvents.ValueChanged.rawValue]?.sendNext(control)
   }
   
+  @objc
+  func handleEditingChanged(control: UIControl) {
+    signalsMap[UIControlEvents.EditingChanged.rawValue]?.sendNext(control)
+  }
 }
 
 extension UIControl {
