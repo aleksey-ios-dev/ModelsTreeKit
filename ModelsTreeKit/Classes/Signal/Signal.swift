@@ -23,9 +23,8 @@ public struct Signals {
 
 public final class ValueKeepingSignal<T>: Signal<T> {
 
-  var value: T?
-
   public init(value: T? = nil) {
+    super.init()
     self.value = value
   }
   
@@ -49,6 +48,7 @@ public class Signal<T> {
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
+  var value: T?
 
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
@@ -66,8 +66,8 @@ public class Signal<T> {
   
   public init() {}
   
-  public func sendNext(value: T) {
-    nextHandlers.forEach { $0.invoke(value) }
+  public func sendNext(newValue: T) {
+    nextHandlers.forEach { $0.invoke(newValue) }
   }
   
   public func sendCompleted() {
@@ -100,7 +100,9 @@ public class Signal<T> {
   //Transforms value, can change passed value type
   
   public func map<U>(handler: T -> U) -> Signal<U> {
-    let nextSignal = Signal<U>()
+    var nextSignal: Signal<U>!
+    if self is ValueKeepingSignal { nextSignal = ValueKeepingSignal<U>() }
+    else { nextSignal = Signal<U>() }
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext(handler($0)) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
     
@@ -111,6 +113,17 @@ public class Signal<T> {
     let nextSignal = ValueKeepingSignal<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
+    if let value = self.value { nextSignal.sendNext(value) }
+    
+    return nextSignal
+  }
+  
+  private func transientMap() -> Signal<T> {
+    let nextSignal = Signal<T>()
+    subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
+    chainSignal(nextSignal)
+    
+    if let value = self.value { nextSignal.sendNext(value) }
     
     return nextSignal
   }
@@ -118,7 +131,9 @@ public class Signal<T> {
   //Adds a condition for sending next value, doesn't change passed value type
   
   public func filter(handler: T -> Bool) -> Signal<T> {
-    let nextSignal = Signal<T>()
+    var nextSignal: Signal<T>!
+    if self is ValueKeepingSignal { nextSignal = ValueKeepingSignal<T>() }
+    else { nextSignal = Signal<T>() }
     subscribeNext { [weak nextSignal] in
       if handler($0) { nextSignal?.sendNext($0) }
     }.putInto(nextSignal.pool)
@@ -143,6 +158,27 @@ public class Signal<T> {
   
   //Sends combined value when any of signals fire
   
+  private func distinctLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+    let transientSelf = transientMap()
+    let transientOther = otherSignal.transientMap()
+    
+    let nextSignal = ValueKeepingSignal<(T?, U?)>()
+    
+    transientOther.subscribeNext { [weak transientSelf, weak nextSignal] in
+      guard let _self = transientSelf, let nextSignal = nextSignal else { return }
+      nextSignal.sendNext((_self.value, $0))
+    }.putInto(nextSignal.pool)
+    
+    transientSelf.subscribeNext { [weak transientOther, weak nextSignal] in
+      guard let otherSignal = transientOther, let nextSignal = nextSignal else { return }
+      nextSignal.sendNext(($0, otherSignal.value))
+    }.putInto(nextSignal.pool)
+    
+    chainSignal(nextSignal)
+    
+    return nextSignal
+  }
+  
   public func combineLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let persistentSelf = persistentMap()
     let persistentOther = otherSignal.persistentMap()
@@ -150,14 +186,14 @@ public class Signal<T> {
     let nextSignal = ValueKeepingSignal<(T?, U?)>()
     
     persistentOther.subscribeNext { [weak persistentSelf, weak nextSignal] in
-      guard let _persistentSelf = persistentSelf, let nextSignal = nextSignal else { return }
-      nextSignal.sendNext((_persistentSelf.value, $0))
-    }.putInto(nextSignal.pool)
+      guard let _self = persistentSelf, let nextSignal = nextSignal else { return }
+      nextSignal.sendNext((_self.value, $0))
+      }.putInto(nextSignal.pool)
     
     persistentSelf.subscribeNext { [weak persistentOther, weak nextSignal] in
       guard let otherSignal = persistentOther, let nextSignal = nextSignal else { return }
       nextSignal.sendNext(($0, otherSignal.value))
-    }.putInto(nextSignal.pool)
+      }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -198,10 +234,10 @@ public class Signal<T> {
   //Zip
   
   public func zip<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let nextSignal = combineLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
+    let nextSignal = distinctLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
-      
+
       var reducedSelf = reducedValue?.0.1
       if reducedSelf == nil { reducedSelf = [T]() }
       
@@ -213,7 +249,7 @@ public class Signal<T> {
       
       var zippedSelfValue: T? = nil
       var zippedOtherValue: U? = nil
-      
+
       if !reducedSelf!.isEmpty && !reducedOther!.isEmpty {
         zippedSelfValue = reducedSelf!.first
         zippedOtherValue = reducedOther!.first
@@ -232,12 +268,15 @@ public class Signal<T> {
     return nextSignal
   }
   
-  //Adds blocking signal
+  //Adds blocking signal. false - blocks, true - passes
   
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
     let persistentBlocker = blocker.persistentMap()
-    return filter { [weak persistentBlocker] newValue in
-      guard let persistentBlocker = persistentBlocker else { return true }
+    return filter { newValue in
+      
+      guard let _ = persistentBlocker.value else {
+        return true
+      }
       return persistentBlocker.value == false
     }
   }

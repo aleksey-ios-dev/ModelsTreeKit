@@ -11,6 +11,9 @@ import XCTest
 @testable import ModelsTreeKit
 
 class SignalTests: XCTestCase {
+  
+  var blocker = Signal<Bool>()
+  
   func testThatSubscriptionPassesValue() {
     let signal = Signal<Int>()
     
@@ -46,8 +49,8 @@ class SignalTests: XCTestCase {
   }
   
   func testThatCombineMergesTwoSignals() {
-    let numberSignal = Signal<Int>()
-    let textSignal = Signal<String>()
+    let numberSignal = ValueKeepingSignal<Int>()
+    let textSignal = ValueKeepingSignal<String>()
     
     
     var result = [String]()
@@ -97,13 +100,15 @@ class SignalTests: XCTestCase {
   
   func testThatBlockerBlocksSignal() {
     let testSignal = Signal<Int>()
-    let blocker = Signal<Bool>()
+//    let blocker = Signal<Bool>()
     
     testSignal.blockWith(blocker).subscribeNext { _ in
       XCTFail()
     }
     
     blocker.sendNext(true)
+  
+
     testSignal.sendNext(4)
   }
   
