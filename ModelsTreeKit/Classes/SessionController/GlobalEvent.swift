@@ -1,5 +1,5 @@
 //
-//  SessionEvent.swift
+//  GlobalEvent.swift
 //  ModelsTreeKit
 //
 //  Created by aleksey on 28.02.16.

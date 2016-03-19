@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		5B0DE7091C9507E100D02053 /* UIButton+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */; };
 		5B1508EC1C2943E6009A880C /* DeinitSignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */; };
-		5B18E0D11C8359D900FD22B4 /* SessionEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D01C8359D900FD22B4 /* SessionEvent.swift */; };
+		5B18E0D11C8359D900FD22B4 /* GlobalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */; };
 		5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */; };
 		5B18E0D71C835F6000FD22B4 /* NSObject+Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */; };
 		5B18E10D1C853C1900FD22B4 /* ValuesStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E10C1C853C1900FD22B4 /* ValuesStack.swift */; };
@@ -92,7 +92,7 @@
 /* Begin PBXFileReference section */
 		5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Signal.swift"; sourceTree = "<group>"; };
 		5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitSignalTests.swift; sourceTree = "<group>"; };
-		5B18E0D01C8359D900FD22B4 /* SessionEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionEvent.swift; sourceTree = "<group>"; };
+		5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalEvent.swift; sourceTree = "<group>"; };
 		5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+DeinitObservable.swift"; sourceTree = "<group>"; };
 		5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Pool.swift"; sourceTree = "<group>"; };
 		5B18E10C1C853C1900FD22B4 /* ValuesStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValuesStack.swift; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 				5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */,
 				5BB53FE91C25D60500246130 /* SessionCredentials.swift */,
 				5BB53FEB1C25D60500246130 /* UserSession.swift */,
-				5B18E0D01C8359D900FD22B4 /* SessionEvent.swift */,
+				5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */,
 			);
 			path = SessionController;
 			sourceTree = "<group>";
@@ -508,7 +508,7 @@
 				5BB540301C25D60500246130 /* Signal.swift in Sources */,
 				5BB5402E1C25D60500246130 /* Disposable.swift in Sources */,
 				5BB540201C25D60500246130 /* Session.swift in Sources */,
-				5B18E0D11C8359D900FD22B4 /* SessionEvent.swift in Sources */,
+				5B18E0D11C8359D900FD22B4 /* GlobalEvent.swift in Sources */,
 				5BB5401C1C25D60500246130 /* ServiceLocator.swift in Sources */,
 				5BB540161C25D60500246130 /* TableViewCell.swift in Sources */,
 				5B1F9DBB1C8BC5AA00F96644 /* USegmentedControl+Signal.swift in Sources */,
