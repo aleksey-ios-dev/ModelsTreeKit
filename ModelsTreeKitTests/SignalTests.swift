@@ -11,55 +11,63 @@ import XCTest
 @testable import ModelsTreeKit
 
 class SignalTests: XCTestCase {
-    func testThatSubscriptionPassesValue() {
-        let signal = Signal<Int>()
-        
-        signal.subscribeNext { o in
-            XCTAssertEqual(o, 5)
-        }
-        
-        signal.sendNext(5)
+  func testThatSubscriptionPassesValue() {
+    let signal = Signal<Int>()
+    
+    signal.subscribeNext { o in
+      XCTAssertEqual(o, 5)
     }
     
-    func testThatFilterDoesntPassNonConformingValue() {
-        let signal = Signal<Int>()
-        
-        signal.filter({object in return object > 6
-            
-        }).subscribeNext() { _ in
-            XCTFail()
-        }
-        
-        signal.sendNext(5)
+    signal.sendNext(5)
+  }
+  
+  func testThatFilterDoesntPassNonConformingValue() {
+    let signal = Signal<Int>()
+    
+    signal.filter({object in return object > 6
+      
+    }).subscribeNext() { _ in
+      XCTFail()
     }
-
-    func testThatMapTransformsValue() {
-        let signal = Signal<Int>()
-        
-        signal.map { o in
-            return "result is: \(o)"
-            }.subscribeNext { o in
-                XCTAssertEqual("result is: 5", o)
-        }
-        
-        signal.sendNext(5)
+    
+    signal.sendNext(5)
+  }
+  
+  func testThatMapTransformsValue() {
+    let signal = Signal<Int>()
+    
+    signal.map { o in
+      return "result is: \(o)"
+      }.subscribeNext { o in
+        XCTAssertEqual("result is: 5", o)
     }
-
-    func testThatCombineMergesTwoSignals() {
-        let numberSignal = Signal<Int>()
-        let textSignal = Signal<String>()
-        
-        numberSignal.combineLatest(textSignal).filter { number, text in
-            return number != nil && text != nil
-            }.map { number, string in
-                return "\(number!) \(string!)"
-        }.subscribeNext() { result in
-            XCTAssertEqual("50 hello", result)
-        }
-        
-        numberSignal.sendNext(50)
-        textSignal.sendNext("hello")
+    
+    signal.sendNext(5)
+  }
+  
+  func testThatCombineMergesTwoSignals() {
+    let numberSignal = Signal<Int>()
+    let textSignal = Signal<String>()
+    
+    
+    var result = [String]()
+    
+    numberSignal.combineLatest(textSignal).filter { number, text in
+      return number != nil && text != nil
+      }.map { number, string in
+        return "\(number!) \(string!)"
+      }.subscribeNext() {
+        result.append($0)
     }
+    
+    numberSignal.sendNext(1)
+    textSignal.sendNext("a")
+    textSignal.sendNext("b")
+    numberSignal.sendNext(2)
+    numberSignal.sendNext(3)
+    
+    XCTAssertEqual(["1 a", "1 b", "2 b", "3 b"], result)
+  }
   
   
   func testThatCombineBoundWorks() {
@@ -87,23 +95,23 @@ class SignalTests: XCTestCase {
   }
   
   
-    func testThatBlockerBlocksSignal() {
-        let testSignal = Signal<Int>()
-        let blocker = Signal<Bool>()
-        
-        testSignal.blockWith(blocker).subscribeNext { _ in
-            XCTFail()
-        }
-        
-        blocker.sendNext(true)
-        testSignal.sendNext(4)
+  func testThatBlockerBlocksSignal() {
+    let testSignal = Signal<Int>()
+    let blocker = Signal<Bool>()
+    
+    testSignal.blockWith(blocker).subscribeNext { _ in
+      XCTFail()
     }
+    
+    blocker.sendNext(true)
+    testSignal.sendNext(4)
+  }
   
   func testThatSkipRepeatingWorks() {
     let testSignal = Signal<Int>()
     let expectedResult = [1, 2, 3, 2]
     var actualResult = [Int]()
-
+    
     testSignal.skipRepeating().subscribeNext {
       actualResult.append($0)
     }
@@ -173,7 +181,7 @@ class SignalTests: XCTestCase {
     testSignal.reduce { (newValue, reducedValue) -> [Int] in
       var unwrappedReduced: [Int] = reducedValue ?? [Int]()
       unwrappedReduced.append(newValue)
-  
+      
       return unwrappedReduced
       }.subscribeNext {
         actualResult = $0
