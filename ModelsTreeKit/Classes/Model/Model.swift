@@ -148,29 +148,29 @@ public class Model {
   
   private var registeredGlobalEvents = Set<String>()
   
-  public final func registerForEvent(name: SessionEventName) {
+  public final func registerForEvent(name: GlobalEventName) {
     registeredGlobalEvents.insert(name.rawValue)
   }
   
-  public final func unregisterFromEvent(name: SessionEventName) {
+  public final func unregisterFromEvent(name: GlobalEventName) {
     registeredGlobalEvents.remove(name.rawValue)
   }
   
-  public final func isRegisteredForEvent(name: SessionEventName) -> Bool {
+  public final func isRegisteredForEvent(name: GlobalEventName) -> Bool {
     return registeredGlobalEvents.contains(name.rawValue)
   }
   
   public final func raiseSessionEvent(
-    name: SessionEventName,
+    name: GlobalEventName,
     withObject object: Any? = nil,
     userInfo: [String: Any] = [:]) {
-    let event = SessionEvent(name: name, object: object, userInfo: userInfo)
+    let event = GlobalEvent(name: name, object: object, userInfo: userInfo)
     session()?.propagateEvent(event)
   }
   
-  public func handleSessionEvent(event: SessionEvent) {}
+  public func handleSessionEvent(event: GlobalEvent) {}
   
-  private func propagateEvent(event: SessionEvent) {
+  private func propagateEvent(event: GlobalEvent) {
     if isRegisteredForEvent(event.name) { handleSessionEvent(event) }
     childModels().forEach { $0.propagateEvent(event) }
   }

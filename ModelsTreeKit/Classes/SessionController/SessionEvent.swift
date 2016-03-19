@@ -6,20 +6,20 @@
 //  Copyright © 2016 aleksey chernish. All rights reserved.
 //
 
-public protocol SessionEventName {
+public protocol GlobalEventName {
   var rawValue: String { get }
 }
 
-public func ==(lhs: SessionEventName, rhs: SessionEventName) -> Bool {
+public func ==(lhs: GlobalEventName, rhs: GlobalEventName) -> Bool {
   return lhs.rawValue == rhs.rawValue
 }
 
-public struct SessionEvent {
-  public var name: SessionEventName
+public struct GlobalEvent {
+  public var name: GlobalEventName
   public var object: Any?
   public var userInfo: [String: Any]
   
-  public init(name: SessionEventName, object: Any? = nil, userInfo: [String: Any] = [:]) {
+  public init(name: GlobalEventName, object: Any? = nil, userInfo: [String: Any] = [:]) {
     self.name = name
     self.object = object
     self.userInfo = userInfo
@@ -31,10 +31,10 @@ public struct SessionEvent {
 
 }
 
-extension SessionEvent: Equatable, Hashable {
+extension GlobalEvent: Equatable, Hashable {
   
 }
 
-public func ==(lhs: SessionEvent, rhs: SessionEvent) -> Bool {
+public func ==(lhs: GlobalEvent, rhs: GlobalEvent) -> Bool {
   return lhs.name.rawValue == rhs.name.rawValue
 }
