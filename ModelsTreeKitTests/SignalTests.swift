@@ -228,6 +228,7 @@ class SignalTests: XCTestCase {
     signalB.sendNext("d")
     signalA.sendNext(4)
     
+    print(result)
     XCTAssertEqual(result, ["1a", "2b", "3c", "4d"])
     
   }

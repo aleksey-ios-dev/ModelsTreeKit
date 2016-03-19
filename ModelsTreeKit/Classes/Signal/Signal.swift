@@ -21,39 +21,53 @@ public struct Signals {
   }
 }
 
-public final class Signal<T> {
+public final class ValueKeepingSignal<T>: Signal<T> {
+
+  var value: T?
+
+  public init(value: T? = nil) {
+    self.value = value
+  }
+  
+  public override func sendNext(value: T) {
+    super.sendNext(value)
+    self.value = value
+  }
+  
+  public override func subscribeNext(handler: SignalHandler) -> Disposable {
+    let subscription = super.subscribeNext(handler) as! Subscription<T>
+    if let value = value { subscription.handler?(value) }
+    
+    return subscription
+  }
+  
+}
+
+public class Signal<T> {
   public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash
   
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
-  var value: T?
 
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
   //Destructor is executed before the signal's deallocation. A good place to cancel your network operation.
-  
 
   var destructor: (Void -> Void)?
   
   private var pool = AutodisposePool()
-  private var transient = false
   
   deinit {
     destructor?()
     pool.drain()
   }
   
-  public init(value: T? = nil, transient: Bool = false) {
-    self.value = value
-    self.transient = transient
-  }
+  public init() {}
   
-  public func sendNext(data: T) {
-    nextHandlers.forEach { $0.invoke(data) }
-    
-    if !transient { value = data }
+  public func sendNext(value: T) {
+    nextHandlers.forEach { $0.invoke(value) }
   }
   
   public func sendCompleted() {
@@ -65,7 +79,6 @@ public final class Signal<T> {
   public func subscribeNext(handler: SignalHandler) -> Disposable {
     let wrapper = Subscription(handler: handler, signal: self)
     nextHandlers.append(wrapper)
-    if let value = value { wrapper.handler?(value) }
     
     return wrapper
   }
@@ -94,8 +107,8 @@ public final class Signal<T> {
     return nextSignal
   }
   
-  private func transientMap() -> Signal<T> {
-    let nextSignal = Signal<T>(transient: true)
+  private func persistentMap() -> ValueKeepingSignal<T> {
+    let nextSignal = ValueKeepingSignal<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
     
@@ -118,7 +131,7 @@ public final class Signal<T> {
   //Applies passed values to the cumulative reduced value
   
   public func reduce<U>(handler: (newValue: T, reducedValue: U?) -> U) -> Signal<U> {
-    let nextSignal = Signal<U>()
+    let nextSignal = ValueKeepingSignal<U>()
     subscribeNext { [weak nextSignal] in
       nextSignal?.sendNext(handler(newValue: $0, reducedValue: nextSignal?.value))
     }.putInto(nextSignal.pool)
@@ -131,15 +144,18 @@ public final class Signal<T> {
   //Sends combined value when any of signals fire
   
   public func combineLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
-    let nextSignal = Signal<(T?, U?)>()
+    let persistentSelf = persistentMap()
+    let persistentOther = otherSignal.persistentMap()
     
-    otherSignal.subscribeNext { [weak self, weak nextSignal] in
-      guard let strongSelf = self, let nextSignal = nextSignal else { return }
-      nextSignal.sendNext((strongSelf.value, $0))
+    let nextSignal = ValueKeepingSignal<(T?, U?)>()
+    
+    persistentOther.subscribeNext { [weak persistentSelf, weak nextSignal] in
+      guard let _persistentSelf = persistentSelf, let nextSignal = nextSignal else { return }
+      nextSignal.sendNext((_persistentSelf.value, $0))
     }.putInto(nextSignal.pool)
     
-    subscribeNext { [weak otherSignal, weak nextSignal] in
-      guard let otherSignal = otherSignal, let nextSignal = nextSignal else { return }
+    persistentSelf.subscribeNext { [weak persistentOther, weak nextSignal] in
+      guard let otherSignal = persistentOther, let nextSignal = nextSignal else { return }
       nextSignal.sendNext(($0, otherSignal.value))
     }.putInto(nextSignal.pool)
     
@@ -157,7 +173,7 @@ public final class Signal<T> {
   //Sends combined value every time when both signals fire at least once
   
   public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let nextSignal = transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
+    let nextSignal = combineLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
 
       var reducedSelfValue: T? = reducedValue?.0.1
       var reducedOtherValue: U? = reducedValue?.1.1
@@ -182,7 +198,7 @@ public final class Signal<T> {
   //Zip
   
   public func zip<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    let nextSignal = transientMap().combineLatest(otherSignal.transientMap()).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
+    let nextSignal = combineLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
       
@@ -219,9 +235,10 @@ public final class Signal<T> {
   //Adds blocking signal
   
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
-    return filter { [weak blocker] newValue in
-      guard let blocker = blocker else { return true }
-      return blocker.value == false
+    let persistentBlocker = blocker.persistentMap()
+    return filter { [weak persistentBlocker] newValue in
+      guard let persistentBlocker = persistentBlocker else { return true }
+      return persistentBlocker.value == false
     }
   }
   
@@ -248,7 +265,8 @@ extension Signal where T: Equatable {
   
   //BUG: locks propagation of initial value
   public func skipRepeating() -> Signal<T> {
-    return filter { [weak self] newValue in return newValue != self?.value }
+    let persistentSelf = persistentMap()
+    return persistentSelf.filter { [weak persistentSelf] newValue in return newValue != persistentSelf?.value }
   }
   
 }
@@ -258,7 +276,8 @@ extension Signal where T: Comparable {
   //Pass values only in ascending order
   
   public func passAscending() -> Signal<T> {
-    let nextSignal = Signal<T>()
+    let nextSignal = ValueKeepingSignal<T>()
+    
     subscribeNext { [weak nextSignal] newValue in
       if nextSignal?.value == nil || nextSignal?.value < newValue {
         nextSignal?.sendNext(newValue)
@@ -273,7 +292,7 @@ extension Signal where T: Comparable {
   //Pass values only in descending order
   
   public func passDescending() -> Signal<T> {
-    let nextSignal = Signal<T>()
+    let nextSignal = ValueKeepingSignal<T>()
     subscribeNext { [weak nextSignal] newValue in
       if nextSignal?.value == nil || nextSignal?.value > newValue {
         nextSignal?.sendNext(newValue)

@@ -32,8 +32,8 @@ class ControlSignalEmitter: NSObject {
   func initializeSignalsMap() {
     
     //Hot signals
-    signalsMap[UIControlEvents.ValueChanged.rawValue] = Signal<UIControl>(value: control)
-    signalsMap[UIControlEvents.EditingChanged.rawValue] = Signal<UIControl>(value: control)
+    signalsMap[UIControlEvents.ValueChanged.rawValue] = ValueKeepingSignal<UIControl>(value: control)
+    signalsMap[UIControlEvents.EditingChanged.rawValue] = ValueKeepingSignal<UIControl>(value: control)
     
     //Cold signals
     signalsMap[UIControlEvents.EditingDidEnd.rawValue] = Signal<UIControl>()
