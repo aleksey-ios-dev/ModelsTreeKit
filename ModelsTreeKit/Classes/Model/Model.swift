@@ -104,32 +104,32 @@ public class Model {
   //Errors
   
   //TODO: extensions
-  private var registeredErrors2 = [String: Set<Int>]()
+  private var registeredErrors = [String: Set<Int>]()
   
   public final func registerForError(code: ErrorCode, inDomain domain: ErrorDomain) {
-    var allCodes = registeredErrors2[domain.title] ?? []
+    var allCodes = registeredErrors[domain.rawValue] ?? []
     allCodes.insert(code.rawValue)
-    registeredErrors2[domain.title] = allCodes
+    registeredErrors[domain.rawValue] = allCodes
   }
   
   public final func registerForErrorCodes(codes: [ErrorCode], inDomain domain: ErrorDomain) {
-    var allCodes = registeredErrors2[domain.title] ?? []
+    var allCodes = registeredErrors[domain.rawValue] ?? []
     let mappedCodes = codes.map { $0.rawValue }
     mappedCodes.forEach { allCodes.insert($0) }
-    registeredErrors2[domain.title] = allCodes
+    registeredErrors[domain.rawValue] = allCodes
   }
   
   public final func unregisterFromError(code code: ErrorCode, inDomain domain: ErrorDomain) {
-    if let codes = registeredErrors2[domain.title] {
+    if let codes = registeredErrors[domain.rawValue] {
       var filteredCodes = codes
       filteredCodes.remove(code.rawValue
       )
-      registeredErrors2[domain.title] = filteredCodes
+      registeredErrors[domain.rawValue] = filteredCodes
     }
   }
   
   public final func isRegisteredForError(error: Error) -> Bool {
-    guard let codes = registeredErrors2[error.domain.title] else { return false }
+    guard let codes = registeredErrors[error.domain.rawValue] else { return false }
     return codes.contains(error.code.rawValue)
   }
   
@@ -193,7 +193,6 @@ extension Model {
   
   public enum PrintParams {
     case Representation
-    case ChildrenCount
     case GlobalEvents
     case BubbleNotifications
     case Errors
@@ -223,10 +222,6 @@ extension Model {
       output += "  | (R)"
     }
     
-    if params.contains(.ChildrenCount) {
-      output += "  / children: \(childModels().count)"
-    }
-    
     if params.contains(.GlobalEvents) && !registeredGlobalEvents.isEmpty {
       output += "  | (E):"
       registeredGlobalEvents.forEach { output += " \($0)" }
@@ -237,9 +232,9 @@ extension Model {
       registeredBubbles.forEach { output += " \($0)" }
     }
     
-    if params.contains(.Errors) && !registeredErrors2.isEmpty {
+    if params.contains(.Errors) && !registeredErrors.isEmpty {
       output += "  | (Err): "
-      for (domain, codes) in registeredErrors2 {
+      for (domain, codes) in registeredErrors {
         output += "\(domain) > "
         codes.forEach { output += "\($0) " }
       }
