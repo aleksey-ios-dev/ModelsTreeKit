@@ -191,24 +191,24 @@ public func ==(lhs: Model, rhs: Model) -> Bool {
 
 extension Model {
   
-  public enum PrintParams {
+  public enum TreeInfoOptions {
     case Representation
     case GlobalEvents
     case BubbleNotifications
     case Errors
   }
   
-  public final func printSubtree(params: [PrintParams] = []) {
+  public final func printSubtree(params: [TreeInfoOptions] = []) {
     print("\n")
     printTreeLevel(0, params: params)
     print("\n")
   }
   
-  public final func printSessionTree(withParams params: [PrintParams] = []) {
+  public final func printSessionTree(withOptions params: [TreeInfoOptions] = []) {
     session()?.printSubtree(params)
   }
   
-  private func printTreeLevel(level: Int, params: [PrintParams] = []) {
+  private func printTreeLevel(level: Int, params: [TreeInfoOptions] = []) {
     var output = "|"
     let indent = "  |"
     
