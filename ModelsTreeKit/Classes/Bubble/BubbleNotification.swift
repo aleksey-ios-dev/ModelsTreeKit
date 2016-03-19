@@ -6,19 +6,29 @@
 //  Copyright © 2016 aleksey chernish. All rights reserved.
 //
 
+public protocol BubbleNotificationName {
+  var rawValue: String { get }
+}
+
+public func ==(lhs: BubbleNotificationName, rhs: BubbleNotificationName) -> Bool {
+  return lhs.rawValue == rhs.rawValue
+}
+
 import Foundation
 
 public struct BubbleNotification {
-  public var code: Int
+  public var name: BubbleNotificationName
   public var domain: String
+  public var object: Any?
   
-  public init(code: Int, domain: String) {
-    self.code = code
+  public init(name: BubbleNotificationName, domain: String, object: Any? = nil) {
+    self.name = name
     self.domain = domain
+    self.object = object
   }
   
   public var hashValue: Int {
-    return (code.hashValue &+ domain.hashValue).hashValue
+    return (name.rawValue.hashValue &+ name.rawValue.hashValue).hashValue
   }
 }
 
@@ -27,5 +37,5 @@ extension BubbleNotification: Hashable, Equatable {
 }
 
 public func ==(a: BubbleNotification, b: BubbleNotification) -> Bool {
-  return a.code == b.code && a.domain == b.domain
+  return a.name == b.name && a.domain == b.domain
 }

@@ -75,25 +75,25 @@ public class Model {
   
   //TODO: extensions
 
-  private var registeredBubbles = Set<BubbleNotification>()
+  private var registeredBubbles = Set<Int>()
   
-  public final func registerForBubbleNotification(bubble: BubbleNotification) {
-    registeredBubbles.insert(bubble)
+  public final func registerForBubbleNotification(name: BubbleNotificationName, inDomain domain: String) {
+    registeredBubbles.insert(name.rawValue.hashValue + domain.hashValue)
   }
   
-  public final func unregisterFromBubbleNotification(bubble: BubbleNotification) {
-    registeredBubbles.remove(bubble)
+  public final func unregisterFromBubbleNotification(name: BubbleNotificationName, inDomain domain: String) {
+    registeredBubbles.remove(name.rawValue.hashValue + domain.hashValue)
   }
   
-  public final func isRegisteredForBubbleNotification(bubble: BubbleNotification) -> Bool {
-    return registeredBubbles.contains(bubble)
+  public final func isRegisteredForBubbleNotification(name: BubbleNotificationName, inDomain domain: String) -> Bool {
+    return registeredBubbles.contains(name.rawValue.hashValue + domain.hashValue)
   }
   
-  public func raiseBubbleNotification(bubble: BubbleNotification, sender: Model) {
-    if isRegisteredForBubbleNotification(bubble) {
-      handleBubbleNotification(bubble, sender: sender)
+  public func raiseBubbleNotification(name: BubbleNotificationName, domain: String, withObject object: Any? = nil, sender: Model) {
+    if isRegisteredForBubbleNotification(name, inDomain: domain) {
+      handleBubbleNotification(BubbleNotification(name: name, domain: domain, object: object), sender: sender)
     } else {
-      parent?.raiseBubbleNotification(bubble, sender: sender)
+      parent?.raiseBubbleNotification(name, domain: domain, withObject: object, sender: sender)
     }
   }
   
