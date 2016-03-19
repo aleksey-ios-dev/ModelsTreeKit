@@ -27,11 +27,15 @@ public class Session: Model {
     super.init(parent: nil)
   }
   
+  public func sessionDidLoad() {
+  }
+  
   func openWithController(controller: SessionController) {
     self.controller = controller
     self.services.takeOff()
     self.controller?.sessionDidOpen(self)
     self.controller?.sessionDidPrepareToShowRootRepresenation(self)
+    sessionDidLoad()
   }
   
   public func closeWithParams(params: Any?) {

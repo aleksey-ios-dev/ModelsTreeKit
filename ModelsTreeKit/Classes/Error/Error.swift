@@ -20,7 +20,7 @@ public protocol ErrorCode {
 
 public protocol ErrorDomain {
   
-    var title: String { get }
+    var rawValue: String { get }
   
 }
 
@@ -43,11 +43,11 @@ public struct Error: ErrorType {
     }
     
     private func descriptionString() -> String {
-        return "\(domain.title).\(code.rawValue)"
+        return "\(domain.rawValue).\(code.rawValue)"
     }
     
     public var hashValue: Int {
-        return (code.rawValue.hashValue + domain.title.hashValue).hashValue
+        return (code.rawValue.hashValue + domain.rawValue.hashValue).hashValue
     }
   
 }
@@ -57,5 +57,5 @@ extension Error: Hashable, Equatable {
 }
 
 public func ==(a: Error, b: Error) -> Bool {
-    return a.code.rawValue == b.code.rawValue && a.domain.title == b.domain.title
+    return a.code.rawValue == b.code.rawValue && a.domain.rawValue == b.domain.rawValue
 }

@@ -9,6 +9,7 @@
 import Foundation
 
 public class UserSession: Session {
+  
   public init(params: SessionCompletionParams) {
     super.init()
     
@@ -21,6 +22,7 @@ public class UserSession: Session {
       credentials = SessionCredentials(archivationProxy: credentialsProxy)
     }
   }
+  
 }
 
 extension UserSession: Archivable {
