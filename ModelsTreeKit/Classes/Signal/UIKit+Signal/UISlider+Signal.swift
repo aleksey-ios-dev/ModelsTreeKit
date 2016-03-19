@@ -10,13 +10,13 @@ import Foundation
 
 extension UISlider {
   
-  public var valueChangeSignal: Signal<Float> {
+  public var valueSignal: Signal<Float> {
     get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0 as! UISlider).value }.skipRepeating() }
   }
   
   public var reachMaximumSignal: Signal<Bool> {
     get {
-      return valueChangeSignal.filter { [weak self] in
+      return valueSignal.filter { [weak self] in
         return self!.maximumValue == $0
       }.map { _ in return true}
     }
@@ -24,7 +24,7 @@ extension UISlider {
   
   public var reachMinimumSignal: Signal<Bool> {
     get {
-      return valueChangeSignal.filter { [weak self] in
+      return valueSignal.filter { [weak self] in
         return self!.minimumValue == $0
         }.map { _ in return true}
     }

@@ -1,5 +1,5 @@
 //
-//  Bubble.swift
+//  BubbleNotification.swift
 //  ModelsTreeKit
 //
 //  Created by aleksey on 27.02.16.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Bubble {
+public struct BubbleNotification {
   public var code: Int
   public var domain: String
   
@@ -18,14 +18,14 @@ public struct Bubble {
   }
   
   public var hashValue: Int {
-    return (code.hashValue + domain.hashValue).hashValue
+    return (code.hashValue &+ domain.hashValue).hashValue
   }
 }
 
-extension Bubble: Hashable, Equatable {
+extension BubbleNotification: Hashable, Equatable {
   
 }
 
-public func ==(a: Bubble, b: Bubble) -> Bool {
+public func ==(a: BubbleNotification, b: BubbleNotification) -> Bool {
   return a.code == b.code && a.domain == b.domain
 }

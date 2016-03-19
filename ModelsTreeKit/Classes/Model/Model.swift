@@ -75,21 +75,21 @@ public class Model {
   
   //TODO: extensions
 
-  private var registeredBubbles = Set<Bubble>()
+  private var registeredBubbles = Set<BubbleNotification>()
   
-  public final func registerForBubbleNotification(bubble: Bubble) {
+  public final func registerForBubbleNotification(bubble: BubbleNotification) {
     registeredBubbles.insert(bubble)
   }
   
-  public final func unregisterFromBubbleNotification(bubble: Bubble) {
+  public final func unregisterFromBubbleNotification(bubble: BubbleNotification) {
     registeredBubbles.remove(bubble)
   }
   
-  public final func isRegisteredForBubbleNotification(bubble: Bubble) -> Bool {
+  public final func isRegisteredForBubbleNotification(bubble: BubbleNotification) -> Bool {
     return registeredBubbles.contains(bubble)
   }
   
-  public func raiseBubbleNotification(bubble: Bubble, sender: Model) {
+  public func raiseBubbleNotification(bubble: BubbleNotification, sender: Model) {
     if isRegisteredForBubbleNotification(bubble) {
       handleBubbleNotification(bubble, sender: sender)
     } else {
@@ -97,7 +97,7 @@ public class Model {
     }
   }
   
-  public func handleBubbleNotification(bubble: Bubble, sender: Model) {
+  public func handleBubbleNotification(bubble: BubbleNotification, sender: Model) {
     //Implemented by subclasses
   }
   
@@ -137,28 +137,33 @@ public class Model {
   
   //Global events
   
-  private var eventHandlerWrappers = [SessionEventWrapper]()
+  private var registeredGlobalEvents = Set<Int>()
   
-  public final func registerForEvent(event: SessionEvent, handler: EventHandler) {
-    unregisterFromEvent(event)
-    eventHandlerWrappers.append(SessionEventWrapper(event: event, handler: handler))
+  public final func registerForEvent(name: SessionEventName) {
+    registeredGlobalEvents.insert(name.rawValue.hash)
   }
   
-  public final func unregisterFromEvent(event: SessionEvent) {
-    eventHandlerWrappers = eventHandlerWrappers.filter {$0.event != event}
+  public final func unregisterFromEvent(name: SessionEventName) {
+    registeredGlobalEvents.remove(name.rawValue.hash)
   }
   
-  public final func raiseSessionEvent(event: SessionEvent, withObject object: Any?) {
-    session()?.propagateEvent(event, withObject: object)
+  public final func isRegisteredForEvent(name: SessionEventName) -> Bool {
+    return registeredGlobalEvents.contains(name.rawValue.hash)
   }
   
-  private func propagateEvent(event: SessionEvent, withObject object: Any?) {
-    eventHandlerWrappers.forEach {
-      if $0.event == event {
-        $0.handler(object: object)
-      }
-    }
-    childModels().forEach { $0.propagateEvent(event, withObject: object) }
+  public final func raiseSessionEvent(
+    name: SessionEventName,
+    withObject object: Any? = nil,
+    userInfo: [String: Any] = [:]) {
+    let event = SessionEvent(name: name, object: object, userInfo: userInfo)
+    session()?.propagateEvent(event)
+  }
+  
+  public func handleSessionEvent(event: SessionEvent) {}
+  
+  private func propagateEvent(event: SessionEvent) {
+    if isRegisteredForEvent(event.name) { handleSessionEvent(event) }
+    childModels().forEach { $0.propagateEvent(event) }
   }
   
 }
@@ -206,17 +211,5 @@ extension Model {
     print(output)
     
     childModels().forEach { $0.printTreeLevel(level + 1, params:  params) }
-  }
-}
-
-public typealias EventHandler = (object: Any?) -> (Void)
-
-private class SessionEventWrapper {
-  var event: SessionEvent
-  var handler: EventHandler
-  
-  init (event: SessionEvent, handler: EventHandler) {
-    self.event = event
-    self.handler = handler
   }
 }

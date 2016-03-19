@@ -30,10 +30,16 @@ class ControlSignalEmitter: NSObject {
   }
   
   func initializeSignalsMap() {
-    let events = [UIControlEvents.EditingChanged.rawValue, UIControlEvents.ValueChanged.rawValue]
-    for event in events {
-      signalsMap[event] = Signal<UIControl>()
-    }
+    
+    //Hot signals
+    signalsMap[UIControlEvents.ValueChanged.rawValue] = Signal<UIControl>(value: control)
+    signalsMap[UIControlEvents.EditingChanged.rawValue] = Signal<UIControl>(value: control)
+    
+    //Cold signals
+    signalsMap[UIControlEvents.EditingDidEnd.rawValue] = Signal<UIControl>()
+    signalsMap[UIControlEvents.EditingDidEndOnExit.rawValue] = Signal<UIControl>()
+    signalsMap[UIControlEvents.EditingDidEndOnExit.rawValue] = Signal<UIControl>()
+  
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
@@ -46,25 +52,53 @@ class ControlSignalEmitter: NSObject {
     }
 
     if events.contains(.ValueChanged) {
-      control.addTarget(self, action: "handleValueChanged:", forControlEvents: .ValueChanged)
+      control.addTarget(self, action: "valueChanged:", forControlEvents: .ValueChanged)
     }
 
     if events.contains(.EditingChanged) {
-      control.addTarget(self, action: "handleEditingChanged:", forControlEvents: .EditingChanged)
+      control.addTarget(self, action: "editingChanged:", forControlEvents: .EditingChanged)
+    }
+    
+    if events.contains(.EditingDidEnd) {
+      control.addTarget(self, action: "editingDidEnd:", forControlEvents: .EditingDidEnd)
+    }
+    
+    if events.contains(.EditingDidEndOnExit) {
+      control.addTarget(self, action: "editingDidEndOnExit:", forControlEvents: .EditingDidEndOnExit)
+    }
+    
+    if events.contains(.TouchUpInside) {
+      control.addTarget(self, action: "touchUpInside:", forControlEvents: .TouchUpInside)
     }
     
     return Signals.merge(correspondingSignals)
   }
   
   @objc
-  func handleValueChanged(control: UIControl) {
+  func valueChanged(control: UIControl) {
     signalsMap[UIControlEvents.ValueChanged.rawValue]?.sendNext(control)
   }
   
   @objc
-  func handleEditingChanged(control: UIControl) {
+  func editingChanged(control: UIControl) {
     signalsMap[UIControlEvents.EditingChanged.rawValue]?.sendNext(control)
   }
+  
+  @objc
+  func editingDidEnd(control: UIControl) {
+    signalsMap[UIControlEvents.EditingDidEnd.rawValue]?.sendNext(control)
+  }
+  
+  @objc
+  func editingDidEndOnExit(control: UIControl) {
+    signalsMap[UIControlEvents.EditingDidEndOnExit.rawValue]?.sendNext(control)
+  }
+  
+  @objc
+  func touchUpInside(control: UIControl) {
+    signalsMap[UIControlEvents.TouchUpInside.rawValue]?.sendNext(control)
+  }
+
 }
 
 extension UIControl {

@@ -10,17 +10,31 @@ public protocol SessionEventName {
   var rawValue: String { get }
 }
 
-public struct SessionEvent {
-  var name: String
-  
-  public init(name: SessionEventName) {
-    self.name = name.rawValue
-  }
+public func ==(lhs: SessionEventName, rhs: SessionEventName) -> Bool {
+  return lhs.rawValue == rhs.rawValue
 }
 
-extension SessionEvent: Equatable {
+public struct SessionEvent {
+  public var name: SessionEventName
+  public var object: Any?
+  public var userInfo: [String: Any]
+  
+  public init(name: SessionEventName, object: Any? = nil, userInfo: [String: Any] = [:]) {
+    self.name = name
+    self.object = object
+    self.userInfo = userInfo
+  }
+  
+  public var hashValue: Int {
+    return name.rawValue.hashValue
+  }
+
+}
+
+extension SessionEvent: Equatable, Hashable {
+  
 }
 
 public func ==(lhs: SessionEvent, rhs: SessionEvent) -> Bool {
-  return lhs.name == rhs.name
+  return lhs.name.rawValue == rhs.name.rawValue
 }

@@ -9,6 +9,7 @@
 import Foundation
 
 extension UIStepper {
+  
   public var valueChangeSignal: Signal<Double> {
     get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0 as! UIStepper).value } }
   }
