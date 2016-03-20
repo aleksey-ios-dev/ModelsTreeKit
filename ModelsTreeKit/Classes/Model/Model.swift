@@ -196,6 +196,7 @@ extension Model {
     case GlobalEvents
     case BubbleNotifications
     case Errors
+    case ErrorsVerbous
   }
   
   public final func printSubtree(params: [TreeInfoOptions] = []) {
@@ -232,7 +233,12 @@ extension Model {
       registeredBubbles.forEach { output += " \($0)" }
     }
     
-    if params.contains(.Errors) && !registeredErrors.isEmpty {
+    if params.contains(.ErrorsVerbous) && !registeredErrors.isEmpty {
+      output += "  | (Err): "
+      for (domain, codes) in registeredErrors {
+        codes.forEach { output += "[\(NSLocalizedString("\(domain).\($0)", comment: ""))] " }
+      }
+    } else if params.contains(.Errors) && !registeredErrors.isEmpty {
       output += "  | (Err): "
       for (domain, codes) in registeredErrors {
         output += "\(domain) > "
