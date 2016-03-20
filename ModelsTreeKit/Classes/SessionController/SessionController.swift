@@ -21,10 +21,10 @@ public class SessionController {
   public var configuration: SessionControllerConfiguration!
   
   public var navigationManager: RootNavigationManager!
-  public var representationsRouter: RootRepresentationsRouter!
-  public var modelsRouter: RootModelsRouter!
-  public var sessionsRouter: SessionsGenerator!
-  public var servicesConfigurator: ServicesConfigurator!
+  public var representationRouter: RootRepresentationRouter!
+  public var modelRouter: RootModelRouter!
+  public var sessionRouter: SessionGenerator!
+  public var serviceConfigurator: ServiceConfigurator!
   
   private let userDefaults = NSUserDefaults.standardUserDefaults()
   private var activeSession: Session?
@@ -33,13 +33,13 @@ public class SessionController {
     if let lastSession = lastOpenedUserSession {
       openSession(lastSession)
     } else {
-      openSession(self.sessionsRouter.newLoginSession())
+      openSession(self.sessionRouter.classOfAnonymousSession().init())
     }
   }
   
   private func openSession(session: Session) {
     activeSession = session
-    servicesConfigurator.configure(session)
+    serviceConfigurator.configure(session)
     session.openWithController(self)
     
     if let userSession = session as? UserSession {
@@ -99,8 +99,8 @@ public class SessionController {
       let sessionProxy = NSKeyedUnarchiver.unarchiveObjectWithData(sessionData) as? ArchivationProxy else {
         throw ArchiverErrors.NoSessionForKey
     }
-    
-    return sessionsRouter.newUserSessionFrom(sessionProxy)
+
+    return sessionRouter.classOfAuthorizedSession().init(archivationProxy: sessionProxy) as! UserSession
   }
 }
 
@@ -111,7 +111,8 @@ extension SessionController: SessionDelegate {
   func session(session: Session, didCloseWithParams params: Any?) {
     guard let _ = session as? LoginSession, let loginParams = params as? SessionCompletionParams else {
       lastOpenedUserSession = nil
-      openSession(sessionsRouter.newLoginSession())
+
+      openSession(sessionRouter.classOfAnonymousSession().init() as! LoginSession)
       
       return
     }
@@ -121,13 +122,13 @@ extension SessionController: SessionDelegate {
       let session = try archivedUserSessionForKey(String(uidString.hash))
       openSession(session)
     } catch {
-      openSession(sessionsRouter.newUserSessionWithParams(loginParams))
+      openSession(sessionRouter.classOfAuthorizedSession().init(params: loginParams))
     }
   }
   
   func sessionDidPrepareToShowRootRepresenation(session: Session) {
-    let representation = representationsRouter.representationFor(session: session)
-    let model = modelsRouter.modelFor(session: session)
+    let representation = representationRouter.representationFor(session: session)
+    let model = modelRouter.modelFor(session: session)
 
     if let assignable = representation as? RootModelAssignable {
       assignable.assignRootModel(model)

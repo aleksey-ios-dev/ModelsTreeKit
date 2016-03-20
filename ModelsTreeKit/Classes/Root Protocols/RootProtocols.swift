@@ -9,25 +9,34 @@
 import Foundation
 
 
-public protocol RootRepresentationsRouter {
-    func representationFor(session session: Session) -> AnyObject;
+public protocol RootRepresentationRouter {
+  
+  func representationFor(session session: Session) -> AnyObject;
+  
 }
 
-public protocol RootModelsRouter {
-    func modelFor(session session: Session) -> Model;
+public protocol RootModelRouter {
+  
+  func modelFor(session session: Session) -> Model;
+  
 }
 
 public protocol RootNavigationManager {
-    func showRootRepresentation(representation: AnyObject) -> Void
+  
+  func showRootRepresentation(representation: AnyObject) -> Void
+  
 }
 
-public protocol SessionsGenerator {
-    func newLoginSession() -> LoginSession
-    func newUserSessionFrom(proxy: ArchivationProxy) -> UserSession
-    func newUserSessionWithParams(params: SessionCompletionParams) -> UserSession
+public protocol SessionGenerator {
+  
+  func classOfAnonymousSession() -> Session.Type
+  func classOfAuthorizedSession() -> Session.Type
+  
 }
 
-public protocol ServicesConfigurator {
-    func configure(session: Session) -> Void
+public protocol ServiceConfigurator {
+  
+  func configure(session: Session) -> Void
+  
 }
 

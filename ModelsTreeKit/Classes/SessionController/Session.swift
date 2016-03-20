@@ -23,9 +23,19 @@ public class Session: Model {
   
   private weak var controller: SessionDelegate?
   
-  public init() {
+  public required init() {
     super.init(parent: nil)
   }
+  
+  public required init(archivationProxy: ArchivationProxy) {
+    super.init(parent: nil)
+  }
+  
+  public required init(params: SessionCompletionParams) {
+    super.init(parent: nil)
+    credentials = SessionCredentials(params: params)
+  }
+
   
   public func sessionDidLoad() {
   }

@@ -9,5 +9,15 @@
 import Foundation
 
 public class LoginSession: Session {
-  public override init() {}
+  public required init() {
+    super.init()
+  }
+  
+  required public init(archivationProxy: ArchivationProxy) {
+    fatalError()
+  }
+
+  public required init(params: SessionCompletionParams) {
+      fatalError("init(params:) has not been implemented")
+  }
 }

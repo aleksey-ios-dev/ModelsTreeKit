@@ -10,17 +10,19 @@ import Foundation
 
 public class UserSession: Session {
   
-  public init(params: SessionCompletionParams) {
-    super.init()
-    
-    credentials = SessionCredentials(params: params)
-  }
-  
   public required init(archivationProxy: ArchivationProxy) {
     super.init()
     if let credentialsProxy = archivationProxy["credentials"] as? ArchivationProxy {
       credentials = SessionCredentials(archivationProxy: credentialsProxy)
     }
+  }
+
+  required public init() {
+      fatalError("initialization without parameters is not available")
+  }
+
+  public required init(params: SessionCompletionParams) {
+    super.init(params: params)
   }
   
 }
