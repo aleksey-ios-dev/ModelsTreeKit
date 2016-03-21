@@ -46,9 +46,7 @@ class ControlSignalEmitter: NSObject {
     var correspondingSignals = [Signal<UIControl>]()
     
     for (key, signal) in signalsMap {
-      if events.contains(UIControlEvents(rawValue: key)) {
-        correspondingSignals.append(signal)
-      }
+      if events.contains(UIControlEvents(rawValue: key)) { correspondingSignals.append(signal) }
     }
 
     if events.contains(.ValueChanged) {

@@ -1,5 +1,5 @@
 //
-//  LoginSession.swift
+//  UnauthorizedSession.swift
 //  SessionSwift
 //
 //  Created by aleksey on 12.10.15.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-public class LoginSession: Session {
+public class UnauthorizedSession: Session {
+  
   public required init() {
     super.init()
   }
@@ -16,8 +17,9 @@ public class LoginSession: Session {
   required public init(archivationProxy: ArchivationProxy) {
     fatalError()
   }
-
+  
   public required init(params: SessionCompletionParams) {
-      fatalError("init(params:) has not been implemented")
+    fatalError("init(params:) has not been implemented")
   }
+  
 }

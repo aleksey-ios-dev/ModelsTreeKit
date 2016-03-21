@@ -6,13 +6,17 @@
 import Foundation
 
 public protocol ObjectConsuming {
+  
   typealias ObjectType
   
   var object: ObjectType? { get }
+  
   func applyObject(object: ObjectType) -> Void
+  
 }
 
 public extension ObjectConsuming {
+  
   var object: ObjectType {
     set {
       self.object = object
@@ -20,15 +24,11 @@ public extension ObjectConsuming {
         applyObject(object)
       }
     }
-    
-    get {
-      return self.object
-    }
+    get { return self.object }
   }
   
   func reapplyObject() {
-    if let object = self.object {
-      applyObject(object)
-    }
+    if let object = self.object { applyObject(object) }
   }
+  
 }

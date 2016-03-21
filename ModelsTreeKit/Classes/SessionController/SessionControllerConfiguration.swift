@@ -9,6 +9,7 @@
 import Foundation
 
 public struct SessionControllerConfiguration {
+  
   var keychainAccessKey: String
   var credentialsPrimaryKey: CredentialsKey
   
@@ -16,4 +17,5 @@ public struct SessionControllerConfiguration {
     self.keychainAccessKey = keychainAccessKey
     self.credentialsPrimaryKey = credentialsPrimaryKey
   }
+  
 }

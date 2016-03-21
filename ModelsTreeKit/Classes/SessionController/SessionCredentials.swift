@@ -9,7 +9,9 @@
 import Foundation
 
 public protocol CredentialsKey {
+  
   var rawValue: String { get }
+  
 }
 
 public final class SessionCredentials {

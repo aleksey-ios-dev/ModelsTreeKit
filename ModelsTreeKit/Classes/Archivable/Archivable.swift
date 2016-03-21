@@ -1,5 +1,5 @@
 //
-//  ArchivationProxy.swift
+//  Archivable.swift
 //  SessionSwift
 //
 //  Created by aleksey on 24.10.15.
@@ -11,6 +11,8 @@ import Foundation
 public typealias ArchivationProxy = [String: AnyObject]
 
 public protocol Archivable {
-    func archivationProxy() -> [String: AnyObject]
-    init(archivationProxy: [String: AnyObject])
+  
+  func archivationProxy() -> [String: AnyObject]
+  init(archivationProxy: [String: AnyObject])
+  
 }

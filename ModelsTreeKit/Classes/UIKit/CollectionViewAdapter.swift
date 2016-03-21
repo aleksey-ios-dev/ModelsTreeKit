@@ -10,28 +10,25 @@ import Foundation
 import UIKit
 
 public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+  
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   typealias UpdateAction = Void -> Void
-  
-  weak var collectionView: UICollectionView!
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
   public let didSelectCellSignal = Signal<(cell: UICollectionViewCell?, object: ObjectType?)>()
-  public let willDisplayCell = Signal<UICollectionViewCell>()
+  public let willDisplayCellSignal = Signal<UICollectionViewCell>()
   public let willCalculateSizeSignal = Signal<UICollectionViewCell>()
-  
   public let didEndDisplayingCell = Signal<UICollectionViewCell>()
+  public let willSetObjectSignal = Signal<UICollectionViewCell>()
+  public let didSetObjectSignal = Signal<UICollectionViewCell>()
   
-  public let willSetObject = Signal<UICollectionViewCell>()
-  public let didSetObject = Signal<UICollectionViewCell>()
-  
+  private weak var collectionView: UICollectionView!
+
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UICollectionViewCell]()
   private var identifiersForIndexPaths = [NSIndexPath: String]()
-
   private var mappings: [String: (ObjectType, UICollectionViewCell, NSIndexPath) -> Void] = [:]
-  
   private var updateActions = [UpdateAction]()
   
   public init(dataSource: ObjectsDataSource<ObjectType>, collectionView: UICollectionView) {
@@ -48,18 +45,12 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     }.putInto(pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
-      guard let strongSelf = self else {
-        return
-      }
-      for action in strongSelf.updateActions {
-        action()
-      }
-      }.putInto(pool)
+      guard let strongSelf = self else { return }
+      strongSelf.updateActions.forEach { $0() }
+    }.putInto(pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       
       UIView.animateWithDuration(0.1, animations: {
         strongSelf.collectionView.alpha = 0},
@@ -67,9 +58,9 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
           strongSelf.collectionView.reloadData()
           UIView.animateWithDuration(0.2, animations: {
             strongSelf.collectionView.alpha = 1
-          })
+        })
       })
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
       guard let strongSelf = self else {
@@ -102,12 +93,10 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
           }
         }
       }
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       
       switch changeType {
       case .Insertion:
@@ -125,7 +114,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       default:
         break
       }
-      }.putInto(pool)
+    }.putInto(pool)
   }
   
   public func registerCellClass<U: ObjectConsuming where U.ObjectType == ObjectType>(cellClass: U.Type) {
@@ -160,16 +149,16 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     identifiersForIndexPaths[indexPath] = identifier
 
     
-    willSetObject.sendNext(cell)
+    willSetObjectSignal.sendNext(cell)
     let mapping = mappings[identifier]!
     mapping(object, cell, indexPath)
-    didSetObject.sendNext(cell)
+    didSetObjectSignal.sendNext(cell)
     
     return cell
   }
   
   public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    willDisplayCell.sendNext(cell)
+    willDisplayCellSignal.sendNext(cell)
   }
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {

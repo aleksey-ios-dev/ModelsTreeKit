@@ -9,20 +9,21 @@
 import Foundation
 
 public struct Signals {
+  
   static func merge<U>(signals: [Signal<U>]) -> Signal<U> {
     let nextSignal = Signal<U>()
     
-        signals.forEach { signal in
-          signal.subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0)
-            }.putInto(nextSignal.pool)
-        }
+    signals.forEach { signal in
+      signal.subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
+    }
     
     return nextSignal
   }
+  
 }
 
 public final class ValueKeepingSignal<T>: Signal<T> {
-
+  
   public init(value: T? = nil) {
     super.init()
     self.value = value
@@ -43,18 +44,19 @@ public final class ValueKeepingSignal<T>: Signal<T> {
 }
 
 public class Signal<T> {
+  
   public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash
   
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
   
   var value: T?
-
+  
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
   //Destructor is executed before the signal's deallocation. A good place to cancel your network operation.
-
+  
   var destructor: (Void -> Void)?
   
   private var pool = AutodisposePool()
@@ -136,7 +138,7 @@ public class Signal<T> {
     else { nextSignal = Signal<T>() }
     subscribeNext { [weak nextSignal] in
       if handler($0) { nextSignal?.sendNext($0) }
-    }.putInto(nextSignal.pool)
+      }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -149,10 +151,10 @@ public class Signal<T> {
     let nextSignal = ValueKeepingSignal<U>()
     subscribeNext { [weak nextSignal] in
       nextSignal?.sendNext(handler(newValue: $0, reducedValue: nextSignal?.value))
-    }.putInto(nextSignal.pool)
-
+      }.putInto(nextSignal.pool)
+    
     chainSignal(nextSignal)
-
+    
     return nextSignal
   }
   
@@ -167,12 +169,12 @@ public class Signal<T> {
     transientOther.subscribeNext { [weak transientSelf, weak nextSignal] in
       guard let _self = transientSelf, let nextSignal = nextSignal else { return }
       nextSignal.sendNext((_self.value, $0))
-    }.putInto(nextSignal.pool)
+      }.putInto(nextSignal.pool)
     
     transientSelf.subscribeNext { [weak transientOther, weak nextSignal] in
       guard let otherSignal = transientOther, let nextSignal = nextSignal else { return }
       nextSignal.sendNext(($0, otherSignal.value))
-    }.putInto(nextSignal.pool)
+      }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -210,14 +212,14 @@ public class Signal<T> {
   
   public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
     let nextSignal = combineLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
-
+      
       var reducedSelfValue: T? = reducedValue?.0.1
       var reducedOtherValue: U? = reducedValue?.1.1
-
+      
       if let newSelfValue = newValue.0 { reducedSelfValue = newSelfValue }
       if let newOtherValue = newValue.1 { reducedOtherValue = newOtherValue }
       if let reducedSelfValue = reducedSelfValue, let reducedOtherValue = reducedOtherValue {
-          return ((reducedSelfValue, nil), (reducedOtherValue, nil))
+        return ((reducedSelfValue, nil), (reducedOtherValue, nil))
       } else {
         return ((nil, reducedValue?.0.1), (nil, reducedValue?.1.1))
       }
@@ -237,7 +239,7 @@ public class Signal<T> {
     let nextSignal = distinctLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
-
+      
       var reducedSelf = reducedValue?.0.1
       if reducedSelf == nil { reducedSelf = [T]() }
       
@@ -249,7 +251,7 @@ public class Signal<T> {
       
       var zippedSelfValue: T? = nil
       var zippedOtherValue: U? = nil
-
+      
       if !reducedSelf!.isEmpty && !reducedOther!.isEmpty {
         zippedSelfValue = reducedSelf!.first
         zippedOtherValue = reducedOther!.first
@@ -321,7 +323,7 @@ extension Signal where T: Comparable {
       if nextSignal?.value == nil || nextSignal?.value < newValue {
         nextSignal?.sendNext(newValue)
       }
-    }.putInto(nextSignal.pool)
+      }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     
@@ -336,7 +338,7 @@ extension Signal where T: Comparable {
       if nextSignal?.value == nil || nextSignal?.value > newValue {
         nextSignal?.sendNext(newValue)
       }
-    }.putInto(nextSignal.pool)
+      }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     

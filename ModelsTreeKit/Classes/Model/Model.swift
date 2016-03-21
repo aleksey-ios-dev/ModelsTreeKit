@@ -97,9 +97,7 @@ public class Model {
     }
   }
   
-  public func handleBubbleNotification(bubble: BubbleNotification, sender: Model) {
-    //Implemented by subclasses
-  }
+  public func handleBubbleNotification(bubble: BubbleNotification, sender: Model) {}
   
   //Errors
   
@@ -122,8 +120,7 @@ public class Model {
   public final func unregisterFromError(code code: ErrorCode, inDomain domain: ErrorDomain) {
     if let codes = registeredErrors[domain.rawValue] {
       var filteredCodes = codes
-      filteredCodes.remove(code.rawValue
-      )
+      filteredCodes.remove(code.rawValue)
       registeredErrors[domain.rawValue] = filteredCodes
     }
   }
@@ -160,7 +157,7 @@ public class Model {
     return registeredGlobalEvents.contains(name.rawValue)
   }
   
-  public final func raiseSessionEvent(
+  public final func raiseGlobalEvent(
     name: GlobalEventName,
     withObject object: Any? = nil,
     userInfo: [String: Any] = [:]) {
@@ -178,11 +175,9 @@ public class Model {
 }
 
 extension Model: Hashable, Equatable {
-  public var hashValue: Int {
-    get {
-      return hash.hash
-    }
-  }
+  
+  public var hashValue: Int { get { return hash.hash } }
+  
 }
 
 public func ==(lhs: Model, rhs: Model) -> Bool {
@@ -250,4 +245,5 @@ extension Model {
     
     childModels().forEach { $0.printTreeLevel(level + 1, params:  params) }
   }
+  
 }

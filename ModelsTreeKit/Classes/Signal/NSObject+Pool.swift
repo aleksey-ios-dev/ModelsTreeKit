@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 public extension NSObject {
+  
   private struct AssociatedKeys {
     static var AutodisposePoolKey = "AutodisposePoolKey"
   }
@@ -29,9 +30,11 @@ public extension NSObject {
 }
 
 private class ObjectObjcWrapper: NSObject {
+  
   var object: AnyObject
   
   init(object: AnyObject) {
     self.object = object
   }
+  
 }

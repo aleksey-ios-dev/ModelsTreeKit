@@ -9,6 +9,7 @@
 import Foundation
 
 public class AutodisposePool {
+  
   private var disposables = [WeakRef]()
   
   public func add(disposable: Disposable) {
@@ -17,11 +18,8 @@ public class AutodisposePool {
   
   public func drain() {
     for weakRef in disposables {
-      if let disposable = weakRef.object as? Disposable {
-        disposable.dispose()
-      }
+      if let disposable = weakRef.object as? Disposable { disposable.dispose() }
     }
-    
     disposables.removeAll()
   }
   
@@ -31,9 +29,11 @@ public class AutodisposePool {
 }
 
 private class WeakRef {
+  
   weak var object: AnyObject?
   
   init(object: AnyObject?) {
     self.object = object
   }
+  
 }

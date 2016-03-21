@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class ListDataSource <ObjectType, GroupKeyType where
-ObjectType: Hashable, ObjectType: Equatable,
+public class ListDataSource<ObjectType, GroupKeyType where
+  ObjectType: Hashable, ObjectType: Equatable,
 GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType> {
-
+  
   typealias Section = (objects: [ObjectType], key: GroupKeyType?)
   typealias Sections = [Section]
   
@@ -25,29 +25,17 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   public init(list: List<ObjectType>) {
     super.init()
     
-    list.beginUpdatesSignal.subscribeNext { [weak self] _ in
-      self?.beginUpdates()
-    }.putInto(pool)
-    
-    list.endUpdatesSignal.subscribeNext { [weak self] _ in
-      self?.endUpdates()
-    }.putInto(pool)
-    
+    list.beginUpdatesSignal.subscribeNext { [weak self] in self?.beginUpdates() }.putInto(pool)
+    list.endUpdatesSignal.subscribeNext { [weak self] in self?.endUpdates() }.putInto(pool)
     list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       strongSelf.sections = strongSelf.arrangedSectionsFrom(objects)
     }.putInto(pool)
     
     list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       let oldSections = strongSelf.sections
-      
       strongSelf.applyInsertions(insertions, deletions: deletions, updates: updates)
-      
       strongSelf.pushInsertions(
         insertions,
         deletions: deletions,
@@ -67,10 +55,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   }
   
   public func allObjects() -> [[ObjectType]] {
-    if sections.isEmpty {
-      return []
-    }
-    
+    if sections.isEmpty { return [] }
     return sections.map {return $0.objects}
   }
   
@@ -93,9 +78,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   //Private
   
   private func arrangedSectionsFrom(objects: Set<ObjectType>) -> Sections {
-    if objects.isEmpty {
-      return []
-    }
+    if objects.isEmpty { return [] }
     
     guard let groupingBlock = groupingCriteria else {
       if let sortingCriteria = groupContentsSortingCriteria {
@@ -211,9 +194,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       allObjects.appendContentsOf(section.objects)
     }
     
-    if !allObjects.contains(object) {
-      return nil
-    }
+    if !allObjects.contains(object) { return nil }
     
     var row = 0
     var section = 0
@@ -254,4 +235,5 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
     sections = arrangedSectionsFrom(allObjectsSet())
     reloadDataSignal.sendNext()
   }
+  
 }

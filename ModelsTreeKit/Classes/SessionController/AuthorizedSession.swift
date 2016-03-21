@@ -1,5 +1,5 @@
 //
-//  UserSession.swift
+//  AuthorizedSession.swift
 //  SessionSwift
 //
 //  Created by aleksey on 12.10.15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class UserSession: Session {
+public class AuthorizedSession: Session {
   
   public required init(archivationProxy: ArchivationProxy) {
     super.init()
@@ -27,11 +27,13 @@ public class UserSession: Session {
   
 }
 
-extension UserSession: Archivable {
+extension AuthorizedSession: Archivable {
+  
   public func archivationProxy() -> ArchivationProxy {
     var proxy = ArchivationProxy()
     proxy["credentials"] = credentials?.archivationProxy()
     
     return proxy
   }
+  
 }

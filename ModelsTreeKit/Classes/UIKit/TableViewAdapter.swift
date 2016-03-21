@@ -10,20 +10,19 @@ import Foundation
 import UIKit
 
 public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITableViewDelegate {
-  typealias DataSourceType = ObjectsDataSource<ObjectType>
-  weak var tableView: UITableView!
   
-  private var nibs = [String: UINib]()
+  typealias DataSourceType = ObjectsDataSource<ObjectType>
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
   public let didSelectCellSignal = Signal<(cell: UITableViewCell?, object: ObjectType?)>()
-  public let willDisplayCell = Signal<UITableViewCell>()
-  public let didEndDisplayingCell = Signal<UITableViewCell>()
-  
+  public let willDisplayCellSignal = Signal<UITableViewCell>()
+  public let didEndDisplayingCellSignal = Signal<UITableViewCell>()
   public let willSetObjectSignal = Signal<UITableViewCell>()
   public let didSetObjectSignal = Signal<UITableViewCell>()
   
+  private weak var tableView: UITableView!
+  private var nibs = [String: UINib]()
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UITableViewCell]()
   private var identifiersForIndexPaths = [NSIndexPath: String]()
@@ -47,23 +46,19 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     }.putInto(pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       UIView.animateWithDuration(0.1, animations: {
         strongSelf.tableView.alpha = 0},
         completion: { completed in
           strongSelf.tableView.reloadData()
           UIView.animateWithDuration(0.2, animations: {
             strongSelf.tableView.alpha = 1
-          })
+        })
       })
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       switch changeType {
       case .Insertion:
         if let toIndexPath = toIndexPath {
@@ -86,12 +81,10 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
             toIndexPath: toIndexPath)
         }
       }
-      }.putInto(pool)
+    }.putInto(pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
-      guard let strongSelf = self else {
-        return
-      }
+      guard let strongSelf = self else { return }
       switch changeType {
       case .Insertion:
         if let toIndex = toIndex {
@@ -106,7 +99,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       default:
         break
       }
-      }.putInto(pool)
+    }.putInto(pool)
   }
   
   public func registerCellClass<U: ObjectConsuming where U.ObjectType == ObjectType>(cellClass: U.Type) {
@@ -130,9 +123,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView,
     cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      
       let object = dataSource.objectAtIndexPath(indexPath)!;
-      
       let identifier = nibNameForObjectMatching(object)
       var cell = tableView.dequeueReusableCellWithIdentifier(identifier)
       identifiersForIndexPaths[indexPath] = identifier
@@ -176,10 +167,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    willDisplayCell.sendNext(cell)
+    willDisplayCellSignal.sendNext(cell)
   }
   
   public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCell.sendNext(cell)
+    didEndDisplayingCellSignal.sendNext(cell)
   }
+  
 }

@@ -7,7 +7,9 @@
 //
 
 public protocol GlobalEventName {
+  
   var rawValue: String { get }
+  
 }
 
 public func ==(lhs: GlobalEventName, rhs: GlobalEventName) -> Bool {
@@ -15,6 +17,7 @@ public func ==(lhs: GlobalEventName, rhs: GlobalEventName) -> Bool {
 }
 
 public struct GlobalEvent {
+  
   public var name: GlobalEventName
   public var object: Any?
   public var userInfo: [String: Any]

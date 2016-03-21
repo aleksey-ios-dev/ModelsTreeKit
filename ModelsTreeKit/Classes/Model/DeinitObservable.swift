@@ -9,5 +9,7 @@
 import Foundation
 
 public protocol DeinitObservable: class {
+  
   var deinitSignal: Signal<Void> { get }
+  
 }

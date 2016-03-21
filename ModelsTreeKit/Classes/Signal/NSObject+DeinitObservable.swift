@@ -9,14 +9,13 @@
 import Foundation
 
 extension NSObject: DeinitObservable {
+  
   private struct AssociatedKeys {
     static var DeinitNotifierKey = "DeinitNotifierKey"
   }
   
   public var deinitSignal: Signal<Void> {
-    get {
-      return deinitNotifier.signal
-    }
+    get { return deinitNotifier.signal }
   }
   
   private var deinitNotifier: DeinitNotifier {
@@ -31,4 +30,5 @@ extension NSObject: DeinitObservable {
       return wrapper!
     }
   }
+  
 }

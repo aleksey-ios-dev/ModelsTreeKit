@@ -10,9 +10,13 @@ import Foundation
 import UIKit
 
 public protocol HeightCalculatingCell {
-    func heightFor(object: Any?, width: CGFloat) -> CGFloat
+  
+  func heightFor(object: Any?, width: CGFloat) -> CGFloat
+  
 }
 
 public protocol SizeCalculatingCell {
-    func sizeFor(object: Any?) -> CGSize
+  
+  func sizeFor(object: Any?) -> CGSize
+  
 }

@@ -29,8 +29,8 @@ public protocol RootNavigationManager {
 
 public protocol SessionGenerator {
   
-  func classOfAnonymousSession() -> Session.Type
-  func classOfAuthorizedSession() -> Session.Type
+  func unauthorizedSessionType() -> Session.Type
+  func authorizedSessionType() -> Session.Type
   
 }
 

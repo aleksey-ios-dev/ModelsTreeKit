@@ -9,9 +9,11 @@
 import Foundation
 
 class DeinitNotifier: NSObject {
-    var signal = Signal<Void>()
-    
-    deinit {
-        signal.sendCompleted()
-    }
+  
+  var signal = Signal<Void>()
+  
+  deinit {
+    signal.sendCompleted()
+  }
+  
 }

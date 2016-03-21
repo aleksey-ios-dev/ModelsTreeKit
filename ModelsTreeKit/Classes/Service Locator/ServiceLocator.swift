@@ -30,17 +30,12 @@ public class ServiceLocator {
   
   func takeOff() {
     for service in services.values {
-      if let service = service as? Service {
-        service.takeOff()
-      }
+      if let service = service as? Service { service.takeOff() }
     }
   }
   
   func prepareToClose() {
-    for service in services.values {
-      if let service = service as? Service {
-        service.prepareToClose()
-      }
-    }
+    services.values.forEach { if let service = $0 as? Service { service.prepareToClose() } }
   }
+  
 }

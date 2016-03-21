@@ -9,18 +9,23 @@
 import Foundation
 
 public protocol Disposable: class {
+  
   func dispose()
   func deliverOnMainThread() -> Disposable
   func autodispose() -> Disposable
   func putInto(pool: AutodisposePool) -> Disposable
+  
 }
 
 protocol Invocable: class {
+  
   func invoke(data: Any) -> Void
   func invokeState(data: Bool) -> Void
+  
 }
 
 class Subscription<U> : Invocable, Disposable {
+  
   var handler: (U -> Void)?
   var stateHandler: (Bool -> Void)?
   
@@ -41,10 +46,7 @@ class Subscription<U> : Invocable, Disposable {
     } else {
       handler?(data as! U)
     }
-    
-    if autodisposes {
-      dispose()
-    }
+    if autodisposes { dispose() }
   }
   
   func invokeState(data: Bool) -> Void {

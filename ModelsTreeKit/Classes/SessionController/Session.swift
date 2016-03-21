@@ -11,9 +11,11 @@ import Foundation
 public typealias SessionCompletionParams = [String: AnyObject]
 
 protocol SessionDelegate: class {
+  
   func sessionDidPrepareToShowRootRepresenation(session: Session) -> Void
   func session(session: Session, didCloseWithParams params: Any?) -> Void
   func sessionDidOpen(session: Session) -> Void
+  
 }
 
 public class Session: Model {
@@ -35,10 +37,8 @@ public class Session: Model {
     super.init(parent: nil)
     credentials = SessionCredentials(params: params)
   }
-
   
-  public func sessionDidLoad() {
-  }
+  public func sessionDidLoad() {}
   
   func openWithController(controller: SessionController) {
     self.controller = controller
@@ -53,5 +53,6 @@ public class Session: Model {
     services.prepareToClose()
     controller?.session(self, didCloseWithParams: params)
   }
+  
 }
 
