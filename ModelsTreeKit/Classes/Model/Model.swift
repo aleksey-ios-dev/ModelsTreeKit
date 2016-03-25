@@ -162,15 +162,17 @@ public class Model {
     withObject object: Any? = nil,
     userInfo: [String: Any] = [:]) {
     let event = GlobalEvent(name: name, object: object, userInfo: userInfo)
-    session()?.propagateEvent(event)
+    session()?.propagateGlobalEvent(event)
+  }
+  
+  private func propagateGlobalEvent(event: GlobalEvent) {
+    if isRegisteredForEvent(event.name) {
+      handleSessionEvent(event)
+    }
+    childModels().forEach { $0.propagateGlobalEvent(event) }
   }
   
   public func handleSessionEvent(event: GlobalEvent) {}
-  
-  private func propagateEvent(event: GlobalEvent) {
-    if isRegisteredForEvent(event.name) { handleSessionEvent(event) }
-    childModels().forEach { $0.propagateEvent(event) }
-  }
   
 }
 
