@@ -16,7 +16,7 @@ public protocol RootModelAssignable: class {
 
 public protocol ModelApplicable: class {
   
-  typealias T: Model
+  associatedtype T: Model
   weak var model: T! { get set }
   
 }

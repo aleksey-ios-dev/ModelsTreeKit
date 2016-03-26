@@ -50,23 +50,23 @@ class ControlSignalEmitter: NSObject {
     }
 
     if events.contains(.ValueChanged) {
-      control.addTarget(self, action: "valueChanged:", forControlEvents: .ValueChanged)
+      control.addTarget(self, action: #selector(valueChanged(_:)), forControlEvents: .ValueChanged)
     }
 
     if events.contains(.EditingChanged) {
-      control.addTarget(self, action: "editingChanged:", forControlEvents: .EditingChanged)
+      control.addTarget(self, action: #selector(editingChanged(_:)), forControlEvents: .EditingChanged)
     }
     
     if events.contains(.EditingDidEnd) {
-      control.addTarget(self, action: "editingDidEnd:", forControlEvents: .EditingDidEnd)
+      control.addTarget(self, action: #selector(editingDidEnd(_:)), forControlEvents: .EditingDidEnd)
     }
     
     if events.contains(.EditingDidEndOnExit) {
-      control.addTarget(self, action: "editingDidEndOnExit:", forControlEvents: .EditingDidEndOnExit)
+      control.addTarget(self, action: #selector(editingDidEndOnExit(_:)), forControlEvents: .EditingDidEndOnExit)
     }
     
     if events.contains(.TouchUpInside) {
-      control.addTarget(self, action: "touchUpInside:", forControlEvents: .TouchUpInside)
+      control.addTarget(self, action: #selector(touchUpInside(_:)), forControlEvents: .TouchUpInside)
     }
     
     return Signals.merge(correspondingSignals)

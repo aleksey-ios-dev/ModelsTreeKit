@@ -7,7 +7,7 @@ import Foundation
 
 public protocol ObjectConsuming {
   
-  typealias ObjectType
+  associatedtype ObjectType
   
   var object: ObjectType? { get }
   

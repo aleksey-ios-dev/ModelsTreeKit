@@ -81,7 +81,7 @@
         NSMutableDictionary *dictionary = nil;
         CFTypeRef outDictionary = (__bridge CFTypeRef)dictionary;
         
-        if (! SecItemCopyMatching((__bridge CFDictionaryRef)tempQuery, &outDictionary) == noErr)
+        if (! (SecItemCopyMatching((__bridge CFDictionaryRef)tempQuery, &outDictionary) == noErr))
         {
             // Stick these default values into keychain item if nothing found.
             [self resetKeychainItem];
