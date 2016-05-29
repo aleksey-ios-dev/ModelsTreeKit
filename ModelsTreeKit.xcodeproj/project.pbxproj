@@ -21,6 +21,8 @@
 		5B1F9DC01C8BD6F200F96644 /* UISlider+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DBF1C8BD6F200F96644 /* UISlider+Signal.swift */; };
 		5B1F9DC21C8BE2E100F96644 /* UIStepper+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DC11C8BE2E100F96644 /* UIStepper+Signal.swift */; };
 		5B1F9DC41C8BEC7300F96644 /* UIControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */; };
+		5B2E48D51CF99A21001413B2 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B2E48D31CF99A21001413B2 /* ControlProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2E48D41CF99A21001413B2 /* ControlProxy.m */; };
 		5BB53FAD1C25D5AC00246130 /* ModelsTreeKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB53FB41C25D5AC00246130 /* ModelsTreeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB53FA91C25D5AC00246130 /* ModelsTreeKit.framework */; };
 		5BB53FF91C25D60500246130 /* Archivable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FC61C25D60500246130 /* Archivable.swift */; };
@@ -103,6 +105,8 @@
 		5B1F9DBF1C8BD6F200F96644 /* UISlider+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISlider+Signal.swift"; sourceTree = "<group>"; };
 		5B1F9DC11C8BE2E100F96644 /* UIStepper+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStepper+Signal.swift"; sourceTree = "<group>"; };
 		5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIControl+Signal.swift"; sourceTree = "<group>"; };
+		5B2E48D31CF99A21001413B2 /* ControlProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlProxy.h; sourceTree = "<group>"; };
+		5B2E48D41CF99A21001413B2 /* ControlProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlProxy.m; sourceTree = "<group>"; };
 		5B8BAC861C27BEFA000389C2 /* ListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
 		5BB53FA91C25D5AC00246130 /* ModelsTreeKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelsTreeKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelsTreeKit.h; sourceTree = "<group>"; };
@@ -178,6 +182,8 @@
 				5B1F9DC11C8BE2E100F96644 /* UIStepper+Signal.swift */,
 				5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */,
 				5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */,
+				5B2E48D31CF99A21001413B2 /* ControlProxy.h */,
+				5B2E48D41CF99A21001413B2 /* ControlProxy.m */,
 			);
 			path = "UIKit+Signal";
 			sourceTree = "<group>";
@@ -398,6 +404,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B2E48D51CF99A21001413B2 /* ControlProxy.h in Headers */,
 				5BB53FAD1C25D5AC00246130 /* ModelsTreeKit.h in Headers */,
 				5BB540421C25D6F300246130 /* BridgingHeader.h in Headers */,
 				5BB540341C25D60500246130 /* TSTTransitionViewController.h in Headers */,
@@ -540,6 +547,7 @@
 				5BB5401A1C25D60500246130 /* Service.swift in Sources */,
 				5BB540141C25D60500246130 /* ObjectConsuming.swift in Sources */,
 				5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */,
+				5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */,
 				5B0DE7091C9507E100D02053 /* UIButton+Signal.swift in Sources */,
 				5BD081BA1C81DDC100269752 /* SessionControllerConfiguration.swift in Sources */,
 				5BB540121C25D60500246130 /* ModelAssignable.swift in Sources */,

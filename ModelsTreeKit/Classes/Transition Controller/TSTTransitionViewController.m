@@ -11,7 +11,9 @@
 static const NSTimeInterval TSTAnimationDuration = 0.3;
 
 @interface TSTTransitionViewController ()
+
 @property (nonatomic, strong, readwrite) UIViewController *presentedController;
+
 @end
 
 @implementation TSTTransitionViewController

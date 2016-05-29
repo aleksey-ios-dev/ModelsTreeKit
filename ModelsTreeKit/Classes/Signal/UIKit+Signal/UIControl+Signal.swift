@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 extension UIControl {
   
   public func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
@@ -21,6 +22,7 @@ class ControlSignalEmitter: NSObject {
   private static var EmitterHandler: Int = 0
   private weak var control: UIControl!
   private var signalsMap = [UInt: Signal<UIControl>]()
+  private let controlProxy = ControlProxy(object: "")
   
   init(control: UIControl) {
     self.control = control
@@ -31,71 +33,39 @@ class ControlSignalEmitter: NSObject {
   
   func initializeSignalsMap() {
     
-    //Hot signals
-    signalsMap[UIControlEvents.ValueChanged.rawValue] = ValueKeepingSignal<UIControl>(value: control)
-    signalsMap[UIControlEvents.EditingChanged.rawValue] = ValueKeepingSignal<UIControl>(value: control)
-    
-    //Cold signals
-    signalsMap[UIControlEvents.EditingDidEnd.rawValue] = Signal<UIControl>()
-    signalsMap[UIControlEvents.EditingDidEndOnExit.rawValue] = Signal<UIControl>()
-    signalsMap[UIControlEvents.EditingDidEndOnExit.rawValue] = Signal<UIControl>()
+    for (eventRawValue, _) in eventsList {
+      signalsMap[eventRawValue] = Signal<UIControl>()
+    }
+  
+    for (eventRawValue, selectorString) in eventsList {
+      let signal = signalsMap[eventRawValue]
+      controlProxy.registerBlock({ [weak signal, unowned self] in
+        signal?.sendNext(self.control)
+        }, forKey: selectorString)
+      control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), forControlEvents: UIControlEvents(rawValue: eventRawValue))
+    }
   
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
     var correspondingSignals = [Signal<UIControl>]()
     
-    for (key, signal) in signalsMap {
-      if events.contains(UIControlEvents(rawValue: key)) { correspondingSignals.append(signal) }
-    }
-
-    if events.contains(.ValueChanged) {
-      control.addTarget(self, action: #selector(valueChanged(_:)), forControlEvents: .ValueChanged)
-    }
-
-    if events.contains(.EditingChanged) {
-      control.addTarget(self, action: #selector(editingChanged(_:)), forControlEvents: .EditingChanged)
-    }
-    
-    if events.contains(.EditingDidEnd) {
-      control.addTarget(self, action: #selector(editingDidEnd(_:)), forControlEvents: .EditingDidEnd)
-    }
-    
-    if events.contains(.EditingDidEndOnExit) {
-      control.addTarget(self, action: #selector(editingDidEndOnExit(_:)), forControlEvents: .EditingDidEndOnExit)
-    }
-    
-    if events.contains(.TouchUpInside) {
-      control.addTarget(self, action: #selector(touchUpInside(_:)), forControlEvents: .TouchUpInside)
+    for event in eventsList.keys {
+      if events.contains(UIControlEvents(rawValue: event)) {
+        correspondingSignals.append(signalsMap[event]!)
+      }
     }
     
     return Signals.merge(correspondingSignals)
   }
   
-  @objc
-  func valueChanged(control: UIControl) {
-    signalsMap[UIControlEvents.ValueChanged.rawValue]?.sendNext(control)
-  }
-  
-  @objc
-  func editingChanged(control: UIControl) {
-    signalsMap[UIControlEvents.EditingChanged.rawValue]?.sendNext(control)
-  }
-  
-  @objc
-  func editingDidEnd(control: UIControl) {
-    signalsMap[UIControlEvents.EditingDidEnd.rawValue]?.sendNext(control)
-  }
-  
-  @objc
-  func editingDidEndOnExit(control: UIControl) {
-    signalsMap[UIControlEvents.EditingDidEndOnExit.rawValue]?.sendNext(control)
-  }
-  
-  @objc
-  func touchUpInside(control: UIControl) {
-    signalsMap[UIControlEvents.TouchUpInside.rawValue]?.sendNext(control)
-  }
+  private var eventsList: [UInt: String] = [
+    UIControlEvents.EditingChanged.rawValue: "editingChanged",
+    UIControlEvents.ValueChanged.rawValue: "valueChanged",
+    UIControlEvents.EditingDidEnd.rawValue: "editingDidEnd",
+    UIControlEvents.EditingDidEndOnExit.rawValue: "EditingDidEndOnExit",
+    UIControlEvents.TouchUpInside.rawValue: "touchUpInside"
+  ]
 
 }
 

@@ -266,6 +266,95 @@ class SignalTests: XCTestCase {
     XCTAssertEqual(summary, [1, 2, 3, 4, 5])
   }
   
+  func testThatTwoBooleanSignalsAdd() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    
+    var result = [Bool]()
+    sigA.and(sigB).subscribeNext { result.append($0) }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    
+    XCTAssertEqual(result, [false, true, false])
+  }
+  
+  func testThatThreeBooleanSignalsAdd() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    let sigC = Signal<Bool>()
+    
+    var result = [Bool]()
+    sigA.and(sigB).and(sigC).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    sigC.sendNext(false)
+    sigC.sendNext(true)
+    sigB.sendNext(true)
+    
+    XCTAssertEqual(result, [false, false, false, false, false, true])
+  }
+  
+  func testThatOrWorks() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    let sigC = Signal<Bool>()
+    
+    var result = [Bool]()
+    sigA.or(sigB).or(sigC).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    sigC.sendNext(true)
+    sigC.sendNext(false)
+    sigA.sendNext(false)
+        
+    XCTAssertEqual(result, [true, true, true, true, true, false])
+  }
+  
+  func testThatXorWorks() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    
+    var result = [Bool]()
+    
+    sigA.xor(sigB).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    sigA.sendNext(false)
+    
+    XCTAssertEqual(result, [true, false, true, false])
+  }
+  
+  func testThatNotWorks() {
+    let sigA = Signal<Bool>()
+    
+    var result = [Bool]()
+    
+    sigA.not().subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigA.sendNext(true)
+    sigA.sendNext(false)
+    sigA.sendNext(false)
+    
+    XCTAssertEqual(result, [false, false, true, true])
+  }
+  
 }
 
 

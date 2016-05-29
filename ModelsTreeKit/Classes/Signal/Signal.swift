@@ -111,7 +111,7 @@ public class Signal<T> {
     return nextSignal
   }
   
-  private func persistentMap() -> ValueKeepingSignal<T> {
+  func persistentMap() -> ValueKeepingSignal<T> {
     let nextSignal = ValueKeepingSignal<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
@@ -120,7 +120,7 @@ public class Signal<T> {
     return nextSignal
   }
   
-  private func transientMap() -> Signal<T> {
+  func transientMap() -> Signal<T> {
     let nextSignal = Signal<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
@@ -160,7 +160,7 @@ public class Signal<T> {
   
   //Sends combined value when any of signals fire
   
-  private func distinctLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+  func distinctLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let transientSelf = transientMap()
     let transientOther = otherSignal.transientMap()
     
@@ -352,5 +352,30 @@ extension Signal: Hashable, Equatable {
 
 public func ==<T>(lhs: Signal<T>, rhs: Signal<T>) -> Bool {
   return lhs.hashValue == rhs.hashValue
+}
+
+extension Signal where T: BooleanType {
+  
+  func and(otherSignal: Signal<T>) -> Signal<Bool> {
+    return persistentMap().combineLatest(otherSignal.persistentMap()).map {
+      guard let value1 = $0, let value2 = $1 else { return false }
+      return value1.boolValue && value2.boolValue
+    }
+  }
+  
+  func or(otherSignal: Signal<T>) -> Signal<Bool> {
+    return persistentMap().combineLatest(otherSignal.persistentMap()).map { $0?.boolValue == true || $1?.boolValue == true }
+  }
+  
+  func xor(otherSignal: Signal<T>) -> Signal<Bool> {
+    return persistentMap().combineLatest(otherSignal.persistentMap()).map {
+      return $0?.boolValue == true && $1?.boolValue != true || $0?.boolValue != true && $1?.boolValue == true
+    }
+  }
+  
+  func not() -> Signal<Bool> {
+    return map { !$0.boolValue }
+  }
+  
 }
 

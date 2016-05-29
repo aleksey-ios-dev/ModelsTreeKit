@@ -8,3 +8,4 @@
 
 #import "TSTTransitionViewController.h"
 #import "KeychainItemWrapper.h"
+#import "ControlProxy.h"
