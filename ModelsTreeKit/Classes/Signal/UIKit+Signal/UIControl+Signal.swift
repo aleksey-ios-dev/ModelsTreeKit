@@ -19,32 +19,11 @@ extension UIControl {
 
 class ControlSignalEmitter: NSObject {
   
-  private static var EmitterHandler: Int = 0
-  private weak var control: UIControl!
-  private var signalsMap = [UInt: Signal<UIControl>]()
-  private let controlProxy = ControlProxy(object: "")
-  
   init(control: UIControl) {
     self.control = control
     super.init()
     
     initializeSignalsMap()
-  }
-  
-  func initializeSignalsMap() {
-    
-    for (eventRawValue, _) in eventsList {
-      signalsMap[eventRawValue] = Signal<UIControl>()
-    }
-  
-    for (eventRawValue, selectorString) in eventsList {
-      let signal = signalsMap[eventRawValue]
-      controlProxy.registerBlock({ [weak signal, unowned self] in
-        signal?.sendNext(self.control)
-        }, forKey: selectorString)
-      control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), forControlEvents: UIControlEvents(rawValue: eventRawValue))
-    }
-  
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
@@ -57,6 +36,23 @@ class ControlSignalEmitter: NSObject {
     }
     
     return Signals.merge(correspondingSignals)
+  }
+  
+  private static var EmitterHandler: Int = 0
+  private weak var control: UIControl!
+  private var signalsMap = [UInt: Signal<UIControl>]()
+  private let controlProxy = ControlProxy.newProxy()
+  
+  private func initializeSignalsMap() {
+    for (eventRawValue, selectorString) in eventsList {
+      signalsMap[eventRawValue] = Signal<UIControl>()
+
+      let signal = signalsMap[eventRawValue]
+      controlProxy.registerBlock({ [weak signal, unowned self] in
+        signal?.sendNext(self.control)
+        }, forKey: selectorString)
+      control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), forControlEvents: UIControlEvents(rawValue: eventRawValue))
+    }
   }
   
   private var eventsList: [UInt: String] = [

@@ -8,15 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ControlTarget : NSObject
-
-- (void)someMethod;
-
-@end
-
 @interface ControlProxy : NSProxy
 
-- (instancetype)initWithObject: (id)object;
-- (void)registerBlock: (void (^)(void))block forKey: (NSString *)key;
++ (instancetype)newProxy;
+- (void)registerBlock: (void(^)(void))block forKey: (NSString *)key;
 
 @end

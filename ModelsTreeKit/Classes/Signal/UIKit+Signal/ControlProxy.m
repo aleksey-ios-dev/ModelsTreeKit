@@ -8,10 +8,10 @@
 
 #import "ControlProxy.h"
 
-@interface ControlTarget()
+
+@interface ControlTarget : NSObject
 
 @property (nonatomic, strong) NSMutableDictionary *blocks;
-
 
 @end
 
@@ -25,10 +25,7 @@
   return self;
 }
 
-- (void)someMethod {
-  
-}
-
+- (void)defaultCall {}
 
 - (void)registerBlock: (void (^)(void))block forKey: (NSString *)key {
   _blocks[key] = block;
@@ -39,9 +36,7 @@
   if  (block) {
     block();
   }
-  
 }
-
 
 @end
 
@@ -53,8 +48,12 @@
 
 @implementation ControlProxy
 
-- (instancetype)initWithObject: (id)object  {
-  _target = [ControlTarget new];
++ (instancetype)newProxy {
+  return [[self alloc] initWithObject: [ControlTarget new]];
+}
+
+- (instancetype)initWithObject: (ControlTarget *)object  {
+  _target = object;
   
   return self;
 }
@@ -65,10 +64,10 @@
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
-  return [_target methodSignatureForSelector:@selector(someMethod)];
+  return [_target methodSignatureForSelector:@selector(defaultCall)];
 }
 
-- (void)registerBlock: (void (^)(void)) block forKey: (NSString *)key {
+- (void)registerBlock: (void(^)(void)) block forKey: (NSString *)key {
   [_target registerBlock:block forKey:key];
 }
 
