@@ -11,7 +11,7 @@ import Foundation
 extension UISlider {
   
   public var valueSignal: Signal<Float> {
-    get { return signalEmitter.signalForControlEvents(.ValueChanged).map { ($0 as! UISlider).value }.skipRepeating() }
+    get { return signalForControlEvents(.ValueChanged).map { ($0 as! UISlider).value }.skipRepeating() }
   }
   
   public var reachMaximumSignal: Signal<Bool> {

@@ -11,7 +11,7 @@ import Foundation
 extension UITextField {
   
   public var textSignal: Signal<String> {
-    let textSignal = signalEmitter.signalForControlEvents(.EditingChanged).map { ($0 as! UITextField).text! }
+    let textSignal = signalForControlEvents(.EditingChanged).map { ($0 as! UITextField).text! }
     let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text }.filter { $0 != nil }.map { $0! }
     return Signals.merge([textSignal, onClearSignal])
   }
@@ -21,15 +21,15 @@ extension UITextField {
   }
   
   public var editingBeginSignal: Signal<Void> {
-    return signalEmitter.signalForControlEvents(.EditingDidBegin).map { _ in return Void() }
+    return signalForControlEvents(.EditingDidBegin).map { _ in return Void() }
   }
   
   public var editingEndSignal: Signal<Void> {
-    return signalEmitter.signalForControlEvents(.EditingDidEnd).map { _ in return Void() }
+    return signalForControlEvents(.EditingDidEnd).map { _ in return Void() }
   }
   
   public var returnSignal: Signal<Void> {
-    return signalEmitter.signalForControlEvents([.EditingDidEndOnExit]).map { _ in return Void() }
+    return signalForControlEvents([.EditingDidEndOnExit]).map { _ in return Void() }
   }
   
 }

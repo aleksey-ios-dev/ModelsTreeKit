@@ -11,7 +11,7 @@ import Foundation
 extension UIButton {
   
   public var selectionSignal: Signal<Void> {
-    get { return signalEmitter.signalForControlEvents(.TouchUpInside).map { _ in return Void() } }
+    get { return signalForControlEvents(.TouchUpInside).map { _ in return Void() } }
   }
 
 }

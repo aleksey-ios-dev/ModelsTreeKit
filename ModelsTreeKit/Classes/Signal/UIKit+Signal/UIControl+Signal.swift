@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 extension UIControl {
   
   public func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
@@ -17,19 +16,18 @@ extension UIControl {
   
 }
 
-class ControlSignalEmitter: NSObject {
+private class ControlSignalEmitter: NSObject {
   
   init(control: UIControl) {
     self.control = control
     super.init()
-    
     initializeSignalsMap()
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
     var correspondingSignals = [Signal<UIControl>]()
     
-    for event in eventsList.keys {
+    for event in eventsList {
       if events.contains(UIControlEvents(rawValue: event)) {
         correspondingSignals.append(signalsMap[event]!)
       }
@@ -43,29 +41,33 @@ class ControlSignalEmitter: NSObject {
   private var signalsMap = [UInt: Signal<UIControl>]()
   private let controlProxy = ControlProxy.newProxy()
   
+  private var eventsList: [UInt] = [
+    UIControlEvents.EditingChanged.rawValue,
+    UIControlEvents.ValueChanged.rawValue,
+    UIControlEvents.EditingDidEnd.rawValue,
+    UIControlEvents.EditingDidEndOnExit.rawValue,
+    UIControlEvents.TouchUpInside.rawValue
+  ]
+  
+  private let signaturePrefix = "selector"
+  
   private func initializeSignalsMap() {
-    for (eventRawValue, selectorString) in eventsList {
+    for eventRawValue in eventsList {
       signalsMap[eventRawValue] = Signal<UIControl>()
 
       let signal = signalsMap[eventRawValue]
+      let selectorString = signaturePrefix + String(eventRawValue)
+      
       controlProxy.registerBlock({ [weak signal, unowned self] in
         signal?.sendNext(self.control)
         }, forKey: selectorString)
       control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), forControlEvents: UIControlEvents(rawValue: eventRawValue))
     }
   }
-  
-  private var eventsList: [UInt: String] = [
-    UIControlEvents.EditingChanged.rawValue: "editingChanged",
-    UIControlEvents.ValueChanged.rawValue: "valueChanged",
-    UIControlEvents.EditingDidEnd.rawValue: "editingDidEnd",
-    UIControlEvents.EditingDidEndOnExit.rawValue: "EditingDidEndOnExit",
-    UIControlEvents.TouchUpInside.rawValue: "touchUpInside"
-  ]
 
 }
 
-extension UIControl {
+private extension UIControl {
   
   var signalEmitter: ControlSignalEmitter {
     get {
@@ -74,7 +76,6 @@ extension UIControl {
         emitter = ControlSignalEmitter(control: self)
         objc_setAssociatedObject(self, &ControlSignalEmitter.EmitterHandler, emitter, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
       }
-      
       return emitter!
     }
   }
