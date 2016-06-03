@@ -355,6 +355,82 @@ class SignalTests: XCTestCase {
     XCTAssertEqual(result, [false, false, true, true])
   }
   
+  func testThatThreeBooleanSignalsAddByOperator() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    let sigC = Signal<Bool>()
+    
+    var result = [Bool]()
+    
+    (sigA && sigB && sigC).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    sigC.sendNext(false)
+    sigC.sendNext(true)
+    sigB.sendNext(true)
+    
+    XCTAssertEqual(result, [false, false, false, false, false, true])
+  }
+  
+  func testThatOrWorksByOperator() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    let sigC = Signal<Bool>()
+    
+    var result = [Bool]()
+    (sigA || sigB || sigC).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    sigC.sendNext(true)
+    sigC.sendNext(false)
+    sigA.sendNext(false)
+    
+    XCTAssertEqual(result, [true, true, true, true, true, false])
+  }
+  
+  func testThatXorWorksByOperator() {
+    let sigA = Signal<Bool>()
+    let sigB = Signal<Bool>()
+    
+    var result = [Bool]()
+    
+    (sigA != sigB).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigB.sendNext(true)
+    sigB.sendNext(false)
+    sigA.sendNext(false)
+    
+    XCTAssertEqual(result, [true, false, true, false])
+  }
+  
+  func testThatNotWorksByOperator() {
+    let sigA = Signal<Bool>()
+    
+    var result = [Bool]()
+    
+    (!sigA).subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.sendNext(true)
+    sigA.sendNext(true)
+    sigA.sendNext(false)
+    sigA.sendNext(false)
+    
+    XCTAssertEqual(result, [false, false, true, true])
+  }
+  
 }
 
 

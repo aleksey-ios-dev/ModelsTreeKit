@@ -78,6 +78,9 @@
 		5BD081A21C818A8D00269752 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081A11C818A8D00269752 /* DeinitObservable.swift */; };
 		5BD081AF1C819EA000269752 /* BubbleNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081AE1C819EA000269752 /* BubbleNotification.swift */; };
 		5BD081BA1C81DDC100269752 /* SessionControllerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */; };
+		5BEFD2491D0193CF008F6B32 /* Signal+BooleanType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */; };
+		5BEFD24B1D01940A008F6B32 /* Signal+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */; };
+		5BEFD24D1D01948E008F6B32 /* Signal+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */; };
 		5BFBD4C81C27D8A6002B17F0 /* SubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -150,6 +153,9 @@
 		5BD081AE1C819EA000269752 /* BubbleNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleNotification.swift; sourceTree = "<group>"; };
 		5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionControllerConfiguration.swift; sourceTree = "<group>"; };
 		5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePoolTests.swift; sourceTree = "<group>"; };
+		5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+BooleanType.swift"; sourceTree = "<group>"; };
+		5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Comparable.swift"; sourceTree = "<group>"; };
+		5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Equatable.swift"; sourceTree = "<group>"; };
 		5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -365,6 +371,9 @@
 				5BB53FED1C25D60500246130 /* AutodisposePool.swift */,
 				5BB53FEE1C25D60500246130 /* Disposable.swift */,
 				5BB53FEF1C25D60500246130 /* Signal.swift */,
+				5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */,
+				5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */,
+				5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */,
 				5B18E10C1C853C1900FD22B4 /* ValuesStack.swift */,
 				5BB53FF01C25D60500246130 /* DeinitNotifier.swift */,
 			);
@@ -522,6 +531,7 @@
 				5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */,
 				5BB53FFF1C25D60500246130 /* Error.swift in Sources */,
 				5BD081A21C818A8D00269752 /* DeinitObservable.swift in Sources */,
+				5BEFD24B1D01940A008F6B32 /* Signal+Comparable.swift in Sources */,
 				5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */,
 				5BB5401E1C25D60500246130 /* UnauthorizedSession.swift in Sources */,
 				5BB5400E1C25D60500246130 /* StaticDataSource.swift in Sources */,
@@ -537,6 +547,7 @@
 				5BB540391C25D60500246130 /* TableViewAdapter.swift in Sources */,
 				5BD081AF1C819EA000269752 /* BubbleNotification.swift in Sources */,
 				5B1F9DC41C8BEC7300F96644 /* UIControl+Signal.swift in Sources */,
+				5BEFD2491D0193CF008F6B32 /* Signal+BooleanType.swift in Sources */,
 				5B1F9DBE1C8BD04800F96644 /* UISwitch+Signal.swift in Sources */,
 				5B18E0D71C835F6000FD22B4 /* NSObject+Pool.swift in Sources */,
 				5B1F9DB91C8BC57100F96644 /* UITextField+Signal.swift in Sources */,
@@ -548,6 +559,7 @@
 				5BB540141C25D60500246130 /* ObjectConsuming.swift in Sources */,
 				5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */,
 				5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */,
+				5BEFD24D1D01948E008F6B32 /* Signal+Equatable.swift in Sources */,
 				5B0DE7091C9507E100D02053 /* UIButton+Signal.swift in Sources */,
 				5BD081BA1C81DDC100269752 /* SessionControllerConfiguration.swift in Sources */,
 				5BB540121C25D60500246130 /* ModelAssignable.swift in Sources */,

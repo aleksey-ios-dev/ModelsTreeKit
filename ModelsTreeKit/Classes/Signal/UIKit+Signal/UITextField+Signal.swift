@@ -13,6 +13,7 @@ extension UITextField {
   public var textSignal: Signal<String> {
     let textSignal = signalForControlEvents(.EditingChanged).map { ($0 as! UITextField).text! }
     let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text }.filter { $0 != nil }.map { $0! }
+    //TODO: use proxy
     return Signals.merge([textSignal, onClearSignal])
   }
   

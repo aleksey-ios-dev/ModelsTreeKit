@@ -59,7 +59,7 @@ public class Signal<T> {
   
   var destructor: (Void -> Void)?
   
-  private var pool = AutodisposePool()
+  var pool = AutodisposePool()
   
   deinit {
     destructor?()
@@ -93,7 +93,7 @@ public class Signal<T> {
     return wrapper
   }
   
-  private func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
+  func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
     subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.putInto(nextSignal.pool)
     
     return nextSignal
@@ -300,82 +300,10 @@ public class Signal<T> {
   
 }
 
-extension Signal where T: Equatable {
-  
-  //Stops the value from being passed more than once
-  
-  //BUG: locks propagation of initial value
-  public func skipRepeating() -> Signal<T> {
-    let persistentSelf = persistentMap()
-    return persistentSelf.filter { [weak persistentSelf] newValue in return newValue != persistentSelf?.value }
-  }
-  
-}
-
-extension Signal where T: Comparable {
-  
-  //Pass values only in ascending order
-  
-  public func passAscending() -> Signal<T> {
-    let nextSignal = ValueKeepingSignal<T>()
-    
-    subscribeNext { [weak nextSignal] newValue in
-      if nextSignal?.value == nil || nextSignal?.value < newValue {
-        nextSignal?.sendNext(newValue)
-      }
-      }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
-    
-    return nextSignal
-  }
-  
-  //Pass values only in descending order
-  
-  public func passDescending() -> Signal<T> {
-    let nextSignal = ValueKeepingSignal<T>()
-    subscribeNext { [weak nextSignal] newValue in
-      if nextSignal?.value == nil || nextSignal?.value > newValue {
-        nextSignal?.sendNext(newValue)
-      }
-      }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
-    
-    return nextSignal
-  }
-  
-}
-
-extension Signal: Hashable, Equatable {
-}
+extension Signal: Hashable, Equatable {}
 
 public func ==<T>(lhs: Signal<T>, rhs: Signal<T>) -> Bool {
   return lhs.hashValue == rhs.hashValue
 }
 
-extension Signal where T: BooleanType {
-  
-  func and(otherSignal: Signal<T>) -> Signal<Bool> {
-    return persistentMap().combineLatest(otherSignal.persistentMap()).map {
-      guard let value1 = $0, let value2 = $1 else { return false }
-      return value1.boolValue && value2.boolValue
-    }
-  }
-  
-  func or(otherSignal: Signal<T>) -> Signal<Bool> {
-    return persistentMap().combineLatest(otherSignal.persistentMap()).map { $0?.boolValue == true || $1?.boolValue == true }
-  }
-  
-  func xor(otherSignal: Signal<T>) -> Signal<Bool> {
-    return persistentMap().combineLatest(otherSignal.persistentMap()).map {
-      return $0?.boolValue == true && $1?.boolValue != true || $0?.boolValue != true && $1?.boolValue == true
-    }
-  }
-  
-  func not() -> Signal<Bool> {
-    return map { !$0.boolValue }
-  }
-  
-}
 
