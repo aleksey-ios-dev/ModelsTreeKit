@@ -23,6 +23,8 @@ public final class Observable<T>: Signal<T> {
     self.value = value
   }
   
+  public var value: T?
+  
   public override func sendNext(value: T) {
     super.sendNext(value)
     self.value = value
@@ -38,8 +40,8 @@ public final class Observable<T>: Signal<T> {
     let extendedObservable = map { [weak self] (newValue: T?) -> (T?, T?, T?) in
       guard let _self = self else { return (new: nil, old: nil, initial: nil)}
       let initial = options.contains(.Initial) ? initialValue : nil
-      let old = _self.value
-      let new = newValue
+      let old = options.contains(.Old) ? _self.value : nil
+      let new = options.contains(.New) ? newValue : nil
       
       return (new, old, initial)
     } as! Observable<(T?, T?, T?)>

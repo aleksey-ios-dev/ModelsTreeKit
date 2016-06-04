@@ -14,9 +14,7 @@ public class Signal<T> {
   
   public typealias SignalHandler = T -> Void
   public typealias StateHandler = Bool -> Void
-  
-  var value: T?
-  
+    
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   

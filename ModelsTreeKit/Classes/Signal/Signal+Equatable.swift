@@ -14,8 +14,15 @@ extension Signal where T: Equatable {
   
   //BUG: locks propagation of initial value
   public func skipRepeating() -> Signal<T> {
-    let persistentSelf = observable()
-    return persistentSelf.filter { [weak persistentSelf] newValue in return newValue != persistentSelf?.value }
+    
+    let newSignal = Signal<T>()
+    observable().subscribeWithOptions([.New, .Old]) { (new, old, initial) in
+      if let new = new where new != old {
+        newSignal.sendNext(new)
+      }
+    }.putInto(pool)
+    
+    return newSignal
   }
   
 }

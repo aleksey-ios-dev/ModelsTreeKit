@@ -72,14 +72,14 @@ public extension Signal {
     
     let nextSignal = Observable<(T?, U?)>()
     
-    transientOther.subscribeNext { [weak transientSelf, weak nextSignal] in
-      guard let _self = transientSelf, let nextSignal = nextSignal else { return }
-      nextSignal.sendNext((_self.value, $0))
+    transientOther.subscribeNext { [weak nextSignal] in
+      guard let nextSignal = nextSignal else { return }
+      nextSignal.sendNext((nil, $0))
       }.putInto(nextSignal.pool)
     
-    transientSelf.subscribeNext { [weak transientOther, weak nextSignal] in
-      guard let otherSignal = transientOther, let nextSignal = nextSignal else { return }
-      nextSignal.sendNext(($0, otherSignal.value))
+    transientSelf.subscribeNext { [weak nextSignal] in
+      guard let nextSignal = nextSignal else { return }
+      nextSignal.sendNext(($0, nil))
       }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
