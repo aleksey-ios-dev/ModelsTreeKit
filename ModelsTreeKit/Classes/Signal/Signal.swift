@@ -8,6 +8,13 @@
 
 import Foundation
 
+infix operator >>> { associativity left precedence 160 }
+
+public func >>><T> (signal: Signal<T>, handler: (T -> Void)) -> Disposable {
+  return signal.subscribeNext(handler)
+}
+
+
 public class Signal<T> {
   
   public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash

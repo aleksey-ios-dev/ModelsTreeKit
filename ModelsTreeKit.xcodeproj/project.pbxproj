@@ -15,6 +15,7 @@
 		5B12F38A1D0283F500D96F0E /* Signal+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F3891D0283F500D96F0E /* Signal+Conversion.swift */; };
 		5B12F38C1D02864700D96F0E /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F38B1D02864700D96F0E /* Observable.swift */; };
 		5B12F38E1D02866700D96F0E /* Pipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F38D1D02866700D96F0E /* Pipe.swift */; };
+		5B12F3901D02E84600D96F0E /* Signal+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F38F1D02E84600D96F0E /* Signal+Binding.swift */; };
 		5B1508EC1C2943E6009A880C /* DeinitSignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */; };
 		5B18E0D11C8359D900FD22B4 /* GlobalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */; };
 		5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */; };
@@ -108,6 +109,7 @@
 		5B12F3891D0283F500D96F0E /* Signal+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Conversion.swift"; sourceTree = "<group>"; };
 		5B12F38B1D02864700D96F0E /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		5B12F38D1D02866700D96F0E /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
+		5B12F38F1D02E84600D96F0E /* Signal+Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Binding.swift"; sourceTree = "<group>"; };
 		5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitSignalTests.swift; sourceTree = "<group>"; };
 		5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalEvent.swift; sourceTree = "<group>"; };
 		5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+DeinitObservable.swift"; sourceTree = "<group>"; };
@@ -394,6 +396,7 @@
 				5B12F38D1D02866700D96F0E /* Pipe.swift */,
 				5B12F3831D0280D100D96F0E /* Signal+Operations.swift */,
 				5B12F3891D0283F500D96F0E /* Signal+Conversion.swift */,
+				5B12F38F1D02E84600D96F0E /* Signal+Binding.swift */,
 				5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */,
 				5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */,
 				5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */,
@@ -568,6 +571,7 @@
 				5BB540101C25D60500246130 /* Model.swift in Sources */,
 				5BB540031C25D60500246130 /* Array+RemoveObject.swift in Sources */,
 				5BB53FF91C25D60500246130 /* Archivable.swift in Sources */,
+				5B12F3901D02E84600D96F0E /* Signal+Binding.swift in Sources */,
 				5BB540181C25D60500246130 /* RootProtocols.swift in Sources */,
 				5BB540241C25D60500246130 /* SessionController.swift in Sources */,
 				5BB540391C25D60500246130 /* TableViewAdapter.swift in Sources */,
