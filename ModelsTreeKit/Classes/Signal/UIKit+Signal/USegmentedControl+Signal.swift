@@ -10,9 +10,14 @@ import Foundation
 
 extension UISegmentedControl {
   
-  public var selectedSegmentIndexSignal: Signal<Int> {
-    get { return signalForControlEvents(.ValueChanged).map { ($0 as! UISegmentedControl).selectedSegmentIndex } }
+  public var selectedSegmentIndexSignal: Observable<Int> {
+    get {
+      let signal = signalForControlEvents(.ValueChanged).map { ($0 as! UISegmentedControl).selectedSegmentIndex }
+      let observable = signal.observable()
+      signal.sendNext(selectedSegmentIndex)
+      
+      return observable
+    }
   }
   
 }
-

@@ -10,11 +10,18 @@ import Foundation
 
 extension UITextField {
   
-  public var textSignal: Signal<String> {
+  public var textSignal: Observable<String> {
     let textSignal = signalForControlEvents(.EditingChanged).map { ($0 as! UITextField).text! }
+    let textObservable = textSignal.observable()
     let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text }.filter { $0 != nil }.map { $0! }
     
-    return Signals.merge([textSignal, onClearSignal])
+    let observable = Signals.merge([textObservable, onClearSignal]).observable()
+    
+    if let text = text {
+      textSignal.sendNext(text)
+    }
+    
+    return observable
   }
   
   public var editingSignal: Signal<Bool> {

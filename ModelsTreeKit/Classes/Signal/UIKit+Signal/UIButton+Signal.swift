@@ -10,8 +10,8 @@ import Foundation
 
 extension UIButton {
   
-  public var selectionSignal: Signal<Void> {
-    get { return signalForControlEvents(.TouchUpInside).map { _ in return Void() } }
+  public var selectionSignal: Pipe<Void> {
+    get { return signalForControlEvents(.TouchUpInside).map { _ in return Void() } as! Pipe<Void> }
   }
 
 }
