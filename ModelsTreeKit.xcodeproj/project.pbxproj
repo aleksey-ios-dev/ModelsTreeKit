@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		5B0DE7091C9507E100D02053 /* UIButton+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */; };
+		5B12F37D1D0263D400D96F0E /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F37C1D0263D400D96F0E /* Validator.swift */; };
+		5B12F37F1D02641500D96F0E /* Signal+Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F37E1D02641500D96F0E /* Signal+Validator.swift */; };
 		5B1508EC1C2943E6009A880C /* DeinitSignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */; };
 		5B18E0D11C8359D900FD22B4 /* GlobalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */; };
 		5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */; };
 		5B18E0D71C835F6000FD22B4 /* NSObject+Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */; };
-		5B18E10D1C853C1900FD22B4 /* ValuesStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E10C1C853C1900FD22B4 /* ValuesStack.swift */; };
-		5B18E10F1C853EC600FD22B4 /* ValuesStackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E10E1C853EC600FD22B4 /* ValuesStackTests.swift */; };
 		5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE91C25D60500246130 /* SessionCredentials.swift */; };
 		5B1F9DB91C8BC57100F96644 /* UITextField+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DB81C8BC57100F96644 /* UITextField+Signal.swift */; };
 		5B1F9DBB1C8BC5AA00F96644 /* USegmentedControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DBA1C8BC5AA00F96644 /* USegmentedControl+Signal.swift */; };
@@ -96,12 +96,12 @@
 
 /* Begin PBXFileReference section */
 		5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Signal.swift"; sourceTree = "<group>"; };
+		5B12F37C1D0263D400D96F0E /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		5B12F37E1D02641500D96F0E /* Signal+Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Validator.swift"; sourceTree = "<group>"; };
 		5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitSignalTests.swift; sourceTree = "<group>"; };
 		5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalEvent.swift; sourceTree = "<group>"; };
 		5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+DeinitObservable.swift"; sourceTree = "<group>"; };
 		5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Pool.swift"; sourceTree = "<group>"; };
-		5B18E10C1C853C1900FD22B4 /* ValuesStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValuesStack.swift; sourceTree = "<group>"; };
-		5B18E10E1C853EC600FD22B4 /* ValuesStackTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValuesStackTests.swift; sourceTree = "<group>"; };
 		5B1F9DB81C8BC57100F96644 /* UITextField+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Signal.swift"; sourceTree = "<group>"; };
 		5B1F9DBA1C8BC5AA00F96644 /* USegmentedControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "USegmentedControl+Signal.swift"; sourceTree = "<group>"; };
 		5B1F9DBD1C8BD04800F96644 /* UISwitch+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISwitch+Signal.swift"; sourceTree = "<group>"; };
@@ -178,6 +178,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B12F37B1D0263CD00D96F0E /* Validator */ = {
+			isa = PBXGroup;
+			children = (
+				5B12F37C1D0263D400D96F0E /* Validator.swift */,
+			);
+			path = Validator;
+			sourceTree = "<group>";
+		};
 		5B1F9DB71C8BC57100F96644 /* UIKit+Signal */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,7 +239,6 @@
 				5B8BAC861C27BEFA000389C2 /* ListTests.swift */,
 				5BBFBE021C26A2750001E5B3 /* SignalTests.swift */,
 				5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */,
-				5B18E10E1C853EC600FD22B4 /* ValuesStackTests.swift */,
 				5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */,
 				5BBFBDFF1C268AEE0001E5B3 /* UpdatesPoolTests.swift */,
 				5BB53FBA1C25D5AC00246130 /* Info.plist */,
@@ -242,6 +249,7 @@
 		5BB53FC41C25D60500246130 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5B12F37B1D0263CD00D96F0E /* Validator */,
 				5BD081AD1C819E9800269752 /* Bubble */,
 				5BB53FC51C25D60500246130 /* Archivable */,
 				5BB53FCB1C25D60500246130 /* Error */,
@@ -374,7 +382,7 @@
 				5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */,
 				5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */,
 				5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */,
-				5B18E10C1C853C1900FD22B4 /* ValuesStack.swift */,
+				5B12F37E1D02641500D96F0E /* Signal+Validator.swift */,
 				5BB53FF01C25D60500246130 /* DeinitNotifier.swift */,
 			);
 			path = Signal;
@@ -518,6 +526,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B12F37F1D02641500D96F0E /* Signal+Validator.swift in Sources */,
 				5BB5402C1C25D60500246130 /* AutodisposePool.swift in Sources */,
 				5BB540321C25D60500246130 /* DeinitNotifier.swift in Sources */,
 				5B1F9DC21C8BE2E100F96644 /* UIStepper+Signal.swift in Sources */,
@@ -538,7 +547,6 @@
 				5BB5402A1C25D60500246130 /* AuthorizedSession.swift in Sources */,
 				5BB540081C25D60500246130 /* List.swift in Sources */,
 				5BBFBDF71C2681870001E5B3 /* KeychainItemWrapper.m in Sources */,
-				5B18E10D1C853C1900FD22B4 /* ValuesStack.swift in Sources */,
 				5BB540101C25D60500246130 /* Model.swift in Sources */,
 				5BB540031C25D60500246130 /* Array+RemoveObject.swift in Sources */,
 				5BB53FF91C25D60500246130 /* Archivable.swift in Sources */,
@@ -556,6 +564,7 @@
 				5BB5400C1C25D60500246130 /* ObjectsDataSource.swift in Sources */,
 				5BB540371C25D60500246130 /* CollectionViewAdapter.swift in Sources */,
 				5BB5401A1C25D60500246130 /* Service.swift in Sources */,
+				5B12F37D1D0263D400D96F0E /* Validator.swift in Sources */,
 				5BB540141C25D60500246130 /* ObjectConsuming.swift in Sources */,
 				5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */,
 				5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */,
@@ -580,7 +589,6 @@
 				5BB5401B1C25D60500246130 /* Service.swift in Sources */,
 				5BB5400F1C25D60500246130 /* StaticDataSource.swift in Sources */,
 				5BB540361C25D60500246130 /* TSTTransitionViewController.m in Sources */,
-				5B18E10F1C853EC600FD22B4 /* ValuesStackTests.swift in Sources */,
 				5BB5402B1C25D60500246130 /* AuthorizedSession.swift in Sources */,
 				5BB540E41C26758B00246130 /* ListBasicTests.swift in Sources */,
 				5BB540041C25D60500246130 /* Array+RemoveObject.swift in Sources */,

@@ -33,7 +33,7 @@
 
 - (void)fireBlockforKey: (NSString *)key {
   void (^block)(void) = _blocks[key];
-  if  (block) {
+  if (block) {
     block();
   }
 }
