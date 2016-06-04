@@ -19,10 +19,10 @@ public class List<T where T: Hashable, T: Equatable>: Model {
   public typealias FetchCompletionBlock = (success: Bool, response: [T]?, error: Error?) -> Void
   public typealias FetchBlock = (completion: FetchCompletionBlock, offset: Int) -> NSOperation?
   
-  let beginUpdatesSignal = Signal<Void>()
-  let endUpdatesSignal = Signal<Void>()
-  let didChangeContentSignal = Signal<(insertions: Set<T>, deletions: Set<T>, updates: Set<T>)>()
-  let didReplaceContentSignal = Signal<Set<T>>()
+  let beginUpdatesSignal = Pipe<Void>()
+  let endUpdatesSignal = Pipe<Void>()
+  let didChangeContentSignal = Pipe<(insertions: Set<T>, deletions: Set<T>, updates: Set<T>)>()
+  let didReplaceContentSignal = Pipe<Set<T>>()
   
   public private(set) var objects = Set<T>()
   

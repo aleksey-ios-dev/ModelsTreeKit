@@ -12,9 +12,9 @@ public class Model {
   
   public private(set) weak var parent: Model?
   
-  public let pushChildSignal = Signal<Model>()
-  public let wantsRemoveChildSignal = Signal<Model>()
-  public let errorSignal = Signal<Error>()
+  public let pushChildSignal = Pipe<Model>()
+  public let wantsRemoveChildSignal = Pipe<Model>()
+  public let errorSignal = Pipe<Error>()
   public let pool = AutodisposePool()
   
   private let hash = NSProcessInfo.processInfo().globallyUniqueString

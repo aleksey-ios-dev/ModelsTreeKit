@@ -12,7 +12,7 @@ import XCTest
 
 class SignalTests: XCTestCase {
   
-  var blocker = Signal<Bool>()
+  var blocker = Pipe<Bool>()
   
   func testThatSubscriptionPassesValue() {
     let signal = Signal<Int>()
@@ -49,8 +49,8 @@ class SignalTests: XCTestCase {
   }
   
   func testThatCombineMergesTwoSignals() {
-    let numberSignal = ValueKeepingSignal<Int>()
-    let textSignal = ValueKeepingSignal<String>()
+    let numberSignal = Pipe<Int>()
+    let textSignal = Pipe<String>()
     
     
     var result = [String]()
@@ -133,7 +133,7 @@ class SignalTests: XCTestCase {
   }
   
   func testThatPassAscendingWorks() {
-    let testSignal = Signal<Int>()
+    let testSignal = Pipe<Int>()
     let expectedResult = [-4, 1, 3, 4]
     var actualResult = [Int]()
     
@@ -448,6 +448,20 @@ class SignalTests: XCTestCase {
     sigA.sendNext("mr. @aleksey")
     
     XCTAssertEqual(result, ["aleksey", "mr. aleksey", "mr. @aleksey"])
+  }
+  
+  func testObservingWithOptions() {
+    let sigA = Pipe<Int>()
+    
+    sigA.observable().subscribeWithOptions([.New, .Old]) { new, old, initial in
+      print("new: \(new), old: \(old), initial: \(initial)")
+    }
+    
+    sigA.sendNext(7)
+    sigA.sendNext(9)
+    sigA.sendNext(11)
+    
+    //TODO: write proper test
   }
   
 }

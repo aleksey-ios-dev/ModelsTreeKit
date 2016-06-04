@@ -16,12 +16,12 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
-  public let didSelectCellSignal = Signal<(cell: UICollectionViewCell?, object: ObjectType?)>()
-  public let willDisplayCellSignal = Signal<UICollectionViewCell>()
-  public let willCalculateSizeSignal = Signal<UICollectionViewCell>()
-  public let didEndDisplayingCell = Signal<UICollectionViewCell>()
-  public let willSetObjectSignal = Signal<UICollectionViewCell>()
-  public let didSetObjectSignal = Signal<UICollectionViewCell>()
+  public let didSelectCellSignal = Pipe<(cell: UICollectionViewCell?, object: ObjectType?)>()
+  public let willDisplayCellSignal = Pipe<UICollectionViewCell>()
+  public let willCalculateSizeSignal = Pipe<UICollectionViewCell>()
+  public let didEndDisplayingCell = Pipe<UICollectionViewCell>()
+  public let willSetObjectSignal = Pipe<UICollectionViewCell>()
+  public let didSetObjectSignal = Pipe<UICollectionViewCell>()
   
   private weak var collectionView: UICollectionView!
 

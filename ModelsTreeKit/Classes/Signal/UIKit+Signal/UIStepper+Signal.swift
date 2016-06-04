@@ -11,7 +11,7 @@ import Foundation
 extension UIStepper {
   
   public var valueChangeSignal: Signal<Double> {
-    get { return signalForControlEvents(.ValueChanged).map { ($0 as! UIStepper).value }.persistentMap() }
+    get { return signalForControlEvents(.ValueChanged).map { ($0 as! UIStepper).value }.observable() }
   }
   
   public var reachMaximumSignal: Signal<Bool> {

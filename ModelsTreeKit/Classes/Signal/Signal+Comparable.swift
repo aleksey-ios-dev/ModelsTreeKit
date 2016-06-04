@@ -12,8 +12,8 @@ extension Signal where T: Comparable {
   
   //Pass values only in ascending order
   
-  public func passAscending() -> Signal<T> {
-    let nextSignal = ValueKeepingSignal<T>()
+  public func passAscending() -> Observable<T> {
+    let nextSignal = Observable<T>()
     
     subscribeNext { [weak nextSignal] newValue in
       if nextSignal?.value == nil || nextSignal?.value < newValue {
@@ -28,8 +28,8 @@ extension Signal where T: Comparable {
   
   //Pass values only in descending order
   
-  public func passDescending() -> Signal<T> {
-    let nextSignal = ValueKeepingSignal<T>()
+  public func passDescending() -> Observable<T> {
+    let nextSignal = Observable<T>()
     subscribeNext { [weak nextSignal] newValue in
       if nextSignal?.value == nil || nextSignal?.value > newValue {
         nextSignal?.sendNext(newValue)

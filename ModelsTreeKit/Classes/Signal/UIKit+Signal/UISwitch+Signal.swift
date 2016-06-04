@@ -10,8 +10,14 @@ import Foundation
 
 extension UISwitch {
   
-  public var onSignal: Signal<Bool> {
-    get { return signalForControlEvents(.ValueChanged).map { ($0 as! UISwitch).on } }
+  public var onSignal: Observable<Bool> {
+    get {
+      let signal = signalForControlEvents(.ValueChanged).map { ($0 as! UISwitch).on }.observable()
+      let observable = signal.observable()
+      signal.sendNext(on)
+      
+      return observable
+    }
   }
   
 }

@@ -15,11 +15,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
-  public let didSelectCellSignal = Signal<(cell: UITableViewCell?, object: ObjectType?)>()
-  public let willDisplayCellSignal = Signal<UITableViewCell>()
-  public let didEndDisplayingCellSignal = Signal<UITableViewCell>()
-  public let willSetObjectSignal = Signal<UITableViewCell>()
-  public let didSetObjectSignal = Signal<UITableViewCell>()
+  public let didSelectCellSignal = Pipe<(cell: UITableViewCell?, object: ObjectType?)>()
+  public let willDisplayCellSignal = Pipe<UITableViewCell>()
+  public let didEndDisplayingCellSignal = Pipe<UITableViewCell>()
+  public let willSetObjectSignal = Pipe<UITableViewCell>()
+  public let didSetObjectSignal = Pipe<UITableViewCell>()
   
   private weak var tableView: UITableView!
   private var nibs = [String: UINib]()

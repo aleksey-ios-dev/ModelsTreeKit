@@ -11,18 +11,18 @@ import Foundation
 extension Signal where T: BooleanType {
   
   func and(otherSignal: Signal<T>) -> Signal<Bool> {
-    return persistentMap().combineLatest(otherSignal.persistentMap()).map {
+    return observable().combineLatest(otherSignal.observable()).map {
       guard let value1 = $0, let value2 = $1 else { return false }
       return value1.boolValue && value2.boolValue
     }
   }
   
   func or(otherSignal: Signal<T>) -> Signal<Bool> {
-    return persistentMap().combineLatest(otherSignal.persistentMap()).map { $0?.boolValue == true || $1?.boolValue == true }
+    return observable().combineLatest(otherSignal.observable()).map { $0?.boolValue == true || $1?.boolValue == true }
   }
   
   func xor(otherSignal: Signal<T>) -> Signal<Bool> {
-    return persistentMap().combineLatest(otherSignal.persistentMap()).map {
+    return observable().combineLatest(otherSignal.observable()).map {
       return $0?.boolValue == true && $1?.boolValue != true || $0?.boolValue != true && $1?.boolValue == true
     }
   }

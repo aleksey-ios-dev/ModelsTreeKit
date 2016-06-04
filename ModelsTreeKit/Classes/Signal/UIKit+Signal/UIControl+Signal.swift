@@ -25,7 +25,7 @@ private class ControlSignalEmitter: NSObject {
   }
   
   func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
-    var correspondingSignals = [Signal<UIControl>]()
+    var correspondingSignals = [Pipe<UIControl>]()
     
     for event in eventsList {
       if events.contains(UIControlEvents(rawValue: event)) {
@@ -38,7 +38,7 @@ private class ControlSignalEmitter: NSObject {
   
   private static var EmitterHandler: Int = 0
   private weak var control: UIControl!
-  private var signalsMap = [UInt: Signal<UIControl>]()
+  private var signalsMap = [UInt: Pipe<UIControl>]()
   private let controlProxy = ControlProxy.newProxy()
   
   private var eventsList: [UInt] = [
@@ -53,7 +53,7 @@ private class ControlSignalEmitter: NSObject {
   
   private func initializeSignalsMap() {
     for eventRawValue in eventsList {
-      signalsMap[eventRawValue] = Signal<UIControl>()
+      signalsMap[eventRawValue] = Pipe<UIControl>()
 
       let signal = signalsMap[eventRawValue]
       let selectorString = signaturePrefix + String(eventRawValue)

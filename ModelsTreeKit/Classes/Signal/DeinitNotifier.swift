@@ -10,7 +10,7 @@ import Foundation
 
 class DeinitNotifier: NSObject {
   
-  var signal = Signal<Void>()
+  var signal = Pipe<Void>()
   
   deinit {
     signal.sendCompleted()

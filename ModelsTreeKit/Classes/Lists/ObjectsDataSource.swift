@@ -7,11 +7,11 @@ import Foundation
 
 public class ObjectsDataSource<ObjectType> {
   
-  let beginUpdatesSignal = Signal<Void>()
-  let endUpdatesSignal = Signal<Void>()
-  let didChangeObjectSignal = Signal<(object: ObjectType, changeType: ListChangeType, fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?)>()
-  let didChangeSectionSignal = Signal<(changeType: ListChangeType, fromIndex: Int?, toIndex: Int?)>()
-  let reloadDataSignal = Signal<Void>()
+  let beginUpdatesSignal = Pipe<Void>()
+  let endUpdatesSignal = Pipe<Void>()
+  let didChangeObjectSignal = Pipe<(object: ObjectType, changeType: ListChangeType, fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?)>()
+  let didChangeSectionSignal = Pipe<(changeType: ListChangeType, fromIndex: Int?, toIndex: Int?)>()
+  let reloadDataSignal = Pipe<Void>()
   
   func numberOfSections() -> Int {
     return 0

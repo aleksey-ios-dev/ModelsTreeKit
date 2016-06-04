@@ -14,7 +14,7 @@ extension Signal where T: Equatable {
   
   //BUG: locks propagation of initial value
   public func skipRepeating() -> Signal<T> {
-    let persistentSelf = persistentMap()
+    let persistentSelf = observable()
     return persistentSelf.filter { [weak persistentSelf] newValue in return newValue != persistentSelf?.value }
   }
   
