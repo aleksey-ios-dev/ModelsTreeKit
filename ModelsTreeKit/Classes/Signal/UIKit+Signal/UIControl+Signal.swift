@@ -41,8 +41,7 @@ private class ControlSignalEmitter: NSObject {
   private var signalsMap = [UInt: Pipe<UIControl>]()
   private let controlProxy = ControlProxy.newProxy()
   
-  //TODO: lazy loading probably will allow to get rid of this
-  private var eventsList: [UInt] = [
+  private let eventsList: [UInt] = [
     UIControlEvents.EditingChanged.rawValue,
     UIControlEvents.ValueChanged.rawValue,
     UIControlEvents.EditingDidEnd.rawValue,

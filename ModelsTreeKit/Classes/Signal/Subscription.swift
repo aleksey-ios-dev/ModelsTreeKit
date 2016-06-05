@@ -85,4 +85,5 @@ class Subscription<U> : Invocable, Disposable {
   func ownedBy(object: DeinitObservable) -> Disposable {
     return takeUntil(object.deinitSignal)
   }
+  
 }
