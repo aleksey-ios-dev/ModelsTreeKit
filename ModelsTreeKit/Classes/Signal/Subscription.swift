@@ -77,8 +77,8 @@ class Subscription<U> : Invocable, Disposable {
   func takeUntil(signal: Pipe<Void>) -> Disposable {
     signal.subscribeNext { [weak self] in
       self?.dispose()
-    }.putInto(signal.pool)
-    
+    }.putInto(self.signal.pool)
+
     return self
   }
 }
