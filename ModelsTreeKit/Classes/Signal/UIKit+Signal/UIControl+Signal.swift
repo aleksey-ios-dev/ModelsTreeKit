@@ -10,7 +10,7 @@ import Foundation
 
 extension UIControl {
   
-  public func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
+  public func signalForControlEvents(events: UIControlEvents) -> Pipe<UIControl> {
     return signalEmitter.signalForControlEvents(events)
   }
   
@@ -24,7 +24,7 @@ private class ControlSignalEmitter: NSObject {
     initializeSignalsMap()
   }
   
-  func signalForControlEvents(events: UIControlEvents) -> Signal<UIControl> {
+  func signalForControlEvents(events: UIControlEvents) -> Pipe<UIControl> {
     var correspondingSignals = [Pipe<UIControl>]()
     
     for event in eventsList {
@@ -33,7 +33,7 @@ private class ControlSignalEmitter: NSObject {
       }
     }
     
-    return Signals.merge(correspondingSignals)
+    return Signals.merge(correspondingSignals).pipe()
   }
   
   private static var EmitterHandler: Int = 0

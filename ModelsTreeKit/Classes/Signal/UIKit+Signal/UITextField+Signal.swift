@@ -15,29 +15,29 @@ extension UITextField {
     let textObservable = textSignal.observable()
     let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text }.filter { $0 != nil }.map { $0! }
     
-    let observable = Signals.merge([textObservable, onClearSignal]).observable()
-    
-    if let text = text {
-      textSignal.sendNext(text)
-    }
+    let observable = Observable<String>(value: text)
+    Signals.merge([textObservable, onClearSignal]).bindTo(observable)
     
     return observable
   }
   
-  public var editingSignal: Signal<Bool> {
-    return editingBeginSignal.map { true }.distinctLatest(editingEndSignal.map { true }).map { $0 == true && $1 == nil }
+  public var editingSignal: Observable<Bool> {
+    let observable = Observable<Bool>(value: editing)
+    editingBeginSignal.map { true }.distinctLatest(editingEndSignal.map { true }).map { $0 == true && $1 == nil }.bindTo(observable)
+    
+    return observable
   }
   
-  public var editingBeginSignal: Signal<Void> {
-    return signalForControlEvents(.EditingDidBegin).map { _ in return Void() }
+  public var editingBeginSignal: Pipe<Void> {
+    return signalForControlEvents(.EditingDidBegin).map { _ in return Void() } as! Pipe<Void>
   }
   
-  public var editingEndSignal: Signal<Void> {
-    return signalForControlEvents(.EditingDidEnd).map { _ in return Void() }
+  public var editingEndSignal: Pipe<Void> {
+    return signalForControlEvents(.EditingDidEnd).map { _ in return Void() } as! Pipe<Void>
   }
   
-  public var returnSignal: Signal<Void> {
-    return signalForControlEvents([.EditingDidEndOnExit]).map { _ in return Void() }
+  public var returnSignal: Pipe<Void> {
+    return signalForControlEvents([.EditingDidEndOnExit]).map { _ in return Void() } as! Pipe<Void>
   }
   
 }

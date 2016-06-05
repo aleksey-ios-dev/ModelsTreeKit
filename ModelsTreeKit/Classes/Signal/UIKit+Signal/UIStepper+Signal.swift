@@ -10,29 +10,30 @@ import Foundation
 
 extension UIStepper {
   
-  public var valueChangeSignal: Signal<Double> {
+  public var valueSignal: Observable<Double> {
     get {
-      let signal = signalForControlEvents(.ValueChanged).map { ($0 as! UIStepper).value }
-      let observable = signal.observable()
-      signal.sendNext(value)
+      let observable = Observable<Double>(value: value)
+      signalForControlEvents(.ValueChanged).map { ($0 as! UIStepper).value }.bindTo(observable)
       
       return observable
     }
   }
   
-  public var reachMaximumSignal: Signal<Bool> {
+  public var isAtMaximumSignal: Observable<Bool> {
     get {
-      return valueChangeSignal.filter { [weak self] in
-        return self!.maximumValue == $0
-        }.map { _ in return true}
+      let observable = Observable<Bool>(value: value == maximumValue)
+      valueSignal.filter { [weak self] in return self!.maximumValue == $0 }.map { _ in return true}.bindTo(observable)
+      
+      return observable
     }
   }
   
-  public var reachMinimumSignal: Signal<Bool> {
+  public var isAtMinimumSignal: Observable<Bool> {
     get {
-      return valueChangeSignal.filter { [weak self] in
-        return self!.minimumValue == $0
-        }.map { _ in return true}
+      let observable = Observable<Bool>(value: value == minimumValue)
+      valueSignal.filter { [weak self] in return self!.minimumValue == $0 }.map { _ in return true}.bindTo(observable)
+      
+      return observable
     }
   }
   

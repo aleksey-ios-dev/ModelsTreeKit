@@ -19,7 +19,7 @@ extension Signal where T: Comparable {
       if nextSignal?.value == nil || nextSignal?.value < newValue {
         nextSignal?.sendNext(newValue)
       }
-      }.putInto(nextSignal.pool)
+    }.putInto(nextSignal.pool)
     
     chainSignal(nextSignal)
     

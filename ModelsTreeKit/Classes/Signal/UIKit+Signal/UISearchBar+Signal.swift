@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+extension UISearchBar {
+  func textSignal() {
+  }
+}

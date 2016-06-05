@@ -356,9 +356,9 @@ class SignalTests: XCTestCase {
   }
   
   func testThatThreeBooleanSignalsAddByOperator() {
-    let sigA = Signal<Bool>()
-    let sigB = Signal<Bool>()
-    let sigC = Signal<Bool>()
+    let sigA = Pipe<Bool>()
+    let sigB = Pipe<Bool>()
+    let sigC = Pipe<Bool>()
     
     var result = [Bool]()
     
@@ -377,9 +377,9 @@ class SignalTests: XCTestCase {
   }
   
   func testThatOrWorksByOperator() {
-    let sigA = Signal<Bool>()
-    let sigB = Signal<Bool>()
-    let sigC = Signal<Bool>()
+    let sigA = Pipe<Bool>()
+    let sigB = Pipe<Bool>()
+    let sigC = Pipe<Bool>()
     
     var result = [Bool]()
     (sigA || sigB || sigC).subscribeNext {
@@ -451,17 +451,63 @@ class SignalTests: XCTestCase {
   }
   
   func testObservingWithOptions() {
-    let sigA = Pipe<Int>()
+    let sigA = Observable<Int>(value: 5)
     
-    sigA.observable().subscribeWithOptions([.New, .Old]) { new, old, initial in
-      print("new: \(new), old: \(old), initial: \(initial)")
+    var result = [String]()
+
+    sigA.subscribeWithOptions([.New, .Old, .Initial]) { new, old, initial in
+      result.append("n: \(new!), o: \(old!), i: \(initial!)")
     }
     
     sigA.sendNext(7)
     sigA.sendNext(9)
     sigA.sendNext(11)
     
+    XCTAssertEqual(result, [
+      "n: 5, o: 5, i: 5",
+      "n: 7, o: 5, i: 5",
+      "n: 9, o: 7, i: 5",
+      "n: 11, o: 9, i: 5"])
+    
     //TODO: write proper test
+  }
+  
+  func testBindingBetweenObservables() {
+    let sigA = Observable<Int>()
+    let sigB = Observable<Int>()
+    
+    sigA.bindTo(sigB)
+    
+    var result = [Int]()
+    
+    sigB.subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.value = 1
+    sigA.value = 3
+    sigA.value = 5
+    
+    XCTAssertEqual(result, [1, 3, 5])
+  }
+  
+  func testBindingWithMapBetweenObservables() {
+    let sigA = Observable<String>()
+    let sigB = Observable<Int>()
+    
+    sigA.map { $0.characters.count }.bindTo(sigB)
+    
+    var result = [Int]()
+    
+    sigB.subscribeNext {
+      result.append($0)
+    }
+    
+    sigA.value = "a"
+    sigA.value = "abc"
+    sigA.value = "abcde"
+    
+    XCTAssertEqual(result, [1, 3, 5])
   }
   
 }

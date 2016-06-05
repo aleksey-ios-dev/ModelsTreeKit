@@ -12,9 +12,8 @@ extension UISegmentedControl {
   
   public var selectedSegmentIndexSignal: Observable<Int> {
     get {
-      let signal = signalForControlEvents(.ValueChanged).map { ($0 as! UISegmentedControl).selectedSegmentIndex }
-      let observable = signal.observable()
-      signal.sendNext(selectedSegmentIndex)
+      let observable = Observable<Int>(value: selectedSegmentIndex)
+      signalForControlEvents(.ValueChanged).map { ($0 as! UISegmentedControl).selectedSegmentIndex }.bindTo(observable)
       
       return observable
     }
