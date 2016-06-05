@@ -11,6 +11,8 @@ import Foundation
 public extension Signal {
   
   public func observable() -> Observable<T> {
+    if self is Observable<T> { return self as! Observable<T> }
+    
     let nextSignal = Observable<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)
@@ -22,6 +24,8 @@ public extension Signal {
   }
   
   public func pipe() -> Pipe<T> {
+    if self is Pipe<T> { return self as! Pipe<T> }
+    
     let nextSignal = Pipe<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
     chainSignal(nextSignal)

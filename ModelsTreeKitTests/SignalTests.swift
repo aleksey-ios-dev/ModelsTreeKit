@@ -510,6 +510,34 @@ class SignalTests: XCTestCase {
     XCTAssertEqual(result, [1, 3, 5])
   }
   
+  func testBindingInstantlyAppliesBoundValue() {
+    let sigA = Observable<String>(value: "test")
+    let sigB = Observable<String>()
+    
+    sigA.bindTo(sigB)
+    
+    XCTAssertEqual(sigA.value, sigB.value)
+  }
+  
+  func testTakeUntil() {
+    let sigA = Pipe<String>()
+    let deinitSignal = Pipe<Void>()
+    
+    var result = [String]()
+    
+    sigA.subscribeNext {
+      result.append($0)
+    }.takeUntil(deinitSignal)
+    
+    sigA.sendNext("a")
+    sigA.sendNext("b")
+    deinitSignal.sendNext()
+    sigA.sendNext("c")
+    
+    XCTAssertEqual(result, ["a", "b"])
+
+    sigA.subscribeNext { print ($0) }.takeUntil(deinitSignal)
+  }
 }
 
 

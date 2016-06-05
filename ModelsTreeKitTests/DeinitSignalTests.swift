@@ -17,7 +17,7 @@ class DeinitSignalTests: XCTestCase {
   
   override func setUp() {
     controller = UIViewController()
-    controller?.deinitSignal.subscribeCompleted { [weak self] deallocated in
+    controller?.deinitSignal.subscribeNext { [weak self] deallocated in
       self?.controllerDidDeallocate = true
       }.putInto(pool)
   }

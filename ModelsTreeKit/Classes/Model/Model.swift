@@ -33,7 +33,7 @@ public class Model {
   private weak var representationDeinitDisposable: Disposable?
   
   public func applyRepresentation(representation: DeinitObservable) {
-    representationDeinitDisposable = representation.deinitSignal.subscribeCompleted { [weak self] _ in
+    representationDeinitDisposable = representation.deinitSignal.subscribeNext { [weak self] _ in
       self?.parent?.removeChild(self!)
     }.autodispose()
   }
