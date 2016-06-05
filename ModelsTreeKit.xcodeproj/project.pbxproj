@@ -29,6 +29,8 @@
 		5B1F9DC41C8BEC7300F96644 /* UIControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */; };
 		5B2548661D04117E003D6D69 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548651D04117E003D6D69 /* Disposable.swift */; };
 		5B2548681D04135D003D6D69 /* Signal+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548671D04135D003D6D69 /* Signal+Void.swift */; };
+		5B25486A1D041FB0003D6D69 /* TakeUntilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */; };
+		5B25486B1D042020003D6D69 /* AutodisposePoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */; };
 		5B2E48D51CF99A21001413B2 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B2E48D31CF99A21001413B2 /* ControlProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2E48D41CF99A21001413B2 /* ControlProxy.m */; };
 		5BB53FAD1C25D5AC00246130 /* ModelsTreeKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -124,6 +126,7 @@
 		5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIControl+Signal.swift"; sourceTree = "<group>"; };
 		5B2548651D04117E003D6D69 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		5B2548671D04135D003D6D69 /* Signal+Void.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Void.swift"; sourceTree = "<group>"; };
+		5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TakeUntilTests.swift; sourceTree = "<group>"; };
 		5B2E48D31CF99A21001413B2 /* ControlProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlProxy.h; sourceTree = "<group>"; };
 		5B2E48D41CF99A21001413B2 /* ControlProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlProxy.m; sourceTree = "<group>"; };
 		5B8BAC861C27BEFA000389C2 /* ListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
@@ -257,6 +260,7 @@
 				5BBFBE021C26A2750001E5B3 /* SignalTests.swift */,
 				5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */,
 				5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */,
+				5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */,
 				5BBFBDFF1C268AEE0001E5B3 /* UpdatesPoolTests.swift */,
 				5BB53FBA1C25D5AC00246130 /* Info.plist */,
 			);
@@ -620,8 +624,10 @@
 				5BBFBDF81C2681870001E5B3 /* KeychainItemWrapper.m in Sources */,
 				5BB5401B1C25D60500246130 /* Service.swift in Sources */,
 				5BB5400F1C25D60500246130 /* StaticDataSource.swift in Sources */,
+				5B25486B1D042020003D6D69 /* AutodisposePoolTests.swift in Sources */,
 				5BB540361C25D60500246130 /* TSTTransitionViewController.m in Sources */,
 				5BB5402B1C25D60500246130 /* AuthorizedSession.swift in Sources */,
+				5B25486A1D041FB0003D6D69 /* TakeUntilTests.swift in Sources */,
 				5BB540E41C26758B00246130 /* ListBasicTests.swift in Sources */,
 				5BB540041C25D60500246130 /* Array+RemoveObject.swift in Sources */,
 				5BB5402D1C25D60500246130 /* AutodisposePool.swift in Sources */,
