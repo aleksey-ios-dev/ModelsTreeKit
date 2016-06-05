@@ -39,4 +39,3 @@ public protocol ServiceConfigurator {
   func configure(session: Session) -> Void
   
 }
-

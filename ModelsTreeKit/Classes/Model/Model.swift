@@ -16,6 +16,7 @@ public class Model {
   public let wantsRemoveChildSignal = Pipe<Model>()
   public let errorSignal = Pipe<Error>()
   public let pool = AutodisposePool()
+  public let deinitSignal = Pipe<Void>()
   
   private let hash = NSProcessInfo.processInfo().globallyUniqueString
   
@@ -26,6 +27,7 @@ public class Model {
   public init(parent: Model?) {
     self.parent = parent
     parent?.addChild(self)
+    deinitSignal.sendNext()
   }
   
   //Connection with representation
@@ -249,3 +251,5 @@ extension Model {
   }
   
 }
+
+extension Model: DeinitObservable { }

@@ -8,7 +8,6 @@
 
 #import "ControlProxy.h"
 
-
 @interface ControlTarget : NSObject
 
 @property (nonatomic, strong) NSMutableDictionary *blocks;

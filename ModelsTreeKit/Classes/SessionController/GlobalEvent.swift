@@ -34,9 +34,7 @@ public struct GlobalEvent {
 
 }
 
-extension GlobalEvent: Equatable, Hashable {
-  
-}
+extension GlobalEvent: Equatable, Hashable {}
 
 public func ==(lhs: GlobalEvent, rhs: GlobalEvent) -> Bool {
   return lhs.name.rawValue == rhs.name.rawValue

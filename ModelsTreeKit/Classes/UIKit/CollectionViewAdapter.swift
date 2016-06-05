@@ -184,5 +184,3 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     didSelectCellSignal.sendNext(cell: collectionView.cellForItemAtIndexPath(indexPath), object: dataSource.objectAtIndexPath(indexPath))
   }
 }
-
-

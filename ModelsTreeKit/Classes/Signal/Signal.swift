@@ -74,5 +74,3 @@ extension Signal: Hashable, Equatable {}
 public func ==<T>(lhs: Signal<T>, rhs: Signal<T>) -> Bool {
   return lhs.hashValue == rhs.hashValue
 }
-
-

@@ -15,5 +15,6 @@ public protocol Disposable: class {
   func autodispose() -> Disposable
   func putInto(pool: AutodisposePool) -> Disposable
   func takeUntil(signal: Pipe<Void>) -> Disposable
+  func ownedBy(object: DeinitObservable) -> Disposable
   
 }

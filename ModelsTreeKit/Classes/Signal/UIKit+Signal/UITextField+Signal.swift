@@ -6,7 +6,7 @@
 //  Copyright © 2015 aleksey chernish. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 extension UITextField {
   
@@ -43,6 +43,7 @@ extension UITextField {
 }
 
 private class TextFieldDelegate: NSObject, UITextFieldDelegate {
+ 
   let clearSignal = Pipe<Void>()
   
   private static var DelegateHandler: Int = 0
