@@ -10,6 +10,10 @@ import UIKit
 
 extension UITextField {
   
+  public var kvoTextSignal: Observable<String> {
+    return signalForKeyPath("text")
+  }
+  
   public var textSignal: Observable<String> {
     let textSignal = signalForControlEvents(.EditingChanged).map { ($0 as! UITextField).text! }
     let textObservable = textSignal.observable()

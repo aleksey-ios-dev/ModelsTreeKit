@@ -8,6 +8,16 @@
 
 import Foundation
 
+class DeinitNotifier: NSObject {
+  
+  let signal = Pipe<Void>()
+  
+  deinit {
+    signal.sendNext()
+  }
+  
+}
+
 extension NSObject: DeinitObservable {
   
   private struct AssociatedKeys {

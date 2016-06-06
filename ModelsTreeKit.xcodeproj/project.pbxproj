@@ -31,8 +31,10 @@
 		5B2548681D04135D003D6D69 /* Signal+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548671D04135D003D6D69 /* Signal+Void.swift */; };
 		5B25486A1D041FB0003D6D69 /* TakeUntilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */; };
 		5B25486B1D042020003D6D69 /* AutodisposePoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */; };
+		5B2548DC1D043BE3003D6D69 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548DB1D043BE3003D6D69 /* DeinitObservable.swift */; };
 		5B2E48D51CF99A21001413B2 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B2E48D31CF99A21001413B2 /* ControlProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2E48D41CF99A21001413B2 /* ControlProxy.m */; };
+		5B7014E91D051FDA0050C044 /* Signal+KVO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7014E81D051FDA0050C044 /* Signal+KVO.swift */; };
 		5BB53FAD1C25D5AC00246130 /* ModelsTreeKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB53FB41C25D5AC00246130 /* ModelsTreeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB53FA91C25D5AC00246130 /* ModelsTreeKit.framework */; };
 		5BB53FF91C25D60500246130 /* Archivable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FC61C25D60500246130 /* Archivable.swift */; };
@@ -71,8 +73,6 @@
 		5BB5402D1C25D60500246130 /* AutodisposePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FED1C25D60500246130 /* AutodisposePool.swift */; };
 		5BB5402E1C25D60500246130 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEE1C25D60500246130 /* Subscription.swift */; };
 		5BB540301C25D60500246130 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEF1C25D60500246130 /* Signal.swift */; };
-		5BB540321C25D60500246130 /* DeinitNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF01C25D60500246130 /* DeinitNotifier.swift */; };
-		5BB540331C25D60500246130 /* DeinitNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF01C25D60500246130 /* DeinitNotifier.swift */; };
 		5BB540341C25D60500246130 /* TSTTransitionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FF21C25D60500246130 /* TSTTransitionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */; };
 		5BB540361C25D60500246130 /* TSTTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */; };
@@ -85,7 +85,6 @@
 		5BBFBDF81C2681870001E5B3 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBDF51C2681870001E5B3 /* KeychainItemWrapper.m */; };
 		5BBFBE011C268AEE0001E5B3 /* UpdatesPoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBDFF1C268AEE0001E5B3 /* UpdatesPoolTests.swift */; };
 		5BBFBE041C26A2750001E5B3 /* SignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBE021C26A2750001E5B3 /* SignalTests.swift */; };
-		5BD081A21C818A8D00269752 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081A11C818A8D00269752 /* DeinitObservable.swift */; };
 		5BD081AF1C819EA000269752 /* BubbleNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081AE1C819EA000269752 /* BubbleNotification.swift */; };
 		5BD081BA1C81DDC100269752 /* SessionControllerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */; };
 		5BEFD2491D0193CF008F6B32 /* Signal+BooleanType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */; };
@@ -127,8 +126,10 @@
 		5B2548651D04117E003D6D69 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
 		5B2548671D04135D003D6D69 /* Signal+Void.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Void.swift"; sourceTree = "<group>"; };
 		5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TakeUntilTests.swift; sourceTree = "<group>"; };
+		5B2548DB1D043BE3003D6D69 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		5B2E48D31CF99A21001413B2 /* ControlProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlProxy.h; sourceTree = "<group>"; };
 		5B2E48D41CF99A21001413B2 /* ControlProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlProxy.m; sourceTree = "<group>"; };
+		5B7014E81D051FDA0050C044 /* Signal+KVO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+KVO.swift"; sourceTree = "<group>"; };
 		5B8BAC861C27BEFA000389C2 /* ListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
 		5BB53FA91C25D5AC00246130 /* ModelsTreeKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelsTreeKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelsTreeKit.h; sourceTree = "<group>"; };
@@ -157,7 +158,6 @@
 		5BB53FED1C25D60500246130 /* AutodisposePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePool.swift; sourceTree = "<group>"; };
 		5BB53FEE1C25D60500246130 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		5BB53FEF1C25D60500246130 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
-		5BB53FF01C25D60500246130 /* DeinitNotifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitNotifier.swift; sourceTree = "<group>"; };
 		5BB53FF21C25D60500246130 /* TSTTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTTransitionViewController.h; sourceTree = "<group>"; };
 		5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTTransitionViewController.m; sourceTree = "<group>"; };
 		5BB53FF51C25D60500246130 /* CollectionViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewAdapter.swift; sourceTree = "<group>"; };
@@ -168,7 +168,6 @@
 		5BBFBDF51C2681870001E5B3 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		5BBFBDFF1C268AEE0001E5B3 /* UpdatesPoolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatesPoolTests.swift; sourceTree = "<group>"; };
 		5BBFBE021C26A2750001E5B3 /* SignalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalTests.swift; sourceTree = "<group>"; };
-		5BD081A11C818A8D00269752 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		5BD081AE1C819EA000269752 /* BubbleNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleNotification.swift; sourceTree = "<group>"; };
 		5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionControllerConfiguration.swift; sourceTree = "<group>"; };
 		5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePoolTests.swift; sourceTree = "<group>"; };
@@ -339,7 +338,6 @@
 			children = (
 				5BB53FD91C25D60500246130 /* Model.swift */,
 				5BB53FDA1C25D60500246130 /* ModelAssignable.swift */,
-				5BD081A11C818A8D00269752 /* DeinitObservable.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -396,6 +394,7 @@
 			children = (
 				5B1F9DB71C8BC57100F96644 /* UIKit+Signal */,
 				5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */,
+				5B2548DB1D043BE3003D6D69 /* DeinitObservable.swift */,
 				5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */,
 				5BB53FED1C25D60500246130 /* AutodisposePool.swift */,
 				5BB53FEE1C25D60500246130 /* Subscription.swift */,
@@ -411,7 +410,7 @@
 				5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */,
 				5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */,
 				5B12F37E1D02641500D96F0E /* Signal+Validator.swift */,
-				5BB53FF01C25D60500246130 /* DeinitNotifier.swift */,
+				5B7014E81D051FDA0050C044 /* Signal+KVO.swift */,
 			);
 			path = Signal;
 			sourceTree = "<group>";
@@ -557,7 +556,6 @@
 				5B12F37F1D02641500D96F0E /* Signal+Validator.swift in Sources */,
 				5B2548661D04117E003D6D69 /* Disposable.swift in Sources */,
 				5BB5402C1C25D60500246130 /* AutodisposePool.swift in Sources */,
-				5BB540321C25D60500246130 /* DeinitNotifier.swift in Sources */,
 				5B12F38A1D0283F500D96F0E /* Signal+Conversion.swift in Sources */,
 				5B1F9DC21C8BE2E100F96644 /* UIStepper+Signal.swift in Sources */,
 				5BB540301C25D60500246130 /* Signal.swift in Sources */,
@@ -569,9 +567,9 @@
 				5BB540161C25D60500246130 /* TableViewCell.swift in Sources */,
 				5B2548681D04135D003D6D69 /* Signal+Void.swift in Sources */,
 				5B1F9DBB1C8BC5AA00F96644 /* USegmentedControl+Signal.swift in Sources */,
+				5B2548DC1D043BE3003D6D69 /* DeinitObservable.swift in Sources */,
 				5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */,
 				5BB53FFF1C25D60500246130 /* Error.swift in Sources */,
-				5BD081A21C818A8D00269752 /* DeinitObservable.swift in Sources */,
 				5BEFD24B1D01940A008F6B32 /* Signal+Comparable.swift in Sources */,
 				5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */,
 				5BB5401E1C25D60500246130 /* UnauthorizedSession.swift in Sources */,
@@ -602,6 +600,7 @@
 				5BB5401A1C25D60500246130 /* Service.swift in Sources */,
 				5B12F37D1D0263D400D96F0E /* Validator.swift in Sources */,
 				5BB540141C25D60500246130 /* ObjectConsuming.swift in Sources */,
+				5B7014E91D051FDA0050C044 /* Signal+KVO.swift in Sources */,
 				5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */,
 				5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */,
 				5BEFD24D1D01948E008F6B32 /* Signal+Equatable.swift in Sources */,
@@ -634,7 +633,6 @@
 				5BB53FFA1C25D60500246130 /* Archivable.swift in Sources */,
 				5BB540131C25D60500246130 /* ModelAssignable.swift in Sources */,
 				5BB540001C25D60500246130 /* Error.swift in Sources */,
-				5BB540331C25D60500246130 /* DeinitNotifier.swift in Sources */,
 				5BB5401D1C25D60500246130 /* ServiceLocator.swift in Sources */,
 				5BB540191C25D60500246130 /* RootProtocols.swift in Sources */,
 				5BFBD4C81C27D8A6002B17F0 /* SubscriptionTests.swift in Sources */,

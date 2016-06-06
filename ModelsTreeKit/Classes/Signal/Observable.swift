@@ -14,7 +14,7 @@ public enum ObservingOptions {
   
 }
 
-public final class Observable<T>: Signal<T> {
+public class Observable<T>: Signal<T> {
   
   public typealias ObservingHandler = ((new: T?, old: T?, initial: T?) -> Void)
   
