@@ -8,49 +8,55 @@
 
 import Foundation
 
-class KeyValueObserver: NSObject {
+private class KeyValueObserver: NSObject {
+  
+  typealias ObservingAction = Any? -> Void
   
   private weak var object: NSObject!
-  
-  typealias ActionBlock = Any? -> Void
-  private var blocks = [String: ActionBlock]()
+  private var blocks = [String: ObservingAction]()
   private var signals = [String: Any]()
+  private var context: Int = 0
   
   init(object: NSObject) {
     self.object = object
   }
   
-  func _signalForKeyPath<T>(keyPath: String) -> Observable<T> {
+  private func _signalForKeyPath<T>(keyPath: String) -> Observable<T?> {
     var signal = signals[keyPath]
     if signal == nil {
-      signal = Observable<T>()
+      signal = Observable<T?>()
       signals[keyPath] = signal
       startObservingKey(keyPath)
       
       blocks[keyPath] = { value in
-        guard let castedValue = value as? T else { return } //TODO: handle nil casek
-        let castedSignal = signal as! Observable<T>
-        castedSignal.value = castedValue
+        let castedSignal = signal as! Observable<T?>
+        if let castedValue = value as? T {
+          castedSignal.value = castedValue
+        }
+        else {
+          castedSignal.value = nil
+        }
       }
     }
     
-    return signal as! Observable<T>
+    return signal as! Observable<T?>
   }
   
   private func startObservingKey(key: String) {
-    object.addObserver(self, forKeyPath: key, options: [.New], context: nil) //TODO: provide context
+    object.addObserver(self, forKeyPath: key, options: [.New, .Initial], context: &context)
   }
   
   override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-    guard let keyPath = keyPath else { return }
+    if context != &self.context { return }
     
-    let value = change![NSKeyValueChangeNewKey]
-    blocks[keyPath]?(value)
-
+    guard let keyPath = keyPath, let change = change else { return }
+    
+    if let value = change[NSKeyValueChangeNewKey] {
+      blocks[keyPath]?(value)
+    }
   }
   
 }
-
 
 extension NSObject {
   
@@ -58,7 +64,7 @@ extension NSObject {
     static var KeyValueObserverKey = "KeyValueObserverKey"
   }
   
-  public func signalForKeyPath<T>(key: String) -> Observable<T> {
+  public func signalForKeyPath<T>(key: String) -> Observable<T?> {
     return keyValueObserver._signalForKeyPath(key)
   }
   

@@ -15,7 +15,7 @@ extension UIButton {
   }
   
   public var enabledSignal: Observable<Bool> {
-    get { return signalForKeyPath("enabled") }
+    get { return signalForKeyPath("enabled").map { $0! } as! Observable<Bool> }
   }
 
 }
