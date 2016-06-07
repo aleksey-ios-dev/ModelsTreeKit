@@ -7,35 +7,41 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5B0DE7091C9507E100D02053 /* UIButton+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */; };
 		5B12F37D1D0263D400D96F0E /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F37C1D0263D400D96F0E /* Validator.swift */; };
-		5B12F37F1D02641500D96F0E /* Signal+Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F37E1D02641500D96F0E /* Signal+Validator.swift */; };
-		5B12F3841D0280D100D96F0E /* Signal+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F3831D0280D100D96F0E /* Signal+Operations.swift */; };
-		5B12F3881D02836200D96F0E /* UISearchBar+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F3871D02836200D96F0E /* UISearchBar+Signal.swift */; };
-		5B12F38A1D0283F500D96F0E /* Signal+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F3891D0283F500D96F0E /* Signal+Conversion.swift */; };
-		5B12F38C1D02864700D96F0E /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F38B1D02864700D96F0E /* Observable.swift */; };
-		5B12F38E1D02866700D96F0E /* Pipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F38D1D02866700D96F0E /* Pipe.swift */; };
-		5B12F3901D02E84600D96F0E /* Signal+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F38F1D02E84600D96F0E /* Signal+Binding.swift */; };
 		5B1508EC1C2943E6009A880C /* DeinitSignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */; };
 		5B18E0D11C8359D900FD22B4 /* GlobalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */; };
-		5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */; };
-		5B18E0D71C835F6000FD22B4 /* NSObject+Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */; };
 		5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE91C25D60500246130 /* SessionCredentials.swift */; };
-		5B1F9DB91C8BC57100F96644 /* UITextField+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DB81C8BC57100F96644 /* UITextField+Signal.swift */; };
-		5B1F9DBB1C8BC5AA00F96644 /* USegmentedControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DBA1C8BC5AA00F96644 /* USegmentedControl+Signal.swift */; };
-		5B1F9DBE1C8BD04800F96644 /* UISwitch+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DBD1C8BD04800F96644 /* UISwitch+Signal.swift */; };
-		5B1F9DC01C8BD6F200F96644 /* UISlider+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DBF1C8BD6F200F96644 /* UISlider+Signal.swift */; };
-		5B1F9DC21C8BE2E100F96644 /* UIStepper+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DC11C8BE2E100F96644 /* UIStepper+Signal.swift */; };
-		5B1F9DC41C8BEC7300F96644 /* UIControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */; };
-		5B2548661D04117E003D6D69 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548651D04117E003D6D69 /* Disposable.swift */; };
-		5B2548681D04135D003D6D69 /* Signal+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548671D04135D003D6D69 /* Signal+Void.swift */; };
 		5B25486A1D041FB0003D6D69 /* TakeUntilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */; };
 		5B25486B1D042020003D6D69 /* AutodisposePoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */; };
-		5B2548DC1D043BE3003D6D69 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2548DB1D043BE3003D6D69 /* DeinitObservable.swift */; };
-		5B2E48D51CF99A21001413B2 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B2E48D31CF99A21001413B2 /* ControlProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2E48D41CF99A21001413B2 /* ControlProxy.m */; };
-		5B7014E91D051FDA0050C044 /* Signal+KVO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7014E81D051FDA0050C044 /* Signal+KVO.swift */; };
-		5B7014EF1D0577170050C044 /* UIView+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7014EE1D0577170050C044 /* UIView+Signal.swift */; };
+		5B623C5A1D0672A4008FC2A0 /* AutodisposePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C3C1D0672A4008FC2A0 /* AutodisposePool.swift */; };
+		5B623C5B1D0672A4008FC2A0 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C3D1D0672A4008FC2A0 /* DeinitObservable.swift */; };
+		5B623C5C1D0672A4008FC2A0 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C3E1D0672A4008FC2A0 /* Disposable.swift */; };
+		5B623C5D1D0672A4008FC2A0 /* NSObject+DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C3F1D0672A4008FC2A0 /* NSObject+DeinitObservable.swift */; };
+		5B623C5E1D0672A4008FC2A0 /* NSObject+Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C401D0672A4008FC2A0 /* NSObject+Pool.swift */; };
+		5B623C5F1D0672A4008FC2A0 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C411D0672A4008FC2A0 /* Observable.swift */; };
+		5B623C601D0672A4008FC2A0 /* Pipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C421D0672A4008FC2A0 /* Pipe.swift */; };
+		5B623C611D0672A4008FC2A0 /* Signal+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C431D0672A4008FC2A0 /* Signal+Binding.swift */; };
+		5B623C621D0672A4008FC2A0 /* Signal+BooleanType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C441D0672A4008FC2A0 /* Signal+BooleanType.swift */; };
+		5B623C631D0672A4008FC2A0 /* Signal+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C451D0672A4008FC2A0 /* Signal+Comparable.swift */; };
+		5B623C641D0672A4008FC2A0 /* Signal+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C461D0672A4008FC2A0 /* Signal+Conversion.swift */; };
+		5B623C651D0672A4008FC2A0 /* Signal+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C471D0672A4008FC2A0 /* Signal+Equatable.swift */; };
+		5B623C661D0672A4008FC2A0 /* Signal+KVO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C481D0672A4008FC2A0 /* Signal+KVO.swift */; };
+		5B623C671D0672A4008FC2A0 /* Signal+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C491D0672A4008FC2A0 /* Signal+Operations.swift */; };
+		5B623C681D0672A4008FC2A0 /* Signal+Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4A1D0672A4008FC2A0 /* Signal+Validator.swift */; };
+		5B623C691D0672A4008FC2A0 /* Signal+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4B1D0672A4008FC2A0 /* Signal+Void.swift */; };
+		5B623C6A1D0672A4008FC2A0 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4C1D0672A4008FC2A0 /* Signal.swift */; };
+		5B623C6B1D0672A4008FC2A0 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4D1D0672A4008FC2A0 /* Subscription.swift */; };
+		5B623C6C1D0672A4008FC2A0 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B623C4F1D0672A4008FC2A0 /* ControlProxy.h */; };
+		5B623C6D1D0672A4008FC2A0 /* ControlProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C501D0672A4008FC2A0 /* ControlProxy.m */; };
+		5B623C6E1D0672A4008FC2A0 /* UIButton+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C511D0672A4008FC2A0 /* UIButton+Signal.swift */; };
+		5B623C6F1D0672A4008FC2A0 /* UIControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C521D0672A4008FC2A0 /* UIControl+Signal.swift */; };
+		5B623C701D0672A4008FC2A0 /* UISearchBar+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C531D0672A4008FC2A0 /* UISearchBar+Signal.swift */; };
+		5B623C711D0672A4008FC2A0 /* UISlider+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C541D0672A4008FC2A0 /* UISlider+Signal.swift */; };
+		5B623C721D0672A4008FC2A0 /* UIStepper+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C551D0672A4008FC2A0 /* UIStepper+Signal.swift */; };
+		5B623C731D0672A4008FC2A0 /* UISwitch+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C561D0672A4008FC2A0 /* UISwitch+Signal.swift */; };
+		5B623C741D0672A4008FC2A0 /* UITextField+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C571D0672A4008FC2A0 /* UITextField+Signal.swift */; };
+		5B623C751D0672A4008FC2A0 /* USegmentedControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C581D0672A4008FC2A0 /* USegmentedControl+Signal.swift */; };
+		5B623C761D0672A4008FC2A0 /* UIView+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C591D0672A4008FC2A0 /* UIView+Signal.swift */; };
 		5BB53FAD1C25D5AC00246130 /* ModelsTreeKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB53FB41C25D5AC00246130 /* ModelsTreeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB53FA91C25D5AC00246130 /* ModelsTreeKit.framework */; };
 		5BB53FF91C25D60500246130 /* Archivable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FC61C25D60500246130 /* Archivable.swift */; };
@@ -70,10 +76,6 @@
 		5BB540241C25D60500246130 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FE81C25D60500246130 /* SessionController.swift */; };
 		5BB5402A1C25D60500246130 /* AuthorizedSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEB1C25D60500246130 /* AuthorizedSession.swift */; };
 		5BB5402B1C25D60500246130 /* AuthorizedSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEB1C25D60500246130 /* AuthorizedSession.swift */; };
-		5BB5402C1C25D60500246130 /* AutodisposePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FED1C25D60500246130 /* AutodisposePool.swift */; };
-		5BB5402D1C25D60500246130 /* AutodisposePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FED1C25D60500246130 /* AutodisposePool.swift */; };
-		5BB5402E1C25D60500246130 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEE1C25D60500246130 /* Subscription.swift */; };
-		5BB540301C25D60500246130 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FEF1C25D60500246130 /* Signal.swift */; };
 		5BB540341C25D60500246130 /* TSTTransitionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BB53FF21C25D60500246130 /* TSTTransitionViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */; };
 		5BB540361C25D60500246130 /* TSTTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */; };
@@ -88,9 +90,6 @@
 		5BBFBE041C26A2750001E5B3 /* SignalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFBE021C26A2750001E5B3 /* SignalTests.swift */; };
 		5BD081AF1C819EA000269752 /* BubbleNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081AE1C819EA000269752 /* BubbleNotification.swift */; };
 		5BD081BA1C81DDC100269752 /* SessionControllerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */; };
-		5BEFD2491D0193CF008F6B32 /* Signal+BooleanType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */; };
-		5BEFD24B1D01940A008F6B32 /* Signal+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */; };
-		5BEFD24D1D01948E008F6B32 /* Signal+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */; };
 		5BFBD4C81C27D8A6002B17F0 /* SubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -105,33 +104,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Signal.swift"; sourceTree = "<group>"; };
 		5B12F37C1D0263D400D96F0E /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
-		5B12F37E1D02641500D96F0E /* Signal+Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Validator.swift"; sourceTree = "<group>"; };
-		5B12F3831D0280D100D96F0E /* Signal+Operations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Operations.swift"; sourceTree = "<group>"; };
-		5B12F3871D02836200D96F0E /* UISearchBar+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Signal.swift"; sourceTree = "<group>"; };
-		5B12F3891D0283F500D96F0E /* Signal+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Conversion.swift"; sourceTree = "<group>"; };
-		5B12F38B1D02864700D96F0E /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
-		5B12F38D1D02866700D96F0E /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
-		5B12F38F1D02E84600D96F0E /* Signal+Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Binding.swift"; sourceTree = "<group>"; };
 		5B1508EB1C2943E6009A880C /* DeinitSignalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitSignalTests.swift; sourceTree = "<group>"; };
 		5B18E0D01C8359D900FD22B4 /* GlobalEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalEvent.swift; sourceTree = "<group>"; };
-		5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+DeinitObservable.swift"; sourceTree = "<group>"; };
-		5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Pool.swift"; sourceTree = "<group>"; };
-		5B1F9DB81C8BC57100F96644 /* UITextField+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Signal.swift"; sourceTree = "<group>"; };
-		5B1F9DBA1C8BC5AA00F96644 /* USegmentedControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "USegmentedControl+Signal.swift"; sourceTree = "<group>"; };
-		5B1F9DBD1C8BD04800F96644 /* UISwitch+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISwitch+Signal.swift"; sourceTree = "<group>"; };
-		5B1F9DBF1C8BD6F200F96644 /* UISlider+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISlider+Signal.swift"; sourceTree = "<group>"; };
-		5B1F9DC11C8BE2E100F96644 /* UIStepper+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStepper+Signal.swift"; sourceTree = "<group>"; };
-		5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIControl+Signal.swift"; sourceTree = "<group>"; };
-		5B2548651D04117E003D6D69 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
-		5B2548671D04135D003D6D69 /* Signal+Void.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Void.swift"; sourceTree = "<group>"; };
 		5B2548691D041FB0003D6D69 /* TakeUntilTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TakeUntilTests.swift; sourceTree = "<group>"; };
-		5B2548DB1D043BE3003D6D69 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
-		5B2E48D31CF99A21001413B2 /* ControlProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlProxy.h; sourceTree = "<group>"; };
-		5B2E48D41CF99A21001413B2 /* ControlProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlProxy.m; sourceTree = "<group>"; };
-		5B7014E81D051FDA0050C044 /* Signal+KVO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+KVO.swift"; sourceTree = "<group>"; };
-		5B7014EE1D0577170050C044 /* UIView+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Signal.swift"; sourceTree = "<group>"; };
+		5B623C3C1D0672A4008FC2A0 /* AutodisposePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePool.swift; sourceTree = "<group>"; };
+		5B623C3D1D0672A4008FC2A0 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
+		5B623C3E1D0672A4008FC2A0 /* Disposable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
+		5B623C3F1D0672A4008FC2A0 /* NSObject+DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+DeinitObservable.swift"; sourceTree = "<group>"; };
+		5B623C401D0672A4008FC2A0 /* NSObject+Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Pool.swift"; sourceTree = "<group>"; };
+		5B623C411D0672A4008FC2A0 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		5B623C421D0672A4008FC2A0 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
+		5B623C431D0672A4008FC2A0 /* Signal+Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Binding.swift"; sourceTree = "<group>"; };
+		5B623C441D0672A4008FC2A0 /* Signal+BooleanType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+BooleanType.swift"; sourceTree = "<group>"; };
+		5B623C451D0672A4008FC2A0 /* Signal+Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Comparable.swift"; sourceTree = "<group>"; };
+		5B623C461D0672A4008FC2A0 /* Signal+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Conversion.swift"; sourceTree = "<group>"; };
+		5B623C471D0672A4008FC2A0 /* Signal+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Equatable.swift"; sourceTree = "<group>"; };
+		5B623C481D0672A4008FC2A0 /* Signal+KVO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+KVO.swift"; sourceTree = "<group>"; };
+		5B623C491D0672A4008FC2A0 /* Signal+Operations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Operations.swift"; sourceTree = "<group>"; };
+		5B623C4A1D0672A4008FC2A0 /* Signal+Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Validator.swift"; sourceTree = "<group>"; };
+		5B623C4B1D0672A4008FC2A0 /* Signal+Void.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Void.swift"; sourceTree = "<group>"; };
+		5B623C4C1D0672A4008FC2A0 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
+		5B623C4D1D0672A4008FC2A0 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
+		5B623C4F1D0672A4008FC2A0 /* ControlProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlProxy.h; sourceTree = "<group>"; };
+		5B623C501D0672A4008FC2A0 /* ControlProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlProxy.m; sourceTree = "<group>"; };
+		5B623C511D0672A4008FC2A0 /* UIButton+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Signal.swift"; sourceTree = "<group>"; };
+		5B623C521D0672A4008FC2A0 /* UIControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIControl+Signal.swift"; sourceTree = "<group>"; };
+		5B623C531D0672A4008FC2A0 /* UISearchBar+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Signal.swift"; sourceTree = "<group>"; };
+		5B623C541D0672A4008FC2A0 /* UISlider+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISlider+Signal.swift"; sourceTree = "<group>"; };
+		5B623C551D0672A4008FC2A0 /* UIStepper+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStepper+Signal.swift"; sourceTree = "<group>"; };
+		5B623C561D0672A4008FC2A0 /* UISwitch+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UISwitch+Signal.swift"; sourceTree = "<group>"; };
+		5B623C571D0672A4008FC2A0 /* UITextField+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Signal.swift"; sourceTree = "<group>"; };
+		5B623C581D0672A4008FC2A0 /* USegmentedControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "USegmentedControl+Signal.swift"; sourceTree = "<group>"; };
+		5B623C591D0672A4008FC2A0 /* UIView+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Signal.swift"; sourceTree = "<group>"; };
 		5B8BAC861C27BEFA000389C2 /* ListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
 		5BB53FA91C25D5AC00246130 /* ModelsTreeKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelsTreeKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelsTreeKit.h; sourceTree = "<group>"; };
@@ -157,9 +162,6 @@
 		5BB53FE81C25D60500246130 /* SessionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 		5BB53FE91C25D60500246130 /* SessionCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCredentials.swift; sourceTree = "<group>"; };
 		5BB53FEB1C25D60500246130 /* AuthorizedSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizedSession.swift; sourceTree = "<group>"; };
-		5BB53FED1C25D60500246130 /* AutodisposePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePool.swift; sourceTree = "<group>"; };
-		5BB53FEE1C25D60500246130 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
-		5BB53FEF1C25D60500246130 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		5BB53FF21C25D60500246130 /* TSTTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTTransitionViewController.h; sourceTree = "<group>"; };
 		5BB53FF31C25D60500246130 /* TSTTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSTTransitionViewController.m; sourceTree = "<group>"; };
 		5BB53FF51C25D60500246130 /* CollectionViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewAdapter.swift; sourceTree = "<group>"; };
@@ -173,9 +175,6 @@
 		5BD081AE1C819EA000269752 /* BubbleNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleNotification.swift; sourceTree = "<group>"; };
 		5BD081B91C81DDC100269752 /* SessionControllerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionControllerConfiguration.swift; sourceTree = "<group>"; };
 		5BD958931C27DB7700B5A3C0 /* AutodisposePoolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutodisposePoolTests.swift; sourceTree = "<group>"; };
-		5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+BooleanType.swift"; sourceTree = "<group>"; };
-		5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Comparable.swift"; sourceTree = "<group>"; };
-		5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Equatable.swift"; sourceTree = "<group>"; };
 		5BFBD4C71C27D8A6002B17F0 /* SubscriptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -206,19 +205,46 @@
 			path = Validator;
 			sourceTree = "<group>";
 		};
-		5B1F9DB71C8BC57100F96644 /* UIKit+Signal */ = {
+		5B623C3B1D0672A4008FC2A0 /* JetPack */ = {
 			isa = PBXGroup;
 			children = (
-				5B1F9DB81C8BC57100F96644 /* UITextField+Signal.swift */,
-				5B12F3871D02836200D96F0E /* UISearchBar+Signal.swift */,
-				5B1F9DBA1C8BC5AA00F96644 /* USegmentedControl+Signal.swift */,
-				5B1F9DBD1C8BD04800F96644 /* UISwitch+Signal.swift */,
-				5B1F9DBF1C8BD6F200F96644 /* UISlider+Signal.swift */,
-				5B1F9DC11C8BE2E100F96644 /* UIStepper+Signal.swift */,
-				5B1F9DC31C8BEC7300F96644 /* UIControl+Signal.swift */,
-				5B0DE7081C9507E100D02053 /* UIButton+Signal.swift */,
-				5B2E48D31CF99A21001413B2 /* ControlProxy.h */,
-				5B2E48D41CF99A21001413B2 /* ControlProxy.m */,
+				5B623C3C1D0672A4008FC2A0 /* AutodisposePool.swift */,
+				5B623C3D1D0672A4008FC2A0 /* DeinitObservable.swift */,
+				5B623C3E1D0672A4008FC2A0 /* Disposable.swift */,
+				5B623C3F1D0672A4008FC2A0 /* NSObject+DeinitObservable.swift */,
+				5B623C401D0672A4008FC2A0 /* NSObject+Pool.swift */,
+				5B623C411D0672A4008FC2A0 /* Observable.swift */,
+				5B623C421D0672A4008FC2A0 /* Pipe.swift */,
+				5B623C431D0672A4008FC2A0 /* Signal+Binding.swift */,
+				5B623C441D0672A4008FC2A0 /* Signal+BooleanType.swift */,
+				5B623C451D0672A4008FC2A0 /* Signal+Comparable.swift */,
+				5B623C461D0672A4008FC2A0 /* Signal+Conversion.swift */,
+				5B623C471D0672A4008FC2A0 /* Signal+Equatable.swift */,
+				5B623C481D0672A4008FC2A0 /* Signal+KVO.swift */,
+				5B623C491D0672A4008FC2A0 /* Signal+Operations.swift */,
+				5B623C4A1D0672A4008FC2A0 /* Signal+Validator.swift */,
+				5B623C4B1D0672A4008FC2A0 /* Signal+Void.swift */,
+				5B623C4C1D0672A4008FC2A0 /* Signal.swift */,
+				5B623C4D1D0672A4008FC2A0 /* Subscription.swift */,
+				5B623C4E1D0672A4008FC2A0 /* UIKit+Signal */,
+				5B623C591D0672A4008FC2A0 /* UIView+Signal.swift */,
+			);
+			path = JetPack;
+			sourceTree = SOURCE_ROOT;
+		};
+		5B623C4E1D0672A4008FC2A0 /* UIKit+Signal */ = {
+			isa = PBXGroup;
+			children = (
+				5B623C4F1D0672A4008FC2A0 /* ControlProxy.h */,
+				5B623C501D0672A4008FC2A0 /* ControlProxy.m */,
+				5B623C511D0672A4008FC2A0 /* UIButton+Signal.swift */,
+				5B623C521D0672A4008FC2A0 /* UIControl+Signal.swift */,
+				5B623C531D0672A4008FC2A0 /* UISearchBar+Signal.swift */,
+				5B623C541D0672A4008FC2A0 /* UISlider+Signal.swift */,
+				5B623C551D0672A4008FC2A0 /* UIStepper+Signal.swift */,
+				5B623C561D0672A4008FC2A0 /* UISwitch+Signal.swift */,
+				5B623C571D0672A4008FC2A0 /* UITextField+Signal.swift */,
+				5B623C581D0672A4008FC2A0 /* USegmentedControl+Signal.swift */,
 			);
 			path = "UIKit+Signal";
 			sourceTree = "<group>";
@@ -244,6 +270,7 @@
 		5BB53FAB1C25D5AC00246130 /* ModelsTreeKit */ = {
 			isa = PBXGroup;
 			children = (
+				5B623C3B1D0672A4008FC2A0 /* JetPack */,
 				5BB53FC41C25D60500246130 /* Classes */,
 				5BB53FAC1C25D5AC00246130 /* ModelsTreeKit.h */,
 				5BB540411C25D6EF00246130 /* BridgingHeader.h */,
@@ -284,7 +311,6 @@
 				5BB53FE01C25D60500246130 /* Service */,
 				5BB53FE21C25D60500246130 /* Service Locator */,
 				5BB53FE41C25D60500246130 /* SessionController */,
-				5BB53FEC1C25D60500246130 /* Signal */,
 				5BB53FF11C25D60500246130 /* Transition Controller */,
 				5BB53FF41C25D60500246130 /* UIKit */,
 			);
@@ -391,33 +417,6 @@
 			path = SessionController;
 			sourceTree = "<group>";
 		};
-		5BB53FEC1C25D60500246130 /* Signal */ = {
-			isa = PBXGroup;
-			children = (
-				5B1F9DB71C8BC57100F96644 /* UIKit+Signal */,
-				5B18E0D41C835F6000FD22B4 /* NSObject+DeinitObservable.swift */,
-				5B2548DB1D043BE3003D6D69 /* DeinitObservable.swift */,
-				5B18E0D51C835F6000FD22B4 /* NSObject+Pool.swift */,
-				5BB53FED1C25D60500246130 /* AutodisposePool.swift */,
-				5BB53FEE1C25D60500246130 /* Subscription.swift */,
-				5B2548651D04117E003D6D69 /* Disposable.swift */,
-				5BB53FEF1C25D60500246130 /* Signal.swift */,
-				5B12F38B1D02864700D96F0E /* Observable.swift */,
-				5B12F38D1D02866700D96F0E /* Pipe.swift */,
-				5B12F3831D0280D100D96F0E /* Signal+Operations.swift */,
-				5B2548671D04135D003D6D69 /* Signal+Void.swift */,
-				5B12F3891D0283F500D96F0E /* Signal+Conversion.swift */,
-				5B12F38F1D02E84600D96F0E /* Signal+Binding.swift */,
-				5BEFD2481D0193CF008F6B32 /* Signal+BooleanType.swift */,
-				5BEFD24C1D01948E008F6B32 /* Signal+Equatable.swift */,
-				5BEFD24A1D01940A008F6B32 /* Signal+Comparable.swift */,
-				5B12F37E1D02641500D96F0E /* Signal+Validator.swift */,
-				5B7014E81D051FDA0050C044 /* Signal+KVO.swift */,
-				5B7014EE1D0577170050C044 /* UIView+Signal.swift */,
-			);
-			path = Signal;
-			sourceTree = "<group>";
-		};
 		5BB53FF11C25D60500246130 /* Transition Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -451,11 +450,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B2E48D51CF99A21001413B2 /* ControlProxy.h in Headers */,
 				5BB53FAD1C25D5AC00246130 /* ModelsTreeKit.h in Headers */,
 				5BB540421C25D6F300246130 /* BridgingHeader.h in Headers */,
 				5BB540341C25D60500246130 /* TSTTransitionViewController.h in Headers */,
 				5BBFBDF61C2681870001E5B3 /* KeychainItemWrapper.h in Headers */,
+				5B623C6C1D0672A4008FC2A0 /* ControlProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,59 +555,59 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B12F37F1D02641500D96F0E /* Signal+Validator.swift in Sources */,
-				5B2548661D04117E003D6D69 /* Disposable.swift in Sources */,
-				5BB5402C1C25D60500246130 /* AutodisposePool.swift in Sources */,
-				5B12F38A1D0283F500D96F0E /* Signal+Conversion.swift in Sources */,
-				5B1F9DC21C8BE2E100F96644 /* UIStepper+Signal.swift in Sources */,
-				5BB540301C25D60500246130 /* Signal.swift in Sources */,
-				5B12F3881D02836200D96F0E /* UISearchBar+Signal.swift in Sources */,
-				5BB5402E1C25D60500246130 /* Subscription.swift in Sources */,
+				5B623C6E1D0672A4008FC2A0 /* UIButton+Signal.swift in Sources */,
+				5B623C711D0672A4008FC2A0 /* UISlider+Signal.swift in Sources */,
+				5B623C5B1D0672A4008FC2A0 /* DeinitObservable.swift in Sources */,
+				5B623C5E1D0672A4008FC2A0 /* NSObject+Pool.swift in Sources */,
+				5B623C661D0672A4008FC2A0 /* Signal+KVO.swift in Sources */,
+				5B623C651D0672A4008FC2A0 /* Signal+Equatable.swift in Sources */,
 				5BB540201C25D60500246130 /* Session.swift in Sources */,
+				5B623C6A1D0672A4008FC2A0 /* Signal.swift in Sources */,
 				5B18E0D11C8359D900FD22B4 /* GlobalEvent.swift in Sources */,
 				5BB5401C1C25D60500246130 /* ServiceLocator.swift in Sources */,
+				5B623C741D0672A4008FC2A0 /* UITextField+Signal.swift in Sources */,
 				5BB540161C25D60500246130 /* TableViewCell.swift in Sources */,
-				5B2548681D04135D003D6D69 /* Signal+Void.swift in Sources */,
-				5B1F9DBB1C8BC5AA00F96644 /* USegmentedControl+Signal.swift in Sources */,
-				5B2548DC1D043BE3003D6D69 /* DeinitObservable.swift in Sources */,
 				5BB540351C25D60500246130 /* TSTTransitionViewController.m in Sources */,
 				5BB53FFF1C25D60500246130 /* Error.swift in Sources */,
-				5BEFD24B1D01940A008F6B32 /* Signal+Comparable.swift in Sources */,
-				5B18E0D61C835F6000FD22B4 /* NSObject+DeinitObservable.swift in Sources */,
+				5B623C5A1D0672A4008FC2A0 /* AutodisposePool.swift in Sources */,
+				5B623C751D0672A4008FC2A0 /* USegmentedControl+Signal.swift in Sources */,
 				5BB5401E1C25D60500246130 /* UnauthorizedSession.swift in Sources */,
-				5B12F3841D0280D100D96F0E /* Signal+Operations.swift in Sources */,
+				5B623C5F1D0672A4008FC2A0 /* Observable.swift in Sources */,
 				5BB5400E1C25D60500246130 /* StaticDataSource.swift in Sources */,
 				5BB5402A1C25D60500246130 /* AuthorizedSession.swift in Sources */,
 				5BB540081C25D60500246130 /* List.swift in Sources */,
 				5BBFBDF71C2681870001E5B3 /* KeychainItemWrapper.m in Sources */,
+				5B623C701D0672A4008FC2A0 /* UISearchBar+Signal.swift in Sources */,
 				5BB540101C25D60500246130 /* Model.swift in Sources */,
+				5B623C621D0672A4008FC2A0 /* Signal+BooleanType.swift in Sources */,
 				5BB540031C25D60500246130 /* Array+RemoveObject.swift in Sources */,
+				5B623C611D0672A4008FC2A0 /* Signal+Binding.swift in Sources */,
+				5B623C6D1D0672A4008FC2A0 /* ControlProxy.m in Sources */,
 				5BB53FF91C25D60500246130 /* Archivable.swift in Sources */,
-				5B12F3901D02E84600D96F0E /* Signal+Binding.swift in Sources */,
 				5BB540181C25D60500246130 /* RootProtocols.swift in Sources */,
+				5B623C681D0672A4008FC2A0 /* Signal+Validator.swift in Sources */,
 				5BB540241C25D60500246130 /* SessionController.swift in Sources */,
+				5B623C631D0672A4008FC2A0 /* Signal+Comparable.swift in Sources */,
+				5B623C601D0672A4008FC2A0 /* Pipe.swift in Sources */,
+				5B623C761D0672A4008FC2A0 /* UIView+Signal.swift in Sources */,
+				5B623C5D1D0672A4008FC2A0 /* NSObject+DeinitObservable.swift in Sources */,
 				5BB540391C25D60500246130 /* TableViewAdapter.swift in Sources */,
+				5B623C721D0672A4008FC2A0 /* UIStepper+Signal.swift in Sources */,
 				5BD081AF1C819EA000269752 /* BubbleNotification.swift in Sources */,
-				5B1F9DC41C8BEC7300F96644 /* UIControl+Signal.swift in Sources */,
-				5BEFD2491D0193CF008F6B32 /* Signal+BooleanType.swift in Sources */,
-				5B12F38E1D02866700D96F0E /* Pipe.swift in Sources */,
-				5B1F9DBE1C8BD04800F96644 /* UISwitch+Signal.swift in Sources */,
-				5B18E0D71C835F6000FD22B4 /* NSObject+Pool.swift in Sources */,
-				5B1F9DB91C8BC57100F96644 /* UITextField+Signal.swift in Sources */,
-				5B12F38C1D02864700D96F0E /* Observable.swift in Sources */,
+				5B623C641D0672A4008FC2A0 /* Signal+Conversion.swift in Sources */,
+				5B623C6B1D0672A4008FC2A0 /* Subscription.swift in Sources */,
 				5BB5400A1C25D60500246130 /* ListDataSource.swift in Sources */,
-				5B7014EF1D0577170050C044 /* UIView+Signal.swift in Sources */,
-				5B1F9DC01C8BD6F200F96644 /* UISlider+Signal.swift in Sources */,
+				5B623C5C1D0672A4008FC2A0 /* Disposable.swift in Sources */,
 				5BB5400C1C25D60500246130 /* ObjectsDataSource.swift in Sources */,
 				5BB540371C25D60500246130 /* CollectionViewAdapter.swift in Sources */,
 				5BB5401A1C25D60500246130 /* Service.swift in Sources */,
 				5B12F37D1D0263D400D96F0E /* Validator.swift in Sources */,
+				5B623C671D0672A4008FC2A0 /* Signal+Operations.swift in Sources */,
 				5BB540141C25D60500246130 /* ObjectConsuming.swift in Sources */,
-				5B7014E91D051FDA0050C044 /* Signal+KVO.swift in Sources */,
 				5B18E1131C85417500FD22B4 /* SessionCredentials.swift in Sources */,
-				5B2E48D61CF99A21001413B2 /* ControlProxy.m in Sources */,
-				5BEFD24D1D01948E008F6B32 /* Signal+Equatable.swift in Sources */,
-				5B0DE7091C9507E100D02053 /* UIButton+Signal.swift in Sources */,
+				5B623C691D0672A4008FC2A0 /* Signal+Void.swift in Sources */,
+				5B623C731D0672A4008FC2A0 /* UISwitch+Signal.swift in Sources */,
+				5B623C6F1D0672A4008FC2A0 /* UIControl+Signal.swift in Sources */,
 				5BD081BA1C81DDC100269752 /* SessionControllerConfiguration.swift in Sources */,
 				5BB540121C25D60500246130 /* ModelAssignable.swift in Sources */,
 			);
@@ -633,7 +632,6 @@
 				5B25486A1D041FB0003D6D69 /* TakeUntilTests.swift in Sources */,
 				5BB540E41C26758B00246130 /* ListBasicTests.swift in Sources */,
 				5BB540041C25D60500246130 /* Array+RemoveObject.swift in Sources */,
-				5BB5402D1C25D60500246130 /* AutodisposePool.swift in Sources */,
 				5BB53FFA1C25D60500246130 /* Archivable.swift in Sources */,
 				5BB540131C25D60500246130 /* ModelAssignable.swift in Sources */,
 				5BB540001C25D60500246130 /* Error.swift in Sources */,
