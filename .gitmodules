@@ -1,0 +1,3 @@
+[submodule "JetPack"]
+	path = JetPack
+	url = https://github.com/mmrmmlrr/JetPack.git
