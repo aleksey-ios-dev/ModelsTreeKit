@@ -19,9 +19,11 @@ private class KeyValueObserver: NSObject {
   
   init(object: NSObject) {
     self.object = object
+    super.init()
   }
   
-  private func _signalForKeyPath<T>(keyPath: String) -> Observable<T?> {
+  //TODO: owner required
+  private func _signalForKeyPath<T>(keyPath: String, owner: DeinitObservable) -> Observable<T?> {
     var signal = signals[keyPath]
     if signal == nil {
       signal = Observable<T?>()
@@ -37,6 +39,13 @@ private class KeyValueObserver: NSObject {
           castedSignal.value = nil
         }
       }
+      
+      owner.deinitSignal.subscribeNext { [weak self] in
+        guard let _self = self else { return }
+        for keyPath in _self.signals.keys {
+          _self.object.removeObserver(_self, forKeyPath: keyPath, context: &_self.context)
+        }
+      }.putInto(pool)
     }
     
     return signal as! Observable<T?>
@@ -64,8 +73,8 @@ extension NSObject {
     static var KeyValueObserverKey = "KeyValueObserverKey"
   }
   
-  public func signalForKeyPath<T>(key: String) -> Observable<T?> {
-    return keyValueObserver._signalForKeyPath(key)
+  public func signalForKeyPath<T>(key: String, owner: DeinitObservable) -> Observable<T?> {
+    return keyValueObserver._signalForKeyPath(key, owner: owner)
   }
   
   private var keyValueObserver: KeyValueObserver {

@@ -14,8 +14,8 @@ extension UIButton {
     get { return signalForControlEvents(.TouchUpInside).map { _ in return Void() } as! Pipe<Void> }
   }
   
-  public var enabledSignal: Observable<Bool> {
-    get { return signalForKeyPath("enabled").map { $0! } as! Observable<Bool> }
-  }
+//  public var enabledSignal: Observable<Bool> {
+//    get { return signalForKeyPath("enabled").map { $0! } as! Observable<Bool> }
+//  }
 
 }
