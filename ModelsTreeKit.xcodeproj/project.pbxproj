@@ -31,7 +31,7 @@
 		5B623C691D0672A4008FC2A0 /* Signal+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4B1D0672A4008FC2A0 /* Signal+Void.swift */; };
 		5B623C6A1D0672A4008FC2A0 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4C1D0672A4008FC2A0 /* Signal.swift */; };
 		5B623C6B1D0672A4008FC2A0 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C4D1D0672A4008FC2A0 /* Subscription.swift */; };
-		5B623C6C1D0672A4008FC2A0 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B623C4F1D0672A4008FC2A0 /* ControlProxy.h */; };
+		5B623C6C1D0672A4008FC2A0 /* ControlProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B623C4F1D0672A4008FC2A0 /* ControlProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B623C6D1D0672A4008FC2A0 /* ControlProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C501D0672A4008FC2A0 /* ControlProxy.m */; };
 		5B623C6E1D0672A4008FC2A0 /* UIButton+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C511D0672A4008FC2A0 /* UIButton+Signal.swift */; };
 		5B623C6F1D0672A4008FC2A0 /* UIControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B623C521D0672A4008FC2A0 /* UIControl+Signal.swift */; };
