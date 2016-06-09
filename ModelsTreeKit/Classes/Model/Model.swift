@@ -79,23 +79,23 @@ public class Model {
 
   private var registeredBubbles = Set<String>()
   
-  public final func registerForBubbleNotification(name: BubbleNotificationName, inDomain domain: String) {
-    registeredBubbles.insert(domain + "." + name.rawValue)
+  public final func registerForBubble<T where T: BubbleNotificationName>(name: T) {
+    registeredBubbles.insert(T.domain + "." + name.rawValue)
   }
   
-  public final func unregisterFromBubbleNotification(name: BubbleNotificationName, inDomain domain: String) {
-    registeredBubbles.remove(domain + "." + name.rawValue)
+  public final func unregisterFromBubble<T where T: BubbleNotificationName>(name: T) {
+    registeredBubbles.remove(T.domain + "." + name.rawValue)
   }
   
-  public final func isRegisteredForBubbleNotification(name: BubbleNotificationName, inDomain domain: String) -> Bool {
-    return registeredBubbles.contains(domain + "." + name.rawValue)
+  public final func isRegisteredForBubble<T where T: BubbleNotificationName>(name: T) -> Bool {
+    return registeredBubbles.contains(T.domain + "." + name.rawValue)
   }
   
-  public func raiseBubbleNotification(name: BubbleNotificationName, domain: String, withObject object: Any? = nil, sender: Model) {
-    if isRegisteredForBubbleNotification(name, inDomain: domain) {
-      handleBubbleNotification(BubbleNotification(name: name, domain: domain, object: object), sender: sender)
+  public func raiseBubble<T where T: BubbleNotificationName>(name: T, withObject object: Any? = nil, sender: Model) {
+    if isRegisteredForBubble(name) {
+      handleBubbleNotification(BubbleNotification(name: name, object: object), sender: sender)
     } else {
-      parent?.raiseBubbleNotification(name, domain: domain, withObject: object, sender: sender)
+      parent?.raiseBubble(name, withObject: object, sender: sender)
     }
   }
   
@@ -253,3 +253,10 @@ extension Model {
 }
 
 extension Model: DeinitObservable { }
+
+class SomeClass {
+  func registerForBubble<U where U: BooleanType>(param: U) {
+    //    registeredBubbles.insert(domain + "." + name.rawValue)
+  }
+  
+}

@@ -10,6 +10,7 @@ import Foundation
 
 public protocol BubbleNotificationName {
   
+  static var domain: String { get }
   var rawValue: String { get }
   
 }
@@ -21,13 +22,16 @@ public func ==(lhs: BubbleNotificationName, rhs: BubbleNotificationName) -> Bool
 public struct BubbleNotification {
   
   public var name: BubbleNotificationName
-  public var domain: String
+  public var domain: String {
+    get {
+      return name.dynamicType.domain
+    }
+  }
   public var object: Any?
   public var hashValue: Int { return (name.rawValue.hashValue &+ name.rawValue.hashValue).hashValue }
   
-  public init(name: BubbleNotificationName, domain: String, object: Any? = nil) {
+  public init(name: BubbleNotificationName, object: Any? = nil) {
     self.name = name
-    self.domain = domain
     self.object = object
   }
   
