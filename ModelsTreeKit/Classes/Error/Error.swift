@@ -16,27 +16,22 @@ public protocol ErrorCodesList {
 
 public protocol ErrorCode {
   
+  static var domain: String { get }
   var rawValue: Int { get }
-  
-}
-
-public protocol ErrorDomain {
-  
-  var rawValue: String { get }
   
 }
 
 public struct Error: ErrorType {
   
   public var hashValue: Int {
-    return (code.rawValue.hashValue + domain.rawValue.hashValue).hashValue
+    return (code.rawValue.hashValue + domain.hashValue).hashValue
   }
   
-  let domain: ErrorDomain
-  let code: ErrorCode
+  public let domain: String
+  public let code: ErrorCode
   
-  public init(domain: ErrorDomain, code: ErrorCode) {
-    self.domain = domain
+  public init(code: ErrorCode) {
+    self.domain = code.dynamicType.domain
     self.code = code
   }
   
@@ -49,7 +44,7 @@ public struct Error: ErrorType {
   }
   
   private func descriptionString() -> String {
-    return "\(domain.rawValue).\(code.rawValue)"
+    return "\(domain).\(code.rawValue)"
   }
   
 }
@@ -59,5 +54,5 @@ extension Error: Hashable, Equatable {
 }
 
 public func ==(a: Error, b: Error) -> Bool {
-  return a.code.rawValue == b.code.rawValue && a.domain.rawValue == b.domain.rawValue
+  return a.code.rawValue == b.code.rawValue && a.domain == b.domain
 }

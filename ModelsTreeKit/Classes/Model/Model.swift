@@ -106,29 +106,29 @@ public class Model {
   //TODO: extensions
   private var registeredErrors = [String: Set<Int>]()
   
-  public final func registerForError(code: ErrorCode, inDomain domain: ErrorDomain) {
-    var allCodes = registeredErrors[domain.rawValue] ?? []
+  public final func registerForError<T where T: ErrorCode>(code: T) {
+    var allCodes = registeredErrors[T.domain] ?? []
     allCodes.insert(code.rawValue)
-    registeredErrors[domain.rawValue] = allCodes
+    registeredErrors[T.domain] = allCodes
   }
   
-  public final func registerForErrorCodes(codes: [ErrorCode], inDomain domain: ErrorDomain) {
-    var allCodes = registeredErrors[domain.rawValue] ?? []
+  public final func registerForErrorCodes<T where T: ErrorCode>(codes: [T]) {
+    var allCodes = registeredErrors[T.domain] ?? []
     let mappedCodes = codes.map { $0.rawValue }
     mappedCodes.forEach { allCodes.insert($0) }
-    registeredErrors[domain.rawValue] = allCodes
+    registeredErrors[T.domain] = allCodes
   }
   
-  public final func unregisterFromError(code code: ErrorCode, inDomain domain: ErrorDomain) {
-    if let codes = registeredErrors[domain.rawValue] {
+  public final func unregisterFromError<T where T: ErrorCode>(code code: T) {
+    if let codes = registeredErrors[T.domain] {
       var filteredCodes = codes
       filteredCodes.remove(code.rawValue)
-      registeredErrors[domain.rawValue] = filteredCodes
+      registeredErrors[T.domain] = filteredCodes
     }
   }
   
   public final func isRegisteredForError(error: Error) -> Bool {
-    guard let codes = registeredErrors[error.domain.rawValue] else { return false }
+    guard let codes = registeredErrors[error.domain] else { return false }
     return codes.contains(error.code.rawValue)
   }
   
