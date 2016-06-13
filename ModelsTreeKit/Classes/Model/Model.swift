@@ -8,6 +8,8 @@
 
 import Foundation
 
+extension Model: DeinitObservable { }
+
 public class Model {
   
   public private(set) weak var parent: Model!
@@ -22,6 +24,7 @@ public class Model {
   private let timeStamp = NSDate()
   
   deinit {
+    deinitSignal.sendNext()
     representationDeinitDisposable?.dispose()
   }
   
@@ -80,51 +83,55 @@ public class Model {
 
   private var registeredBubbles = Set<String>()
   
-  public final func registerFor<T where T: BubbleNotificationName>(name: T) {
-    registeredBubbles.insert(T.domain + "." + name.rawValue)
+  public final func registerFor(bubbleNotification: BubbleNotificationName) {
+    registeredBubbles.insert(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
   }
   
-  public final func unregisterFrom<T where T: BubbleNotificationName>(name: T) {
-    registeredBubbles.remove(T.domain + "." + name.rawValue)
+  public final func unregisterFrom(bubbleNotification: BubbleNotificationName) {
+    registeredBubbles.remove(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
   }
   
-  public final func isRegisteredFor<T where T: BubbleNotificationName>(name: T) -> Bool {
-    return registeredBubbles.contains(T.domain + "." + name.rawValue)
+  public final func isRegisteredFor(bubbleNotification: BubbleNotificationName) -> Bool {
+    return registeredBubbles.contains(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
   }
   
-  public func raise<T where T: BubbleNotificationName>(name: T, withObject object: Any? = nil, sender: Model) {
-    if isRegisteredFor(name) {
-      handle(BubbleNotification(name: name, object: object), sender: sender)
+  public func raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil) {
+    _raise(bubbleNotification, withObject: object, sender: self)
+  }
+  
+  public func _raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil, sender: Model) {
+    if isRegisteredFor(bubbleNotification) {
+      handle(BubbleNotification(name: bubbleNotification, object: object), sender: sender)
     } else {
-      parent?.raise(name, withObject: object, sender: sender)
+      parent?._raise(bubbleNotification, withObject: object, sender: sender)
     }
   }
   
-  public func handle(bubble: BubbleNotification, sender: Model) {}
+  public func handle(bubbleNotification: BubbleNotification, sender: Model) {}
   
   //Errors
   
   //TODO: extensions
   private var registeredErrors = [String: Set<Int>]()
   
-  public final func registerFor<T where T: ErrorCode>(code: T) {
-    var allCodes = registeredErrors[T.domain] ?? []
-    allCodes.insert(code.rawValue)
-    registeredErrors[T.domain] = allCodes
+  public final func registerFor(error: ErrorCode) {
+    var allCodes = registeredErrors[error.dynamicType.domain] ?? []
+    allCodes.insert(error.rawValue)
+    registeredErrors[error.dynamicType.domain] = allCodes
   }
   
-  public final func registerForErrorCodes<T where T: ErrorCode>(codes: [T]) {
+  public final func registerForErrorCodes<T where T: ErrorCode>(errorCodes codes: [T]) {
     var allCodes = registeredErrors[T.domain] ?? []
     let mappedCodes = codes.map { $0.rawValue }
     mappedCodes.forEach { allCodes.insert($0) }
     registeredErrors[T.domain] = allCodes
   }
   
-  public final func unregisterFrom<T where T: ErrorCode>(code code: T) {
-    if let codes = registeredErrors[T.domain] {
+  public final func unregisterFrom(errorCode: ErrorCode) {
+    if let codes = registeredErrors[errorCode.dynamicType.domain] {
       var filteredCodes = codes
-      filteredCodes.remove(code.rawValue)
-      registeredErrors[T.domain] = filteredCodes
+      filteredCodes.remove(errorCode.rawValue)
+      registeredErrors[errorCode.dynamicType.domain] = filteredCodes
     }
   }
   
@@ -151,23 +158,23 @@ public class Model {
   
   private var registeredGlobalEvents = Set<String>()
   
-  public final func registerFor(name: GlobalEventName) {
-    registeredGlobalEvents.insert(name.rawValue)
+  public final func registerFor(globalEvent: GlobalEventName) {
+    registeredGlobalEvents.insert(globalEvent.rawValue)
   }
   
-  public final func unregisterFrom(name: GlobalEventName) {
-    registeredGlobalEvents.remove(name.rawValue)
+  public final func unregisterFrom(globalEvent: GlobalEventName) {
+    registeredGlobalEvents.remove(globalEvent.rawValue)
   }
   
-  public final func isRegisteredFor(name: GlobalEventName) -> Bool {
-    return registeredGlobalEvents.contains(name.rawValue)
+  public final func isRegisteredFor(globalEvent: GlobalEventName) -> Bool {
+    return registeredGlobalEvents.contains(globalEvent.rawValue)
   }
   
   public final func raise(
-    name: GlobalEventName,
+    globalEvent: GlobalEventName,
     withObject object: Any? = nil,
     userInfo: [String: Any] = [:]) {
-    let event = GlobalEvent(name: name, object: object, userInfo: userInfo)
+    let event = GlobalEvent(name: globalEvent, object: object, userInfo: userInfo)
     session.propagate(event)
   }
   
@@ -256,5 +263,3 @@ extension Model {
   }
   
 }
-
-extension Model: DeinitObservable { }
