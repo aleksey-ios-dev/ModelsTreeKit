@@ -10,7 +10,7 @@ import Foundation
 
 public class Model {
   
-  public private(set) weak var parent: Model?
+  public private(set) weak var parent: Model!
   
   public let pushChildSignal = Pipe<Model>()
   public let wantsRemoveChildSignal = Pipe<Model>()
@@ -19,6 +19,7 @@ public class Model {
   public let deinitSignal = Pipe<Void>()
   
   private let hash = NSProcessInfo.processInfo().globallyUniqueString
+  private let timeStamp = NSDate()
   
   deinit {
     representationDeinitDisposable?.dispose()
@@ -27,7 +28,6 @@ public class Model {
   public init(parent: Model?) {
     self.parent = parent
     parent?.addChild(self)
-    deinitSignal.sendNext()
   }
   
   //Connection with representation
@@ -43,23 +43,19 @@ public class Model {
   //Lifecycle
   
   public func sessionWillClose() {
-    childModels().forEach { $0.sessionWillClose() }
+    childModels.forEach { $0.sessionWillClose() }
   }
   
   //Child models
   
-  private lazy var childModelsSet = Set<Model>()
-  
-  final func childModels() -> Set<Model> {
-    return childModelsSet
-  }
+  private(set) lazy var childModels = Set<Model>()
   
   final func addChild(childModel: Model) {
-    childModelsSet.insert(childModel)
+    childModels.insert(childModel)
   }
   
   final func removeChild(childModel: Model) {
-    childModelsSet.remove(childModel)
+    childModels.remove(childModel)
   }
   
   public func removeFromParent() {
@@ -68,9 +64,14 @@ public class Model {
   
   //Session Helpers
   
-  public final func session() -> Session? {
-    if let session = parent as? Session { return session }
-    else { return parent?.session() }
+  public final var session: Session {
+    get {
+      if let session = parent as? Session {
+        return session
+      } else {
+        return parent.session
+      }
+    }
   }
   
   //Bubble Notifications
@@ -79,34 +80,34 @@ public class Model {
 
   private var registeredBubbles = Set<String>()
   
-  public final func registerForBubble<T where T: BubbleNotificationName>(name: T) {
+  public final func registerFor<T where T: BubbleNotificationName>(name: T) {
     registeredBubbles.insert(T.domain + "." + name.rawValue)
   }
   
-  public final func unregisterFromBubble<T where T: BubbleNotificationName>(name: T) {
+  public final func unregisterFrom<T where T: BubbleNotificationName>(name: T) {
     registeredBubbles.remove(T.domain + "." + name.rawValue)
   }
   
-  public final func isRegisteredForBubble<T where T: BubbleNotificationName>(name: T) -> Bool {
+  public final func isRegisteredFor<T where T: BubbleNotificationName>(name: T) -> Bool {
     return registeredBubbles.contains(T.domain + "." + name.rawValue)
   }
   
-  public func raiseBubble<T where T: BubbleNotificationName>(name: T, withObject object: Any? = nil, sender: Model) {
-    if isRegisteredForBubble(name) {
-      handleBubbleNotification(BubbleNotification(name: name, object: object), sender: sender)
+  public func raise<T where T: BubbleNotificationName>(name: T, withObject object: Any? = nil, sender: Model) {
+    if isRegisteredFor(name) {
+      handle(BubbleNotification(name: name, object: object), sender: sender)
     } else {
-      parent?.raiseBubble(name, withObject: object, sender: sender)
+      parent?.raise(name, withObject: object, sender: sender)
     }
   }
   
-  public func handleBubbleNotification(bubble: BubbleNotification, sender: Model) {}
+  public func handle(bubble: BubbleNotification, sender: Model) {}
   
   //Errors
   
   //TODO: extensions
   private var registeredErrors = [String: Set<Int>]()
   
-  public final func registerForError<T where T: ErrorCode>(code: T) {
+  public final func registerFor<T where T: ErrorCode>(code: T) {
     var allCodes = registeredErrors[T.domain] ?? []
     allCodes.insert(code.rawValue)
     registeredErrors[T.domain] = allCodes
@@ -119,7 +120,7 @@ public class Model {
     registeredErrors[T.domain] = allCodes
   }
   
-  public final func unregisterFromError<T where T: ErrorCode>(code code: T) {
+  public final func unregisterFrom<T where T: ErrorCode>(code code: T) {
     if let codes = registeredErrors[T.domain] {
       var filteredCodes = codes
       filteredCodes.remove(code.rawValue)
@@ -127,19 +128,22 @@ public class Model {
     }
   }
   
-  public final func isRegisteredForError(error: Error) -> Bool {
+  public final func isRegisteredFor(error: Error) -> Bool {
     guard let codes = registeredErrors[error.domain] else { return false }
     return codes.contains(error.code.rawValue)
   }
   
-  public func raiseError(error: Error) {
-    if isRegisteredForError(error) { handleError(error) }
-    else { parent?.raiseError(error) }
+  public func raise(error: Error) {
+    if isRegisteredFor(error) {
+      handle(error)
+    } else {
+      parent?.raise(error)
+    }
   }
   
   //Override to achieve custom behavior
   
-  public func handleError(error: Error) {
+  public func handle(error: Error) {
     errorSignal.sendNext(error)
   }
   
@@ -147,34 +151,34 @@ public class Model {
   
   private var registeredGlobalEvents = Set<String>()
   
-  public final func registerForEvent(name: GlobalEventName) {
+  public final func registerFor(name: GlobalEventName) {
     registeredGlobalEvents.insert(name.rawValue)
   }
   
-  public final func unregisterFromEvent(name: GlobalEventName) {
+  public final func unregisterFrom(name: GlobalEventName) {
     registeredGlobalEvents.remove(name.rawValue)
   }
   
-  public final func isRegisteredForEvent(name: GlobalEventName) -> Bool {
+  public final func isRegisteredFor(name: GlobalEventName) -> Bool {
     return registeredGlobalEvents.contains(name.rawValue)
   }
   
-  public final func raiseGlobalEvent(
+  public final func raise(
     name: GlobalEventName,
     withObject object: Any? = nil,
     userInfo: [String: Any] = [:]) {
     let event = GlobalEvent(name: name, object: object, userInfo: userInfo)
-    session()?.propagateGlobalEvent(event)
+    session.propagate(event)
   }
   
-  private func propagateGlobalEvent(event: GlobalEvent) {
-    if isRegisteredForEvent(event.name) {
-      handleSessionEvent(event)
+  private func propagate(event: GlobalEvent) {
+    if isRegisteredFor(event.name) {
+      handleGlobalEvent(event)
     }
-    childModels().forEach { $0.propagateGlobalEvent(event) }
+    childModels.forEach { $0.propagate(event) }
   }
   
-  public func handleSessionEvent(event: GlobalEvent) {}
+  public func handleGlobalEvent(event: GlobalEvent) {}
   
 }
 
@@ -205,7 +209,7 @@ extension Model {
   }
   
   public final func printSessionTree(withOptions params: [TreeInfoOptions] = []) {
-    session()?.printSubtree(params)
+    session.printSubtree(params)
   }
   
   private func printTreeLevel(level: Int, params: [TreeInfoOptions] = []) {
@@ -247,16 +251,10 @@ extension Model {
 
     print(output)
     
-    childModels().forEach { $0.printTreeLevel(level + 1, params:  params) }
+    childModels.sort { return $0.timeStamp.compare($1.timeStamp) == .OrderedAscending }.forEach { $0.printTreeLevel(level + 1, params:  params) }
+
   }
   
 }
 
 extension Model: DeinitObservable { }
-
-class SomeClass {
-  func registerForBubble<U where U: BooleanType>(param: U) {
-    //    registeredBubbles.insert(domain + "." + name.rawValue)
-  }
-  
-}
