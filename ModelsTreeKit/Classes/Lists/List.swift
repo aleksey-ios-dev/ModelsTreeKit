@@ -47,7 +47,7 @@ public class List<T where T: Hashable, T: Equatable>: Model {
     self.fetchBlock = fetchBlock
   }
   
-  public func performUpdates(@noescape updates: Void -> Void ) {
+  public func performUpdates(@autoclosure updates: Void -> Void ) {
     beginUpdatesSignal.sendNext()
     updates()
     applyChanges()
@@ -100,7 +100,7 @@ public class List<T where T: Hashable, T: Equatable>: Model {
     let completion: FetchCompletionBlock = {[weak self] success, response, error in
       if let response = response {
         guard let strongSelf = self else { return }
-        strongSelf.performUpdates { strongSelf.insert(response) }
+        strongSelf.performUpdates(strongSelf.insert(response))
       }
       self?.didFinishFetchingObjects()
     }

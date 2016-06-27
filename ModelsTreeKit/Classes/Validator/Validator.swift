@@ -26,6 +26,10 @@ public prefix func ! (left: StringValidator) -> StringValidator {
   return { !left($0) }
 }
 
+
+
+
+
 public struct Validator {
   
   public static func longerThan(length: Int) -> StringValidator {

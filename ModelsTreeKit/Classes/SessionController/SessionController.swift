@@ -79,7 +79,6 @@ public class SessionController {
   
   private func archivedUserSessionForKey(key: String?) throws -> AuthorizedSession {
     guard
-      let key = key,
       let sessionData = KeychainItemWrapper(identifier: key , accessGroup: nil).objectForKey(kSecAttrService) as? NSData,
       let sessionProxy = NSKeyedUnarchiver.unarchiveObjectWithData(sessionData) as? ArchivationProxy
     else { throw ArchiverErrors.NoSessionForKey }

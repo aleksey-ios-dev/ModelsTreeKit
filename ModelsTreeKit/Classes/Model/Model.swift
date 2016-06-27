@@ -85,6 +85,7 @@ public class Model {
   
   public final func registerFor(bubbleNotification: BubbleNotificationName) {
     registeredBubbles.insert(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
+    pushChildSignal.sendNext(self)
   }
   
   public final func unregisterFrom(bubbleNotification: BubbleNotificationName) {
@@ -127,11 +128,11 @@ public class Model {
     registeredErrors[T.domain] = allCodes
   }
   
-  public final func unregisterFrom(errorCode: ErrorCode) {
-    if let codes = registeredErrors[errorCode.dynamicType.domain] {
+  public final func unregisterFrom(error: ErrorCode) {
+    if let codes = registeredErrors[error.dynamicType.domain] {
       var filteredCodes = codes
-      filteredCodes.remove(errorCode.rawValue)
-      registeredErrors[errorCode.dynamicType.domain] = filteredCodes
+      filteredCodes.remove(error.rawValue)
+      registeredErrors[error.dynamicType.domain] = filteredCodes
     }
   }
   
@@ -178,14 +179,14 @@ public class Model {
     session.propagate(event)
   }
   
-  private func propagate(event: GlobalEvent) {
-    if isRegisteredFor(event.name) {
-      handleGlobalEvent(event)
+  private func propagate(globalEvent: GlobalEvent) {
+    if isRegisteredFor(globalEvent.name) {
+      handle(globalEvent)
     }
-    childModels.forEach { $0.propagate(event) }
+    childModels.forEach { $0.propagate(globalEvent) }
   }
   
-  public func handleGlobalEvent(event: GlobalEvent) {}
+  public func handle(globalEvent: GlobalEvent) {}
   
 }
 

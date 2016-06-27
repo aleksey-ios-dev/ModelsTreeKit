@@ -28,18 +28,18 @@ class ListBasicTests: XCTestCase {
     
     func testInsertion() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates() {
+        list.performUpdates(
             list.insert([1, 2, 3, 4, 5])
-        }
+      )
+  
+      
         
         XCTAssertEqual(list.objects, [1, 2, 3, 4, 5])
     }
     
     func testDeletion() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates {
-            list.delete([1, 2, 4, 5])
-        }
+        list.performUpdates(list.delete([1, 2, 4, 5]))
         
         XCTAssertEqual(list.objects, [3])
     }
@@ -53,9 +53,9 @@ class ListBasicTests: XCTestCase {
     
     func testResetting() {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
-        list.performUpdates {
+        list.performUpdates(
             list.reset()
-        }
+        )
         
         XCTAssertEqual(list.objects, [])
     }
