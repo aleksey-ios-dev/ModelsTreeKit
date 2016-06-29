@@ -18,9 +18,9 @@ class ListTests: XCTestCase {
         let list = List<Int>(parent: nil, array: [])
         let dataSource = MockDataSource(list: list)
 
-        list.performUpdates() {
+        list.performUpdates(
             list.insert([1])
-        }
+        )
         
         XCTAssertEqual(dataSource.performedActions, [.BeginUpdates, .ChangeContent, .EndUpdates])
     }
@@ -29,10 +29,10 @@ class ListTests: XCTestCase {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
         let dataSource = MockDataSource(list: list)
         
-        list.performUpdates() {
+        list.performUpdates(
             list.delete([1, 4])
-        }
-        
+        )
+  
         XCTAssertEqual(dataSource.lastDeletions, [1])
     }
     
@@ -40,9 +40,9 @@ class ListTests: XCTestCase {
         let list = List<Int>(parent: nil, array: [1, 2, 3])
         let dataSource = MockDataSource(list: list)
         
-        list.performUpdates() {
+        list.performUpdates(
             list.insert([1, 2, 5])
-        }
+        )
         
         XCTAssertEqual(dataSource.lastUpdates, [1, 2])
         XCTAssertEqual(dataSource.lastInsertions, [5])
