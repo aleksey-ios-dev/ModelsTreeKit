@@ -13,8 +13,6 @@ Pod::Spec.new do |s|
   s.framework   = 'UIKit'
   s.source_files = '**/*.*'
 
-  s.subspec 'CocoaLumberjack' do |sp|
-    sp.dependency 'JetPack', :git => "https://github.com/mmrmmlrr/JetPack"
-  end
+  s.dependency 'JetPack', :git => "https://github.com/mmrmmlrr/JetPack"
 
 end
