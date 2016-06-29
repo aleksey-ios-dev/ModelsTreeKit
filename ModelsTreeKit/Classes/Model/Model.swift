@@ -77,10 +77,8 @@ public class Model {
     }
   }
   
-  //Bubble Notifications
+  //Bubble Notifications
   
-  //TODO: extensions
-
   private var registeredBubbles = Set<String>()
   
   public final func registerFor(bubbleNotification: BubbleNotificationName) {
