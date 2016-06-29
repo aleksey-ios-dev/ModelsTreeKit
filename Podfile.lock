@@ -10,11 +10,11 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   JetPack:
-    :commit: 4a1bd81fed65b2ceba3c726fae9bdd5ba76272ec
+    :commit: 64612242d6906fa6058228c677d57a56408bc02a
     :git: https://github.com/mmrmmlrr/JetPack
 
 SPEC CHECKSUMS:
-  JetPack: b7315343ba45db6ef3bc5a65e96161a59a172bb3
+  JetPack: 7b4e8f47fda9f403452b7abc0fdcd7214c2cd755
 
 PODFILE CHECKSUM: 25ab520e2897e2c2ae2953b91ffc26e13038011c
 
