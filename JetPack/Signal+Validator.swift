@@ -14,4 +14,8 @@ extension Signal {
     return self.filter { validator($0) }
   }
   
+  func mapValidWith(validator: (T -> Bool)) -> Signal<Bool> {
+    return self.map { validator($0) }
+  }
+  
 }
