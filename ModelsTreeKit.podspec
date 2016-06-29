@@ -9,9 +9,8 @@ Pod::Spec.new do |s|
   s.homepage = 'https://github.com/mmrmmlrr/ModelsTreeKit'
   s.author = { 'aleksey' => 'aleksey.chernish@yalantis.com' }
   s.source   = { :git => 'https://github.com/mmrmmlrr/ModelsTreeKit.git', :tag => s.version.to_s }
+
   s.framework   = 'UIKit'
   s.source_files = '**/*.*'
-
-  s.dependency 'JetPack', :git => "https://github.com/mmrmmlrr/JetPack"
 
 end
