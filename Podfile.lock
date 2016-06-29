@@ -10,12 +10,12 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   JetPack:
-    :commit: 21d4f767f541ab32caeaef99260bc7cd115fd3d0
+    :commit: 4a1bd81fed65b2ceba3c726fae9bdd5ba76272ec
     :git: https://github.com/mmrmmlrr/JetPack
 
 SPEC CHECKSUMS:
-  JetPack: b00919851587ea1a625f3da000119d9cc448c9cb
+  JetPack: b7315343ba45db6ef3bc5a65e96161a59a172bb3
 
-PODFILE CHECKSUM: e763c4a2ccc817b81b2690354ce7c6763b194e46
+PODFILE CHECKSUM: 25ab520e2897e2c2ae2953b91ffc26e13038011c
 
 COCOAPODS: 1.0.1
