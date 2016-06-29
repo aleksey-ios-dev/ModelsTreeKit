@@ -3,7 +3,7 @@ platform :ios, '8.4'
 use_frameworks!
 inhibit_all_warnings!
 
-target 'ModelsTreeKit’ do
+target 'ModelsTreeKit' do
 
 pod 'JetPack', :git => 'https://github.com/mmrmmlrr/JetPack'
 

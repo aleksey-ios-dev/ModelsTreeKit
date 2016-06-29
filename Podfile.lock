@@ -1,0 +1,21 @@
+PODS:
+  - JetPack (1.0.0)
+
+DEPENDENCIES:
+  - JetPack (from `https://github.com/mmrmmlrr/JetPack`)
+
+EXTERNAL SOURCES:
+  JetPack:
+    :git: https://github.com/mmrmmlrr/JetPack
+
+CHECKOUT OPTIONS:
+  JetPack:
+    :commit: 21d4f767f541ab32caeaef99260bc7cd115fd3d0
+    :git: https://github.com/mmrmmlrr/JetPack
+
+SPEC CHECKSUMS:
+  JetPack: b00919851587ea1a625f3da000119d9cc448c9cb
+
+PODFILE CHECKSUM: e763c4a2ccc817b81b2690354ce7c6763b194e46
+
+COCOAPODS: 1.0.1
