@@ -81,16 +81,16 @@ public class Model {
   
   private var registeredBubbles = Set<String>()
   
-  public final func registerFor(bubbleNotification: BubbleNotificationName) {
+  public final func register(for bubbleNotification: BubbleNotificationName) {
     registeredBubbles.insert(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
     pushChildSignal.sendNext(self)
   }
   
-  public final func unregisterFrom(bubbleNotification: BubbleNotificationName) {
+  public final func unregister(from bubbleNotification: BubbleNotificationName) {
     registeredBubbles.remove(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
   }
   
-  public final func isRegisteredFor(bubbleNotification: BubbleNotificationName) -> Bool {
+  public final func isRegistered(for bubbleNotification: BubbleNotificationName) -> Bool {
     return registeredBubbles.contains(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
   }
   
@@ -99,7 +99,7 @@ public class Model {
   }
   
   public func _raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil, sender: Model) {
-    if isRegisteredFor(bubbleNotification) {
+    if isRegistered(for: bubbleNotification) {
       handle(BubbleNotification(name: bubbleNotification, object: object), sender: sender)
     } else {
       parent?._raise(bubbleNotification, withObject: object, sender: sender)
@@ -113,20 +113,20 @@ public class Model {
   //TODO: extensions
   private var registeredErrors = [String: Set<Int>]()
   
-  public final func registerFor(error: ErrorCode) {
+  public final func register(for error: ErrorCode) {
     var allCodes = registeredErrors[error.dynamicType.domain] ?? []
     allCodes.insert(error.rawValue)
     registeredErrors[error.dynamicType.domain] = allCodes
   }
   
-  public final func registerForErrorCodes<T where T: ErrorCode>(errorCodes codes: [T]) {
+  public final func register<T where T: ErrorCode>(for errorCodes: [T]) {
     var allCodes = registeredErrors[T.domain] ?? []
-    let mappedCodes = codes.map { $0.rawValue }
+    let mappedCodes = errorCodes.map { $0.rawValue }
     mappedCodes.forEach { allCodes.insert($0) }
     registeredErrors[T.domain] = allCodes
   }
   
-  public final func unregisterFrom(error: ErrorCode) {
+  public final func unregister(from error: ErrorCode) {
     if let codes = registeredErrors[error.dynamicType.domain] {
       var filteredCodes = codes
       filteredCodes.remove(error.rawValue)
@@ -134,13 +134,13 @@ public class Model {
     }
   }
   
-  public final func isRegisteredFor(error: Error) -> Bool {
+  public final func isRegistered(for error: Error) -> Bool {
     guard let codes = registeredErrors[error.domain] else { return false }
     return codes.contains(error.code.rawValue)
   }
   
   public func raise(error: Error) {
-    if isRegisteredFor(error) {
+    if isRegistered(for: error) {
       handle(error)
     } else {
       parent?.raise(error)
@@ -157,15 +157,15 @@ public class Model {
   
   private var registeredGlobalEvents = Set<String>()
   
-  public final func registerFor(globalEvent: GlobalEventName) {
+  public final func register(for globalEvent: GlobalEventName) {
     registeredGlobalEvents.insert(globalEvent.rawValue)
   }
   
-  public final func unregisterFrom(globalEvent: GlobalEventName) {
+  public final func unregister(from globalEvent: GlobalEventName) {
     registeredGlobalEvents.remove(globalEvent.rawValue)
   }
   
-  public final func isRegisteredFor(globalEvent: GlobalEventName) -> Bool {
+  public final func isRegistered(for globalEvent: GlobalEventName) -> Bool {
     return registeredGlobalEvents.contains(globalEvent.rawValue)
   }
   
@@ -178,7 +178,7 @@ public class Model {
   }
   
   private func propagate(globalEvent: GlobalEvent) {
-    if isRegisteredFor(globalEvent.name) {
+    if isRegistered(for: globalEvent.name) {
       handle(globalEvent)
     }
     childModels.forEach { $0.propagate(globalEvent) }
