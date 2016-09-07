@@ -17,9 +17,9 @@ extension Signal where T: Comparable {
     
     subscribeNext { [weak nextSignal] newValue in
       if nextSignal?.value == nil || (nextSignal?.value)! < newValue {
-        nextSignal?.sendNext(newValue: newValue)
+        nextSignal?.sendNext(newValue)
       }
-    }.putInto(pool: nextSignal.pool)
+    }.put(into: nextSignal.pool)
     
     chainSignal(nextSignal: nextSignal)
     
@@ -32,9 +32,9 @@ extension Signal where T: Comparable {
     let nextSignal = Observable<T>()
     subscribeNext { [weak nextSignal] newValue in
       if nextSignal?.value == nil || (nextSignal?.value)! > newValue {
-        nextSignal?.sendNext(newValue: newValue)
+        nextSignal?.sendNext(newValue)
       }
-      }.putInto(pool: nextSignal.pool)
+      }.put(into: nextSignal.pool)
     
     chainSignal(nextSignal: nextSignal)
     

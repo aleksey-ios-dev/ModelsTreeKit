@@ -37,7 +37,7 @@ public class SessionController {
   fileprivate func openSession(session: Session) {
     activeSession = session
     serviceConfigurator.configure(session: session)
-    session.openWithController(controller: self)
+    session.open(with: self)
     
     if let userSession = session as? AuthorizedSession {
       lastOpenedAuthorizedSession = userSession
@@ -71,6 +71,7 @@ public class SessionController {
     guard
       let session = session,
       let sessionKey = session.credentials?[configuration.credentialsPrimaryKey] as! String?
+      //TODO: restore
 //    else { throw ArchiverErrors.SessionArchivationFailed }
       else { return }
     
@@ -114,13 +115,13 @@ extension SessionController: SessionDelegate {
   }
   
   func sessionDidPrepareToShowRootRepresenation(session: Session) {
-    let representation = representationRouter.representationFor(session: session)
-    let model = modelRouter.modelFor(session: session)
+    let representation = representationRouter.representation(for: session)
+    let model = modelRouter.model(for: session)
 
     if let assignable = representation as? RootModelAssignable { assignable.assignRootModel(model: model) }
     if let deinitObservable = representation as? DeinitObservable { model.applyRepresentation(representation: deinitObservable) }
     
-    navigationManager.showRootRepresentation(representation: representation)
+    navigationManager.show(rootRepresentation: representation)
   }
   
 }

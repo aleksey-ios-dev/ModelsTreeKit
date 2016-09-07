@@ -47,21 +47,21 @@ public class List<T>: Model where T: Hashable, T: Equatable {
     self.fetchBlock = fetchBlock
   }
   
-  public func performUpdates(updates: @autoclosure (Void) -> Void ) {
+  public func performUpdates(_ updates: @autoclosure (Void) -> Void ) {
     beginUpdates()
     updates()
     endUpdates()
   }
   
   internal func beginUpdates() {
-    beginUpdatesSignal.sendNext(newValue: ())
+    beginUpdatesSignal.sendNext()
   }
   
   internal func endUpdates() {
     applyChanges()
     pushUpdates()
     updatesPool.drain()
-    endUpdatesSignal.sendNext(newValue: ())
+    endUpdatesSignal.sendNext()
   }
   
   //Operations on objects. Use ONLY inside performBatchUpdate() call!
@@ -79,13 +79,13 @@ public class List<T>: Model where T: Hashable, T: Equatable {
   //Call outside the batch update block. Informs subscriber that data should be reloaded
   //To perform batch-based replacement use removeAllObjects() and insert() methods within the batch update block
   
-  public func replaceWith(objects: [T]) {
+  public func replace(with objects: [T]) {
     self.objects = Set(objects)
-    didReplaceContentSignal.sendNext(newValue: self.objects)
+    didReplaceContentSignal.sendNext(self.objects)
   }
   
   public func reset() {
-    replaceWith(objects: [])
+    replace(with: [])
   }
   
   public func removeAllObjects() {
@@ -95,20 +95,19 @@ public class List<T>: Model where T: Hashable, T: Equatable {
   //Fetch objects
   
   public func getNext() {
-    getNextOffset(offset: objects.count)
+    getNext(offset: objects.count)
   }
   
-  public func didFinishFetchingObjects() {
-  }
+  public func didFinishFetchingObjects() {}
   
   //Private
   
-  private func getNextOffset(offset: Int) {
+  private func getNext(offset: Int = 0) {
     fetchOperation?.cancel()
     let completion: FetchCompletionBlock = {[weak self] success, response, error in
       if let response = response {
         guard let strongSelf = self else { return }
-        strongSelf.performUpdates(updates: strongSelf.insert(objects: response))
+        strongSelf.performUpdates(strongSelf.insert(objects: response))
       }
       self?.didFinishFetchingObjects()
     }
@@ -116,14 +115,14 @@ public class List<T>: Model where T: Hashable, T: Equatable {
   }
   
   private func applyChanges() {
-    updatesPool.optimizeFor(objects: objects)
+    updatesPool.optimize(for: objects)
     objects.formUnion(updatesPool.insertions)
     objects.formUnion(updatesPool.updates)
     objects.subtract(updatesPool.deletions)
   }
   
   private func pushUpdates() {
-    didChangeContentSignal.sendNext(newValue: (
+    didChangeContentSignal.sendNext((
       insertions: updatesPool.insertions,
       deletions: updatesPool.deletions,
       updates: updatesPool.updates)
@@ -138,7 +137,7 @@ internal class UpdatesPool<T> where T: Hashable & Equatable {
   var deletions = Set<T>()
   var updates = Set<T>()
   
-  func addObjects(objects: [T], forChangeType changeType: ListChangeType) {
+  func add(_ objects: [T], forChangeType changeType: ListChangeType) {
     switch changeType {
     case .Insertion: insertions.formUnion(objects)
     case .Deletion: deletions.formUnion(objects)
@@ -152,7 +151,7 @@ internal class UpdatesPool<T> where T: Hashable & Equatable {
     updates = []
   }
   
-  func optimizeFor(objects: Set<T>) {
+  func optimize(for objects: Set<T>) {
     optimizeDuplicatingEntries()
     updates.formUnion(objects.intersection(insertions))
     insertions.subtract(updates)

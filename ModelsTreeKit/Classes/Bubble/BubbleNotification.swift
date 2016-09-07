@@ -37,9 +37,7 @@ public struct BubbleNotification {
   
 }
 
-extension BubbleNotification: Hashable, Equatable {
-  
-}
+extension BubbleNotification: Hashable, Equatable {}
 
 public func ==(a: BubbleNotification, b: BubbleNotification) -> Bool {
   return a.name == b.name && a.domain == b.domain

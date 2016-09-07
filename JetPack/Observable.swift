@@ -25,11 +25,11 @@ public class Observable<T>: Signal<T> {
   
   public var value: T? {
     willSet {
-      if let newValue = newValue { super.sendNext(newValue: newValue) }
+      if let newValue = newValue { super.sendNext(newValue) }
     }
   }
   
-  public override func sendNext(newValue value: T) {
+  public override func sendNext(_ value: T) {
     self.value = value
   }
   

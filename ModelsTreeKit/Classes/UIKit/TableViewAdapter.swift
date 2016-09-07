@@ -39,23 +39,23 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.beginUpdates()
-    }.putInto(pool: pool)
+      }.put(into: pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.endUpdates()
-    }.putInto(pool: pool)
+      }.put(into: pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
       UIView.animate(withDuration: 0.1, animations: {
         strongSelf.tableView.alpha = 0},
-        completion: { completed in
-          strongSelf.tableView.reloadData()
-          UIView.animate(withDuration: 0.2, animations: {
-            strongSelf.tableView.alpha = 1
-        })
+                     completion: { completed in
+                      strongSelf.tableView.reloadData()
+                      UIView.animate(withDuration: 0.2, animations: {
+                        strongSelf.tableView.alpha = 1
+                      })
       })
-    }.putInto(pool: pool)
+      }.put(into: pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
       guard let strongSelf = self else { return }
@@ -81,7 +81,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
                                        to: toIndexPath as IndexPath)
         }
       }
-    }.putInto(pool: pool)
+      }.put(into: pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
       guard let strongSelf = self else { return }
@@ -99,10 +99,10 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       default:
         break
       }
-    }.putInto(pool: pool)
+      }.put(into: pool)
   }
   
-  public func registerCellClass<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
+  public func register<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
     let identifier = String(describing: cellClass)
     let nib = UINib(nibName: identifier, bundle: nil)
     tableView.register(nib, forCellReuseIdentifier: identifier)
@@ -117,28 +117,28 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return dataSource.numberOfObjectsInSection(section: section)
+    return dataSource.numberOfObjects(inSection: section)
   }
   
   @objc
   public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let object = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)!;
-      let identifier = nibNameForObjectMatching(object)
-      var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
-      identifiersForIndexPaths[indexPath as NSIndexPath] = identifier
-      
-      if cell == nil {
-        cell = (nibs[identifier]!.instantiate(withOwner: nil, options: nil).last as! UITableViewCell)
-      }
-      
-      willSetObjectSignal.sendNext(newValue: cell!)
-      
-      let mapping = mappings[identifier]!
-      mapping(object, cell!, indexPath as NSIndexPath)
-      
-      didSetObjectSignal.sendNext(newValue: cell!)
-      
-      return cell!
+    let object = dataSource.object(at: indexPath)
+    let identifier = nibNameForObjectMatching(object)
+    var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
+    identifiersForIndexPaths[indexPath as NSIndexPath] = identifier
+    
+    if cell == nil {
+      cell = (nibs[identifier]!.instantiate(withOwner: nil, options: nil).last as! UITableViewCell)
+    }
+    
+    willSetObjectSignal.sendNext(cell!)
+    
+    let mapping = mappings[identifier]!
+    mapping(object, cell!, indexPath as NSIndexPath)
+    
+    didSetObjectSignal.sendNext(cell!)
+    
+    return cell!
   }
   
   @objc
@@ -150,29 +150,29 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let obj = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)!
-    let identifier = nibNameForObjectMatching(obj)
+    let object = dataSource.object(at: indexPath)
+    let identifier = nibNameForObjectMatching(object)
     if let cell = instances[identifier] as? HeightCalculatingCell {
-      return cell.heightFor(object: dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath), width: tableView.frame.size.width)
+      return cell.height(for: object, width: tableView.frame.size.width)
     }
     return UITableViewAutomaticDimension;
   }
   
   @objc
   public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    didSelectCellSignal.sendNext(newValue: (cell: tableView.cellForRow(at: indexPath as IndexPath),
-      object: dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)))
+    didSelectCellSignal.sendNext((cell: tableView.cellForRow(at: indexPath as IndexPath),
+                                  object: dataSource.object(at: indexPath)))
     tableView.deselectRow(at: indexPath as IndexPath, animated: true)
   }
   
   @objc
   public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    willDisplayCellSignal.sendNext(newValue: cell)
+    willDisplayCellSignal.sendNext(cell)
   }
   
   
-  public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCellSignal.sendNext(newValue: cell)
+  public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    didEndDisplayingCellSignal.sendNext(cell)
   }
   
 }

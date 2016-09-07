@@ -24,13 +24,13 @@ public class Model {
   fileprivate let timeStamp = NSDate()
   
   deinit {
-    deinitSignal.sendNext(newValue: ())
+    deinitSignal.sendNext()
     representationDeinitDisposable?.dispose()
   }
   
   public init(parent: Model?) {
     self.parent = parent
-    parent?.addChild(childModel: self)
+    parent?.add(child: self)
   }
   
   //Connection with representation
@@ -39,7 +39,7 @@ public class Model {
   
   public func applyRepresentation(representation: DeinitObservable) {
     representationDeinitDisposable = representation.deinitSignal.subscribeNext { [weak self] _ in
-      self?.parent?.removeChild(childModel: self!)
+      self?.parent?.remove(child: self!)
     }.autodispose()
   }
   
@@ -53,16 +53,16 @@ public class Model {
   
   private(set) lazy var childModels = Set<Model>()
   
-  final func addChild(childModel: Model) {
-    childModels.insert(childModel)
+  final func add(child: Model) {
+    childModels.insert(child)
   }
   
-  final func removeChild(childModel: Model) {
-    childModels.remove(childModel)
+  final func remove(child: Model) {
+    childModels.remove(child)
   }
   
   public func removeFromParent() {
-    parent?.removeChild(childModel: self)
+    parent?.remove(child: self)
   }
   
   //Session Helpers
@@ -81,32 +81,32 @@ public class Model {
   
   fileprivate var registeredBubbles = Set<String>()
   
-  public final func register(for bubbleNotification: BubbleNotificationName) {
-    registeredBubbles.insert(type(of: bubbleNotification).domain + "." + bubbleNotification.rawValue)
-    pushChildSignal.sendNext(newValue: self)
+  public final func register(for bubble: BubbleNotificationName) {
+    registeredBubbles.insert(type(of: bubble).domain + "." + bubble.rawValue)
+    pushChildSignal.sendNext(self)
   }
   
-  public final func unregister(from bubbleNotification: BubbleNotificationName) {
-    registeredBubbles.remove(type(of: bubbleNotification).domain + "." + bubbleNotification.rawValue)
+  public final func unregister(from bubble: BubbleNotificationName) {
+    registeredBubbles.remove(type(of: bubble).domain + "." + bubble.rawValue)
   }
   
-  public final func isRegistered(for bubbleNotification: BubbleNotificationName) -> Bool {
-    return registeredBubbles.contains(type(of: bubbleNotification).domain + "." + bubbleNotification.rawValue)
+  public final func isRegistered(for bubble: BubbleNotificationName) -> Bool {
+    return registeredBubbles.contains(type(of: bubble).domain + "." + bubble.rawValue)
   }
   
-  public func raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil) {
-    _raise(bubbleNotification: bubbleNotification, withObject: object, sender: self)
+  public func raise(_ bubble: BubbleNotificationName, withObject object: Any? = nil) {
+    _raise(bubble: bubble, withObject: object, sender: self)
   }
   
-  public func _raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil, sender: Model) {
-    if isRegistered(for: bubbleNotification) {
-      handle(bubbleNotification: BubbleNotification(name: bubbleNotification, object: object), sender: sender)
+  public func _raise(bubble: BubbleNotificationName, withObject object: Any? = nil, sender: Model) {
+    if isRegistered(for: bubble) {
+      handle(bubble: BubbleNotification(name: bubble, object: object), sender: sender)
     } else {
-      parent?._raise(bubbleNotification: bubbleNotification, withObject: object, sender: sender)
+      parent?._raise(bubble: bubble, withObject: object, sender: sender)
     }
   }
   
-  public func handle(bubbleNotification: BubbleNotification, sender: Model) {}
+  public func handle(bubble: BubbleNotification, sender: Model) {}
   
   //Errors
   
@@ -151,7 +151,7 @@ public class Model {
   //Override to achieve custom behavior
   
   public func handle(error: ModelTreeError) {
-    errorSignal.sendNext(newValue: error)
+    errorSignal.sendNext(error)
   }
   
   //Global events
@@ -209,14 +209,14 @@ extension Model {
     case ErrorsVerbous
   }
   
-  public final func printSubtree(params: [TreeInfoOptions] = []) {
+  public final func printSubtree(withParams params: [TreeInfoOptions] = []) {
     print("\n")
     printTreeLevel(level: 0, params: params)
     print("\n")
   }
   
   public final func printSessionTree(withOptions params: [TreeInfoOptions] = []) {
-    session.printSubtree(params: params)
+    session.printSubtree(withParams: params)
   }
   
   private func printTreeLevel(level: Int, params: [TreeInfoOptions] = []) {

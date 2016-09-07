@@ -42,12 +42,12 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.updateActions.removeAll()
-    }.putInto(pool: pool)
+    }.put(into: pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
       strongSelf.updateActions.forEach { $0() }
-    }.putInto(pool: pool)
+    }.put(into: pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
@@ -60,7 +60,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
             strongSelf.collectionView.alpha = 1
         })
       })
-    }.putInto(pool: pool)
+    }.put(into: pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
       guard let strongSelf = self else {
@@ -93,7 +93,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
           }
         }
       }
-    }.putInto(pool: pool)
+    }.put(into: pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
       guard let strongSelf = self else { return }
@@ -114,10 +114,10 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       default:
         break
       }
-    }.putInto(pool: pool)
+    }.put(into: pool)
   }
   
-  public func registerCellClass<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
+  public func register<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
     let identifier = String(describing: cellClass)
     let nib = UINib(nibName: identifier, bundle: nil)
     collectionView.register(nib, forCellWithReuseIdentifier: identifier)
@@ -137,41 +137,40 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   }
   
   public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return dataSource.numberOfObjectsInSection(section: section)
+    return dataSource.numberOfObjects(inSection: section)
   }
   
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    
-    let object = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)!;
+    let object = dataSource.object(at: indexPath)
     
     let identifier = nibNameForObjectMatching(object)
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath as IndexPath)
     identifiersForIndexPaths[indexPath as NSIndexPath] = identifier
 
     
-    willSetObjectSignal.sendNext(newValue: cell)
+    willSetObjectSignal.sendNext(cell)
     let mapping = mappings[identifier]!
     mapping(object, cell, indexPath as NSIndexPath)
-    didSetObjectSignal.sendNext(newValue: cell)
+    didSetObjectSignal.sendNext(cell)
     
     return cell
   }
   
-  func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    willDisplayCellSignal.sendNext(newValue: cell)
+  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    willDisplayCellSignal.sendNext(cell)
   }
   
-  func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCell.sendNext(newValue: cell)
+  public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    didEndDisplayingCell.sendNext(cell)
   }
   
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let object = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)!
+    let object = dataSource.object(at: indexPath)
     let identifier = nibNameForObjectMatching(object)
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
-      willCalculateSizeSignal.sendNext(newValue: instances[identifier]!)
-      return cell.sizeFor(object: dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath))
+      willCalculateSizeSignal.sendNext(instances[identifier]!)
+      return cell.size(for: dataSource.object(at: indexPath))
     }
     
     if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
@@ -183,7 +182,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let cell = collectionView.cellForItem(at: indexPath)
-    let object = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)
-    didSelectCellSignal.sendNext(newValue: (cell: cell, object: object))
+    let object = dataSource.object(at: indexPath)
+    didSelectCellSignal.sendNext((cell: cell, object: object))
   }
 }

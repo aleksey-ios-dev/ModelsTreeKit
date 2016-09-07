@@ -8,7 +8,7 @@
 
 import Foundation
 
-infix operator >>> { associativity left precedence 160 }
+infix operator >>> : MultiplicationPrecedence
 
 public func >>><T> (signal: Signal<T>, handler: ((T) -> Void)) -> Disposable {
   return signal.subscribeNext(handler: handler)
@@ -36,7 +36,7 @@ public class Signal<T> {
     pool.drain()
   }
     
-  public func sendNext(newValue: T) {
+  public func sendNext(_ newValue: T) {
     nextHandlers.forEach { $0.invoke(data: newValue) }
   }
   
@@ -61,8 +61,9 @@ public class Signal<T> {
     return wrapper
   }
   
+  @discardableResult
   func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
-    subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.putInto(pool: nextSignal.pool)
+    subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.put(into: nextSignal.pool)
     
     return nextSignal
   }

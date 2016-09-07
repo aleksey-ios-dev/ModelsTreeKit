@@ -22,18 +22,18 @@ public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> {
   public override init() { }
   
   public var sections: [StaticObjectsSection<ObjectType>] = [] {
-    didSet { reloadDataSignal.sendNext(newValue: ()) }
+    didSet { reloadDataSignal.sendNext() }
   }
   
   override func numberOfSections() -> Int {
     return sections.count
   }
   
-  override func numberOfObjectsInSection(section: Int) -> Int {
+  override func numberOfObjects(inSection section: Int) -> Int {
     return sections[section].objects.count
   }
   
-  override func objectAtIndexPath(indexPath: NSIndexPath) -> ObjectType? {
+  override func object(at indexPath: IndexPath) -> ObjectType {
     return sections[indexPath.section].objects[indexPath.row]
   }
   

@@ -16,7 +16,7 @@ extension UITextField {
     let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text }.filter { $0 != nil }.map { $0! }
     
     let observable = Observable<String>(value: text)
-    Signals.merge(signals: [textObservable, onClearSignal]).bindTo(observable: observable)
+    Signals.merge([textObservable, onClearSignal]).bindTo(observable: observable)
     
     return observable
   }
@@ -54,7 +54,7 @@ private class TextFieldDelegate: NSObject, UITextFieldDelegate {
   
   @objc fileprivate func textFieldShouldClear(_ textField: UITextField) -> Bool {
     DispatchQueue.main.async {
-      self.clearSignal.sendNext(newValue: ())
+      self.clearSignal.sendNext()
     }
     return true
   }

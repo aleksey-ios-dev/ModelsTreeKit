@@ -45,7 +45,7 @@ private class KeyValueObserver: NSObject {
         for keyPath in _self.signals.keys {
           _self.object.removeObserver(_self, forKeyPath: keyPath, context: &_self.context)
         }
-      }.putInto(pool: pool)
+      }.put(into: pool)
     }
     
     return signal as! Observable<T?>

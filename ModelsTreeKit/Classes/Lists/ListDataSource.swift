@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class ListDataSource<ObjectType, GroupKeyType where
+public class ListDataSource<ObjectType, GroupKeyType>: ObjectsDataSource<ObjectType> where
   ObjectType: Hashable, ObjectType: Equatable,
-GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType> {
+GroupKeyType: Hashable, GroupKeyType: Comparable {
   
   typealias Section = (objects: [ObjectType], key: GroupKeyType?)
   typealias Sections = [Section]
@@ -25,12 +25,12 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   public init(list: List<ObjectType>) {
     super.init()
     
-    list.beginUpdatesSignal.subscribeNext { [weak self] in self?.beginUpdates() }.putInto(pool: pool)
-    list.endUpdatesSignal.subscribeNext { [weak self] in self?.endUpdates() }.putInto(pool: pool)
+    list.beginUpdatesSignal.subscribeNext { [weak self] in self?.beginUpdates() }.put(into: pool)
+    list.endUpdatesSignal.subscribeNext { [weak self] in self?.endUpdates() }.put(into: pool)
     list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
       guard let strongSelf = self else { return }
-      strongSelf.sections = strongSelf.arrangedSectionsFrom(objects: objects)
-    }.putInto(pool: pool)
+      strongSelf.sections = strongSelf.arrangedSections(from: objects)
+    }.put(into: pool)
     
     list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
       guard let strongSelf = self else { return }
@@ -41,17 +41,17 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
         deletions: deletions,
         updates: updates,
         oldSections: oldSections)
-    }.putInto(pool: pool)
+    }.put(into: pool)
   }
   
   //Helpers
   
   public func fetchAllFrom(list: List<ObjectType>) {
-    sections = arrangedSectionsFrom(objects: list.objects)
+    sections = arrangedSections(from: list.objects)
   }
   
-  public func indexPathFor(object: ObjectType) -> NSIndexPath? {
-    return indexPathFor(object: object, inSections: sections)
+  public func indexPath(for object: ObjectType) -> IndexPath? {
+    return indexPath(for: object, in: sections)
   }
   
   public func allObjects() -> [[ObjectType]] {
@@ -63,21 +63,21 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
     return sections.count
   }
   
-  public override func numberOfObjectsInSection(section: Int) -> Int {
+  override func numberOfObjects(inSection section: Int) -> Int {
     return sections[section].objects.count
   }
   
-  public override func objectAtIndexPath(indexPath: NSIndexPath) -> ObjectType? {
-    return objectAtIndexPath(indexPath: indexPath, inSections: sections)
+  override func object(at indexPath: IndexPath) -> ObjectType {
+    return object(at: indexPath, in: sections)
   }
   
-  func objectAtIndexPath(indexPath: NSIndexPath, inSections sections: Sections) -> ObjectType? {
+  func object(at indexPath: IndexPath, in sections: Sections) -> ObjectType {
     return sections[indexPath.section].objects[indexPath.row]
   }
   
   //Private
   
-  private func arrangedSectionsFrom(objects: Set<ObjectType>) -> Sections {
+  private func arrangedSections(from objects: Set<ObjectType>) -> Sections {
     if objects.isEmpty { return [] }
     
     guard let groupingBlock = groupingCriteria else {
@@ -117,7 +117,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
     objects.formUnion(insertions.union(updates))
     objects.subtract(deletions)
     
-    sections = arrangedSectionsFrom(objects: objects)
+    sections = arrangedSections(from: objects)
   }
   
   private func pushInsertions(
@@ -129,34 +129,34 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       //Objects
     
       for object in insertions {
-        didChangeObjectSignal.sendNext(newValue: (
+        didChangeObjectSignal.sendNext((
           object: object,
           changeType: .Insertion,
           fromIndexPath: nil,
-          toIndexPath: indexPathFor(object: object, inSections: sections))
+          toIndexPath: indexPath(for: object, in: sections))
         )
       }
       
       for object in deletions {
-        didChangeObjectSignal.sendNext(newValue: (
+        didChangeObjectSignal.sendNext((
           object: object,
           changeType: .Deletion,
-          fromIndexPath: indexPathFor(object: object, inSections: oldSections),
+          fromIndexPath: indexPath(for: object, in: oldSections),
           toIndexPath: nil)
         )
       }
       
       for object in updates {
         guard
-          let oldIndexPath = indexPathFor(object: object, inSections: oldSections),
-          let newIndexPath = indexPathFor(object: object, inSections: oldSections)
+          let oldIndexPath = indexPath(for: object, in: oldSections),
+          let newIndexPath = indexPath(for: object, in: oldSections)
           else {
             continue
         }
         
         let changeType: ListChangeType = oldIndexPath == newIndexPath ? .Update : .Move
         
-        didChangeObjectSignal.sendNext(newValue: (
+        didChangeObjectSignal.sendNext((
           object: object,
           changeType: changeType,
           fromIndexPath: oldIndexPath,
@@ -168,7 +168,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       
       for (index, section) in oldSections.enumerated() {
         if sections.filter({ return $0.key == section.key }).isEmpty {
-          didChangeSectionSignal.sendNext(newValue: (
+          didChangeSectionSignal.sendNext((
             changeType: .Deletion,
             fromIndex: index,
             toIndex: nil)
@@ -178,7 +178,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       
       for (index, section) in sections.enumerated() {
         if oldSections.filter({ return $0.key == section.key }).isEmpty {
-          didChangeSectionSignal.sendNext(newValue: (
+          didChangeSectionSignal.sendNext((
             changeType: .Insertion,
             fromIndex: nil,
             toIndex: index)
@@ -187,7 +187,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       }
   }
   
-  private func indexPathFor(object: ObjectType, inSections sections: Sections) -> NSIndexPath? {
+  private func indexPath(for object: ObjectType, in sections: Sections) -> IndexPath? {
     var allObjects: [ObjectType] = []
     
     for section in sections {
@@ -210,7 +210,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       }
     }
     
-    return objectFound ? NSIndexPath(row: row, section: section) : nil
+    return objectFound ? IndexPath(row: row, section: section) : nil
   }
   
   private func allObjectsSet() -> Set<ObjectType> {
@@ -224,16 +224,16 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   }
   
   private func beginUpdates() {
-    beginUpdatesSignal.sendNext(newValue: ())
+    beginUpdatesSignal.sendNext()
   }
   
   private func endUpdates() {
-    endUpdatesSignal.sendNext(newValue: ())
+    endUpdatesSignal.sendNext()
   }
   
   private func rearrangeAndPushReload() {
-    sections = arrangedSectionsFrom(objects: allObjectsSet())
-    reloadDataSignal.sendNext(newValue: ())
+    sections = arrangedSections(from: allObjectsSet())
+    reloadDataSignal.sendNext()
   }
   
 }

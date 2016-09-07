@@ -68,22 +68,22 @@ class Subscription<U> : Invocable, Disposable {
     return self
   }
   
-  func putInto(pool: AutodisposePool) -> Disposable {
+  @discardableResult func put(into pool: AutodisposePool) -> Disposable {
     pool.add(disposable: self)
     
     return self
   }
   
-  func takeUntil(signal: Pipe<Void>) -> Disposable {
+  func take(until signal: Pipe<Void>) -> Disposable {
     signal.subscribeNext { [weak self] in
       self?.dispose()
-    }.putInto(pool: self.signal.pool)
+    }.put(into: self.signal.pool)
 
     return self
   }
   
-  func ownedBy(object: DeinitObservable) -> Disposable {
-    return takeUntil(signal: object.deinitSignal)
+  func owned(by object: DeinitObservable) -> Disposable {
+    return take(until: object.deinitSignal)
   }
   
 }

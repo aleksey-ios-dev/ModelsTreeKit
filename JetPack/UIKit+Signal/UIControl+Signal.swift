@@ -33,7 +33,7 @@ private class ControlSignalEmitter: NSObject {
       }
     }
     
-    return Signals.merge(signals: correspondingSignals).pipe()
+    return Signals.merge(correspondingSignals).pipe()
   }
   
   fileprivate static var EmitterHandler: Int = 0
@@ -58,7 +58,7 @@ private class ControlSignalEmitter: NSObject {
       let signal = signalsMap[eventRawValue]
       let selectorString = signaturePrefix + String(eventRawValue)
       controlProxy?.register({ [weak signal, unowned self] in
-        signal?.sendNext(newValue: self.control)
+        signal?.sendNext(self.control)
       },  forKey: selectorString)
       control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), for: UIControlEvents(rawValue: eventRawValue))
     }

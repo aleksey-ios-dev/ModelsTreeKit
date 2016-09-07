@@ -10,13 +10,13 @@ import Foundation
 
 public struct Signals {
   
-  static func merge<U>(signals: [Signal<U>]) -> Signal<U> {
+  static func merge<U>(_ signals: [Signal<U>]) -> Signal<U> {
     let nextSignal = Signal<U>()
     
     signals.forEach { signal in
-        signal.subscribeNext(handler: { [weak nextSignal] in
-            nextSignal?.sendNext(newValue: $0)
-        }).putInto(pool: nextSignal.pool)
+        signal.subscribeNext { [weak nextSignal] in
+            nextSignal?.sendNext($0)
+        }.put(into: nextSignal.pool)
     }
     
     return nextSignal
@@ -32,7 +32,7 @@ public extension Signal {
     var nextSignal: Signal<U>!
     if self is Observable { nextSignal = Observable<U>() }
     else { nextSignal = Pipe<U>() }
-    subscribeNext { [weak nextSignal] in nextSignal?.sendNext(newValue: handler($0)) }.putInto(pool: nextSignal.pool)
+    subscribeNext { [weak nextSignal] in nextSignal?.sendNext(handler($0)) }.put(into: nextSignal.pool)
     chainSignal(nextSignal: nextSignal)
     
     return nextSignal
@@ -45,8 +45,8 @@ public extension Signal {
     if self is Observable { nextSignal = Observable<T>() }
     else { nextSignal = Pipe<T>() }
     subscribeNext { [weak nextSignal] in
-      if handler($0) { nextSignal?.sendNext(newValue: $0) }
-      }.putInto(pool: nextSignal.pool)
+      if handler($0) { nextSignal?.sendNext($0) }
+      }.put(into: nextSignal.pool)
     
     chainSignal(nextSignal: nextSignal)
     
@@ -58,8 +58,8 @@ public extension Signal {
   public func reduce<U>(handler: @escaping (_ newValue: T, _ reducedValue: U?) -> U) -> Signal<U> {
     let nextSignal = Observable<U>()
     subscribeNext { [weak nextSignal] in
-      nextSignal?.sendNext(newValue: handler($0, nextSignal?.value))
-      }.putInto(pool: nextSignal.pool)
+      nextSignal?.sendNext(handler($0, nextSignal?.value))
+      }.put(into: nextSignal.pool)
     
     chainSignal(nextSignal: nextSignal)
     
@@ -76,13 +76,13 @@ public extension Signal {
     
     transientOther.subscribeNext { [weak nextSignal] in
       guard let nextSignal = nextSignal else { return }
-      nextSignal.sendNext(newValue: (nil, $0))
-      }.putInto(pool: nextSignal.pool)
+      nextSignal.sendNext((nil, $0))
+      }.put(into: nextSignal.pool)
     
     transientSelf.subscribeNext { [weak nextSignal] in
       guard let nextSignal = nextSignal else { return }
-      nextSignal.sendNext(newValue: ($0, nil))
-      }.putInto(pool: nextSignal.pool)
+      nextSignal.sendNext(($0, nil))
+      }.put(into: nextSignal.pool)
     
     chainSignal(nextSignal: nextSignal)
     
@@ -97,13 +97,13 @@ public extension Signal {
     
     persistentOther.subscribeNext { [weak persistentSelf, weak nextSignal] in
       guard let _self = persistentSelf, let nextSignal = nextSignal else { return }
-      nextSignal.sendNext(newValue: (_self.value, $0))
-      }.putInto(pool: nextSignal.pool)
+      nextSignal.sendNext((_self.value, $0))
+      }.put(into: nextSignal.pool)
     
     persistentSelf.subscribeNext { [weak persistentOther, weak nextSignal] in
       guard let otherSignal = persistentOther, let nextSignal = nextSignal else { return }
-      nextSignal.sendNext(newValue: ($0, otherSignal.value))
-      }.putInto(pool: nextSignal.pool)
+      nextSignal.sendNext(($0, otherSignal.value))
+      }.put(into: nextSignal.pool)
     
     chainSignal(nextSignal: nextSignal)
     
@@ -133,7 +133,7 @@ public extension Signal {
       }
       
       }.map { ($0.0.0, $0.1.0)
-      }.filter { $0.0 != nil && 0.1 != nil
+      }.filter { $0.0 != nil && $0.1 != nil
       }.map { ($0.0!, $0.1!) }
     
     chainSignal(nextSignal: nextSignal)
@@ -169,7 +169,7 @@ public extension Signal {
       
       return ((zippedSelfValue, reducedSelf!), (zippedOtherValue, reducedOther!))
       }.map { ($0.0.0, $0.1.0)
-      }.filter { $0.0 != nil && 0.1 != nil
+      }.filter { $0.0 != nil && $0.1 != nil
       }.map { ($0.0!, $0.1!)
     }
     
@@ -197,8 +197,8 @@ public extension Signal {
     let signalA = Pipe<U>()
     let signalB = Pipe<V>()
     
-    subscribeNext { [weak signalA] in signalA?.sendNext(newValue: splitter($0).a) }.putInto(pool: signalA.pool)
-    subscribeNext { [weak signalB] in signalB?.sendNext(newValue: splitter($0).b) }.putInto(pool: signalB.pool)
+    subscribeNext { [weak signalA] in signalA?.sendNext(splitter($0).a) }.put(into: signalA.pool)
+    subscribeNext { [weak signalB] in signalB?.sendNext(splitter($0).b) }.put(into: signalB.pool)
     
     chainSignal(nextSignal: signalA)
     chainSignal(nextSignal: signalB)
