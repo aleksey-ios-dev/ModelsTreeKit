@@ -17,21 +17,21 @@ protocol Invocable: class {
 
 class Subscription<U> : Invocable, Disposable {
   
-  var handler: (U -> Void)?
-  var stateHandler: (Bool -> Void)?
+  var handler: ((U) -> Void)?
+  var stateHandler: ((Bool) -> Void)?
   
   private var signal: Signal<U>
   private var deliversOnMainThread = false
   private var autodisposes = false
   
-  init(handler: (U -> Void)?, signal: Signal<U>) {
+  init(handler: ((U) -> Void)?, signal: Signal<U>) {
     self.handler = handler
     self.signal = signal;
   }
   
   func invoke(data: Any) -> Void {
     if deliversOnMainThread {
-      dispatch_async(dispatch_get_main_queue()) { [weak self] in
+      DispatchQueue.main.async { [weak self] in
         self?.handler?(data as! U)
       }
     } else {
@@ -42,7 +42,7 @@ class Subscription<U> : Invocable, Disposable {
   
   func invokeState(data: Bool) -> Void {
     if deliversOnMainThread {
-      dispatch_async(dispatch_get_main_queue()) { [weak self] in
+      DispatchQueue.main.async { [weak self] in
         self?.stateHandler?(data)
       }
     } else {
@@ -69,7 +69,7 @@ class Subscription<U> : Invocable, Disposable {
   }
   
   func putInto(pool: AutodisposePool) -> Disposable {
-    pool.add(self)
+    pool.add(disposable: self)
     
     return self
   }
@@ -77,13 +77,13 @@ class Subscription<U> : Invocable, Disposable {
   func takeUntil(signal: Pipe<Void>) -> Disposable {
     signal.subscribeNext { [weak self] in
       self?.dispose()
-    }.putInto(self.signal.pool)
+    }.putInto(pool: self.signal.pool)
 
     return self
   }
   
   func ownedBy(object: DeinitObservable) -> Disposable {
-    return takeUntil(object.deinitSignal)
+    return takeUntil(signal: object.deinitSignal)
   }
   
 }

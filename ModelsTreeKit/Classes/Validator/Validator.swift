@@ -8,7 +8,7 @@
 
 import UIKit
 
-public typealias StringValidator = (String -> Bool)
+public typealias StringValidator = ((String) -> Bool)
 
 public func && (left: StringValidator, right: StringValidator) -> StringValidator {
   return { left($0) && right($0) }
@@ -37,7 +37,7 @@ public struct Validator {
   }
   
   public static func contains(string: String) -> StringValidator {
-    return { $0.containsString(string) }
+    return { $0.contains(string) }
   }
   
   public static func hasPrefix(string: String) -> StringValidator {

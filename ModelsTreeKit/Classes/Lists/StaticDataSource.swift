@@ -22,7 +22,7 @@ public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> {
   public override init() { }
   
   public var sections: [StaticObjectsSection<ObjectType>] = [] {
-    didSet { reloadDataSignal.sendNext() }
+    didSet { reloadDataSignal.sendNext(newValue: ()) }
   }
   
   override func numberOfSections() -> Int {

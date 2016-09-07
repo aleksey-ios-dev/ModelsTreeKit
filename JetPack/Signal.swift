@@ -10,24 +10,24 @@ import Foundation
 
 infix operator >>> { associativity left precedence 160 }
 
-public func >>><T> (signal: Signal<T>, handler: (T -> Void)) -> Disposable {
-  return signal.subscribeNext(handler)
+public func >>><T> (signal: Signal<T>, handler: ((T) -> Void)) -> Disposable {
+  return signal.subscribeNext(handler: handler)
 }
 
 
 public class Signal<T> {
   
-  public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash
+  public var hashValue = ProcessInfo.processInfo.globallyUniqueString.hash
   
-  public typealias SignalHandler = T -> Void
-  public typealias StateHandler = Bool -> Void
+  public typealias SignalHandler = (T) -> Void
+  public typealias StateHandler = (Bool) -> Void
     
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
   //Destructor is executed before the signal's deallocation. A good place to cancel your network operation.
   
-  var destructor: (Void -> Void)?
+  var destructor: ((Void) -> Void)?
   
   var pool = AutodisposePool()
     
@@ -37,11 +37,11 @@ public class Signal<T> {
   }
     
   public func sendNext(newValue: T) {
-    nextHandlers.forEach { $0.invoke(newValue) }
+    nextHandlers.forEach { $0.invoke(data: newValue) }
   }
   
   public func sendCompleted() {
-    completedHandlers.forEach { $0.invokeState(true) }
+    completedHandlers.forEach { $0.invokeState(data: true) }
   }
   
   //Adds handler to signal and returns subscription
@@ -62,7 +62,7 @@ public class Signal<T> {
   }
   
   func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
-    subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.putInto(nextSignal.pool)
+    subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.putInto(pool: nextSignal.pool)
     
     return nextSignal
   }

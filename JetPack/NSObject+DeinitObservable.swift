@@ -13,7 +13,7 @@ class DeinitNotifier: NSObject {
   let signal = Pipe<Void>()
   
   deinit {
-    signal.sendNext()
+    signal.sendNext(newValue: ())
   }
   
 }

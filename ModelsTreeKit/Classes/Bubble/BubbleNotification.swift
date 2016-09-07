@@ -24,7 +24,7 @@ public struct BubbleNotification {
   public var name: BubbleNotificationName
   public var domain: String {
     get {
-      return name.dynamicType.domain
+      return type(of: name).domain
     }
   }
   public var object: Any?

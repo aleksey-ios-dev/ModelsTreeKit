@@ -14,10 +14,10 @@ public extension Signal {
     if self is Observable<T> { return self as! Observable<T> }
     
     let nextSignal = Observable<T>()
-    subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
-    chainSignal(nextSignal)
+    subscribeNext { [weak nextSignal] in nextSignal?.sendNext(newValue: $0) }.putInto(pool: nextSignal.pool)
+    chainSignal(nextSignal: nextSignal)
     if let observable = self as? Observable<T>, let value = observable.value {
-      nextSignal.sendNext(value)
+      nextSignal.sendNext(newValue: value)
     }
     
     return nextSignal
@@ -27,8 +27,8 @@ public extension Signal {
     if self is Pipe<T> { return self as! Pipe<T> }
     
     let nextSignal = Pipe<T>()
-    subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
-    chainSignal(nextSignal)
+    subscribeNext { [weak nextSignal] in nextSignal?.sendNext(newValue: $0) }.putInto(pool: nextSignal.pool)
+    chainSignal(nextSignal: nextSignal)
     
     return nextSignal
   }

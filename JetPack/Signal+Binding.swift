@@ -19,7 +19,7 @@ public extension Signal {
       if let value = $0 as? AnyObject, let object = object {
         object.setValue(value, forKey: keyPath)
       }
-    }.takeUntil(object.deinitSignal)
+    }.takeUntil(signal: object.deinitSignal)
   }
   
   //Binds values passed by source signal to target observable. Subscription disposed manually.

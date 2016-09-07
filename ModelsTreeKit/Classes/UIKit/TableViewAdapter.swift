@@ -13,7 +13,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   
-  public var nibNameForObjectMatching: (ObjectType -> String)!
+  public var nibNameForObjectMatching: ((ObjectType) -> String)!
   
   public let didSelectCellSignal = Pipe<(cell: UITableViewCell?, object: ObjectType?)>()
   public let willDisplayCellSignal = Pipe<UITableViewCell>()
@@ -39,139 +39,140 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.beginUpdates()
-    }.putInto(pool)
+    }.putInto(pool: pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.endUpdates()
-    }.putInto(pool)
+    }.putInto(pool: pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
-      UIView.animateWithDuration(0.1, animations: {
+      UIView.animate(withDuration: 0.1, animations: {
         strongSelf.tableView.alpha = 0},
         completion: { completed in
           strongSelf.tableView.reloadData()
-          UIView.animateWithDuration(0.2, animations: {
+          UIView.animate(withDuration: 0.2, animations: {
             strongSelf.tableView.alpha = 1
         })
       })
-    }.putInto(pool)
+    }.putInto(pool: pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
       guard let strongSelf = self else { return }
       switch changeType {
       case .Insertion:
         if let toIndexPath = toIndexPath {
-          strongSelf.tableView.insertRowsAtIndexPaths([toIndexPath],
-            withRowAnimation: UITableViewRowAnimation.Fade)
+          strongSelf.tableView.insertRows(at: [toIndexPath as IndexPath],
+                                          with: .fade)
         }
       case .Deletion:
         if let fromIndexPath = fromIndexPath {
-          strongSelf.tableView.deleteRowsAtIndexPaths([fromIndexPath],
-            withRowAnimation: .Fade)
+          strongSelf.tableView.deleteRows(at: [fromIndexPath as IndexPath],
+                                          with: .fade)
         }
       case .Update:
         if let indexPath = toIndexPath {
-          strongSelf.tableView.reloadRowsAtIndexPaths([indexPath],
-            withRowAnimation: .Fade)
+          strongSelf.tableView.reloadRows(at: [indexPath as IndexPath],
+                                          with: .fade)
         }
       case .Move:
         if let fromIndexPath = fromIndexPath, let toIndexPath = toIndexPath {
-          strongSelf.tableView.moveRowAtIndexPath(fromIndexPath,
-            toIndexPath: toIndexPath)
+          strongSelf.tableView.moveRow(at: fromIndexPath as IndexPath,
+                                       to: toIndexPath as IndexPath)
         }
       }
-    }.putInto(pool)
+    }.putInto(pool: pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
       guard let strongSelf = self else { return }
       switch changeType {
       case .Insertion:
         if let toIndex = toIndex {
-          strongSelf.tableView.insertSections(NSIndexSet(index: toIndex),
-            withRowAnimation: .Fade)
+          strongSelf.tableView.insertSections(NSIndexSet(index: toIndex) as IndexSet,
+                                              with: .fade)
         }
       case .Deletion:
         if let fromIndex = fromIndex {
-          strongSelf.tableView.deleteSections(NSIndexSet(index: fromIndex),
-            withRowAnimation: .Fade)
+          strongSelf.tableView.deleteSections(NSIndexSet(index: fromIndex) as IndexSet,
+                                              with: .fade)
         }
       default:
         break
       }
-    }.putInto(pool)
+    }.putInto(pool: pool)
   }
   
-  public func registerCellClass<U: ObjectConsuming where U.ObjectType == ObjectType>(cellClass: U.Type) {
-    let identifier = String(cellClass)
+  public func registerCellClass<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
+    let identifier = String(describing: cellClass)
     let nib = UINib(nibName: identifier, bundle: nil)
-    tableView.registerNib(nib, forCellReuseIdentifier: identifier)
-    instances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewCell
+    tableView.register(nib, forCellReuseIdentifier: identifier)
+    instances[identifier] = nib.instantiate(withOwner: self, options: nil).last as? UITableViewCell
     
     mappings[identifier] = { object, cell, _ in
-      if let consumer = cell as? U { consumer.applyObject(object) }
+      if let consumer = cell as? U { consumer.applyObject(object: object) }
     }
   }
   
   //UITableViewDataSource
   
   @objc
-  public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return dataSource.numberOfObjectsInSection(section)
+  public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return dataSource.numberOfObjectsInSection(section: section)
   }
   
   @objc
-  public func tableView(tableView: UITableView,
-    cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      let object = dataSource.objectAtIndexPath(indexPath)!;
+  public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      let object = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)!;
       let identifier = nibNameForObjectMatching(object)
-      var cell = tableView.dequeueReusableCellWithIdentifier(identifier)
-      identifiersForIndexPaths[indexPath] = identifier
+      var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
+      identifiersForIndexPaths[indexPath as NSIndexPath] = identifier
       
       if cell == nil {
-        cell = (nibs[identifier]!.instantiateWithOwner(nil, options: nil).last as! UITableViewCell)
+        cell = (nibs[identifier]!.instantiate(withOwner: nil, options: nil).last as! UITableViewCell)
       }
       
-      willSetObjectSignal.sendNext(cell!)
+      willSetObjectSignal.sendNext(newValue: cell!)
       
       let mapping = mappings[identifier]!
-      mapping(object, cell!, indexPath)
+      mapping(object, cell!, indexPath as NSIndexPath)
       
-      didSetObjectSignal.sendNext(cell!)
+      didSetObjectSignal.sendNext(newValue: cell!)
       
       return cell!
   }
   
   @objc
-  public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+  public func numberOfSections(in tableView: UITableView) -> Int {
     return dataSource.numberOfSections()
   }
   
   // UITableViewDelegate
   
   @objc
-  public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
+  public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    let obj = dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)!
+    let identifier = nibNameForObjectMatching(obj)
     if let cell = instances[identifier] as? HeightCalculatingCell {
-      return cell.heightFor(dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width)
+      return cell.heightFor(object: dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath), width: tableView.frame.size.width)
     }
     return UITableViewAutomaticDimension;
   }
   
   @objc
-  public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    didSelectCellSignal.sendNext((cell: tableView.cellForRowAtIndexPath(indexPath),
-      object: dataSource.objectAtIndexPath(indexPath)))
-    tableView.deselectRowAtIndexPath(indexPath, animated: true)
+  public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    didSelectCellSignal.sendNext(newValue: (cell: tableView.cellForRow(at: indexPath as IndexPath),
+      object: dataSource.objectAtIndexPath(indexPath: indexPath as NSIndexPath)))
+    tableView.deselectRow(at: indexPath as IndexPath, animated: true)
   }
   
   @objc
-  public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    willDisplayCellSignal.sendNext(cell)
+  public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    willDisplayCellSignal.sendNext(newValue: cell)
   }
   
+  
   public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCellSignal.sendNext(cell)
+    didEndDisplayingCellSignal.sendNext(newValue: cell)
   }
   
 }
