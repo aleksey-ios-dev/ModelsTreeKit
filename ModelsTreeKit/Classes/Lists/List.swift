@@ -14,7 +14,7 @@ enum ListChangeType {
   
 }
 
-public class List<T>: Model where T: Hashable, T: Equatable {
+open class List<T>: Model where T: Hashable, T: Equatable {
   
   public typealias FetchCompletionBlock = (_ success: Bool, _ response: [T]?, _ error: Error?) -> Void
   public typealias FetchBlock = (_ completion: FetchCompletionBlock, _ offset: Int) -> Operation?
