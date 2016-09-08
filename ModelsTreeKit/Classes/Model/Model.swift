@@ -140,11 +140,11 @@ open class Model {
     return codes.contains(error.code.rawValue)
   }
   
-  public func raise(error: ModelTreeError) {
+  public func raise(_ error: ModelTreeError) {
     if isRegistered(for: error) {
       handle(error: error)
     } else {
-      parent?.raise(error: error)
+      parent?.raise(error)
     }
   }
   
