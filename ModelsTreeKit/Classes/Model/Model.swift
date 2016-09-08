@@ -171,7 +171,7 @@ open class Model {
   }
   
   public final func raise(
-    globalEvent: GlobalEventName,
+    _ globalEvent: GlobalEventName,
     withObject object: Any? = nil,
     userInfo: [String: Any] = [:]) {
     let event = GlobalEvent(name: globalEvent, object: object, userInfo: userInfo)
