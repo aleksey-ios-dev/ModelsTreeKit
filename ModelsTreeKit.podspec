@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name     = 'ModelsTreeKit'
-  s.version  = '1.0.0'
+  s.version  = '1.1.0'
   s.ios.deployment_target = '8.0'
   s.license  = 'MIT'
   s.summary  = 'A set of tools for building Tree of models architecture'
