@@ -28,7 +28,7 @@ public extension Signal {
   
   //Transforms value, can change passed value type
   
-  public func map<U>(handler: @escaping (T) -> U) -> Signal<U> {
+  public func map<U>(_ handler: @escaping (T) -> U) -> Signal<U> {
     var nextSignal: Signal<U>!
     if self is Observable { nextSignal = Observable<U>() }
     else { nextSignal = Pipe<U>() }
@@ -40,7 +40,7 @@ public extension Signal {
   
   //Adds a condition for sending next value, doesn't change passed value type
   
-  public func filter(handler: @escaping (T) -> Bool) -> Signal<T> {
+  public func filter(_ handler: @escaping (T) -> Bool) -> Signal<T> {
     var nextSignal: Signal<T>!
     if self is Observable { nextSignal = Observable<T>() }
     else { nextSignal = Pipe<T>() }
@@ -55,7 +55,7 @@ public extension Signal {
   
   //Applies passed values to the cumulative reduced value
   
-  public func reduce<U>(handler: @escaping (_ newValue: T, _ reducedValue: U?) -> U) -> Signal<U> {
+  public func reduce<U>(_ handler: @escaping (_ newValue: T, _ reducedValue: U?) -> U) -> Signal<U> {
     let nextSignal = Observable<U>()
     subscribeNext { [weak nextSignal] in
       nextSignal?.sendNext(handler($0, nextSignal?.value))
@@ -68,7 +68,7 @@ public extension Signal {
   
   //Sends combined value when any of signals fire
   
-  func distinctLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+  func distinctLatest<U>(_ otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let transientSelf = pipe()
     let transientOther = otherSignal.pipe()
     
@@ -144,7 +144,7 @@ public extension Signal {
   //Zip
   
   public func zip<U>(_ otherSignal: Signal <U>) -> Signal<(T, U)> {
-    let nextSignal = distinctLatest(otherSignal: otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
+    let nextSignal = distinctLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
       
