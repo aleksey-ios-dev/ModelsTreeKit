@@ -38,7 +38,7 @@ public class Session: Model {
     credentials = SessionCredentials(params: params)
   }
   
-  public func sessionDidLoad() {}
+  open func sessionDidLoad() {}
   
   func open(with controller: SessionController) {
     self.controller = controller
@@ -48,7 +48,7 @@ public class Session: Model {
     sessionDidLoad()
   }
   
-  public func close(withParams params: Any?) {
+  public final func close(withParams params: Any?) {
     sessionWillClose()
     services.prepareToClose()
     controller?.session(session: self, didCloseWithParams: params)
