@@ -18,7 +18,7 @@ protocol SessionDelegate: class {
   
 }
 
-public class Session: Model {
+open class Session: Model {
   
   public var services: ServiceLocator!
   public var credentials: SessionCredentials?
