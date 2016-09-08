@@ -66,12 +66,12 @@ open class List<T>: Model where T: Hashable, T: Equatable {
   
   //Operations on objects. Use ONLY inside performBatchUpdate() call!
   
-  public func delete(objects: [T]) {
+  public func delete(_ objects: [T]) {
     if objects.isEmpty { return }
     updatesPool.deletions.formUnion(Set(objects))
   }
   
-  public func insert(objects: [T]) {
+  public func insert(_ objects: [T]) {
     if objects.isEmpty { return }
     updatesPool.insertions.formUnion(Set(objects))
   }
@@ -89,7 +89,7 @@ open class List<T>: Model where T: Hashable, T: Equatable {
   }
   
   public func removeAllObjects() {
-    delete(objects: Array(objects))
+    delete(Array(objects))
   }
   
   //Fetch objects
@@ -107,7 +107,7 @@ open class List<T>: Model where T: Hashable, T: Equatable {
     let completion: FetchCompletionBlock = {[weak self] success, response, error in
       if let response = response {
         guard let strongSelf = self else { return }
-        strongSelf.performUpdates(strongSelf.insert(objects: response))
+        strongSelf.performUpdates(strongSelf.insert(response))
       }
       self?.didFinishFetchingObjects()
     }
