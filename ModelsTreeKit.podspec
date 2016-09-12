@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
   s.source   = { :git => 'https://github.com/mmrmmlrr/ModelsTreeKit.git', :tag => s.version.to_s }
 
   s.frameworks   = ['UIKit']
-  s.source_files = '**/*.*'
+  s.source_files = '**/*.{m,h,mm,hpp,cpp,c,swift}'
 
 end
