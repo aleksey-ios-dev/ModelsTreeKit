@@ -17,7 +17,7 @@ public struct StaticObjectsSection<U> {
   
 }
 
-public class StaticDataSource<ObjectType: Equatable, Hashable> : ObjectsDataSource<ObjectType> {
+public class StaticDataSource<ObjectType where ObjectType: Equatable, ObjectType: Hashable> : ObjectsDataSource<ObjectType> {
   
   public override init() { }
   
