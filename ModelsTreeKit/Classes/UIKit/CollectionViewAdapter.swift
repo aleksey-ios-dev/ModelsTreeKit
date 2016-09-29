@@ -17,12 +17,22 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
   public let didSelectCellSignal = Pipe<(cell: UICollectionViewCell?, object: ObjectType?)>()
-  public let willDisplayCellSignal = Pipe<UICollectionViewCell>()
-  public let willCalculateSizeSignal = Pipe<UICollectionViewCell>()
-  public let didEndDisplayingCell = Pipe<UICollectionViewCell>()
-  public let willSetObjectSignal = Pipe<UICollectionViewCell>()
-  public let didSetObjectSignal = Pipe<UICollectionViewCell>()
+  public let willDisplayCellSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let willCalculateSizeSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let didEndDisplayingCell = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let willSetObjectSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let didSetObjectSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
   
+  public var checkedIndexPaths = [NSIndexPath]() {
+    didSet {
+      collectionView.indexPathsForVisibleItems().forEach {
+        if var checkable = collectionView.cellForItemAtIndexPath($0) as? Checkable {
+          checkable.checked = checkedIndexPaths.contains($0)
+        }
+      }
+    }
+  }
+
   private weak var collectionView: UICollectionView!
 
   private var dataSource: ObjectsDataSource<ObjectType>!
@@ -149,27 +159,32 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     identifiersForIndexPaths[indexPath] = identifier
 
     
-    willSetObjectSignal.sendNext(cell)
+    willSetObjectSignal.sendNext((cell, indexPath))
     let mapping = mappings[identifier]!
     mapping(object, cell, indexPath)
-    didSetObjectSignal.sendNext(cell)
+    didSetObjectSignal.sendNext((cell, indexPath))
     
     return cell
   }
   
   public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    willDisplayCellSignal.sendNext(cell)
+    
+    if var checkable = cell as? Checkable {
+      checkable.checked = checkedIndexPaths.contains(indexPath)
+    }
+
+    willDisplayCellSignal.sendNext((cell, indexPath))
   }
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCell.sendNext(cell)
+    didEndDisplayingCell.sendNext((cell, indexPath))
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
-      willCalculateSizeSignal.sendNext(instances[identifier]!)
+      willCalculateSizeSignal.sendNext((instances[identifier]!, indexPath))
       return cell.sizeFor(dataSource.objectAtIndexPath(indexPath))
     }
     

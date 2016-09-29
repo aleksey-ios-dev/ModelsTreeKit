@@ -17,7 +17,7 @@ public struct StaticObjectsSection<U> {
   
 }
 
-public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> {
+public class StaticDataSource<ObjectType: Equatable, Hashable> : ObjectsDataSource<ObjectType> {
   
   public override init() { }
   
@@ -37,14 +37,12 @@ public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> {
     return sections[indexPath.section].objects[indexPath.row]
   }
   
-  public func indexPathFor(object: ObjectType) -> NSIndexPath {
+  public func indexPath(forObject object: ObjectType) -> NSIndexPath {
     var objectRow = 0
     var objectSection = 0
-    var objectFound = false
     
     for (index, section) in sections.enumerate() {
       if section.objects.contains(object) {
-        objectFound = true
         objectSection = index
         objectRow = section.objects.indexOf(object)!
       }

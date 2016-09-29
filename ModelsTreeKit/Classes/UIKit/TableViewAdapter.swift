@@ -16,10 +16,20 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
   public let didSelectCellSignal = Pipe<(cell: UITableViewCell?, object: ObjectType?)>()
-  public let willDisplayCellSignal = Pipe<UITableViewCell>()
-  public let didEndDisplayingCellSignal = Pipe<UITableViewCell>()
-  public let willSetObjectSignal = Pipe<UITableViewCell>()
-  public let didSetObjectSignal = Pipe<UITableViewCell>()
+  public let willDisplayCellSignal = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let didEndDisplayingCellSignal = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let willSetObjectSignal = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let didSetObjectSignal = Pipe<(UITableViewCell, NSIndexPath)>()
+  
+  public var checkedIndexPaths = [NSIndexPath]() {
+    didSet {
+      tableView.indexPathsForVisibleRows?.forEach {
+        if var checkable = tableView.cellForRowAtIndexPath($0) as? Checkable {
+          checkable.checked = checkedIndexPaths.contains($0)
+        }
+      }
+    }
+  }
   
   private weak var tableView: UITableView!
   private var nibs = [String: UINib]()
@@ -132,12 +142,12 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
         cell = (nibs[identifier]!.instantiateWithOwner(nil, options: nil).last as! UITableViewCell)
       }
       
-      willSetObjectSignal.sendNext(cell!)
+      willSetObjectSignal.sendNext((cell!, indexPath))
       
       let mapping = mappings[identifier]!
       mapping(object, cell!, indexPath)
       
-      didSetObjectSignal.sendNext(cell!)
+      didSetObjectSignal.sendNext((cell!, indexPath))
       
       return cell!
   }
@@ -167,11 +177,16 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    willDisplayCellSignal.sendNext(cell)
+  
+    if var checkable = cell as? Checkable {
+      checkable.checked = checkedIndexPaths.contains(indexPath)
+    }
+  
+    willDisplayCellSignal.sendNext((cell, indexPath))
   }
   
   public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCellSignal.sendNext(cell)
+    didEndDisplayingCellSignal.sendNext((cell, indexPath))
   }
   
 }
