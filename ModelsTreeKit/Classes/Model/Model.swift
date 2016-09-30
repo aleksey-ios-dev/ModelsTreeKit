@@ -28,7 +28,7 @@ public class Model {
     representationDeinitDisposable?.dispose()
   }
   
-  public init(parent: Model?) {
+  public required init(parent: Model?) {
     self.parent = parent
     parent?.addChild(self)
   }
