@@ -131,7 +131,7 @@ public extension Signal {
       }
       
       }.map { ($0.0.0, $0.1.0)
-      }.filter { $0.0 != nil && 0.1 != nil
+      }.filter { $0.0 != nil && $0.1 != nil
       }.map { ($0.0!, $0.1!) }
     
     chainSignal(nextSignal)
@@ -167,7 +167,7 @@ public extension Signal {
       
       return ((zippedSelfValue, reducedSelf!), (zippedOtherValue, reducedOther!))
       }.map { ($0.0.0, $0.1.0)
-      }.filter { $0.0 != nil && 0.1 != nil
+      }.filter { $0.0 != nil && $0.1 != nil
       }.map { ($0.0!, $0.1!)
     }
     
@@ -202,6 +202,30 @@ public extension Signal {
     chainSignal(signalB)
     
     return (signalA, signalB)
+  }
+  
+  //Skips n first values 
+  
+  public func skipFirst(n: Int) -> Signal<T> {
+    let nextSignal: Signal<T>
+    
+    if self is Observable<T> {
+      nextSignal = Observable<T>()
+    } else {
+      nextSignal = Pipe<T>()
+    }
+   
+    var count = 0
+
+    subscribeNext { [weak nextSignal] in
+      if count >= n {
+        nextSignal?.sendNext($0)
+      } else {
+        count += 1
+      }
+    }.putInto(nextSignal.pool)
+    
+    return nextSignal
   }
   
 }
