@@ -7,8 +7,8 @@ import Foundation
 
 public struct StaticObjectsSection<U> {
   
-  var title: String?
-  var objects: [U]
+  public private(set) var title: String?
+  public private(set) var objects: [U]
   
   public init(title: String?, objects: [U]) {
     self.title = title
