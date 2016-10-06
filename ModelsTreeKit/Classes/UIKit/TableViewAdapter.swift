@@ -14,6 +14,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
+  public var footerNibNameForSectionIndexMatching: (Int -> String?) = { _ in nil }
+  public var headerNibNameForSectionIndexMatching: (Int -> String?) = { _ in nil }
   
   public let didSelectCellSignal = Pipe<(cell: UITableViewCell?, object: ObjectType?)>()
   public let willDisplayCellSignal = Pipe<(UITableViewCell, NSIndexPath)>()
@@ -34,7 +36,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   private weak var tableView: UITableView!
   private var nibs = [String: UINib]()
   private var dataSource: ObjectsDataSource<ObjectType>!
-  private var instances = [String: UITableViewCell]()
+  private var cellInstances = [String: UITableViewCell]()
+  private var headerFooterInstances = [String: UITableViewHeaderFooterView]()
   private var identifiersForIndexPaths = [NSIndexPath: String]()
   private var mappings: [String: (ObjectType, UITableViewCell, NSIndexPath) -> Void] = [:]
   
@@ -112,11 +115,18 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     }.putInto(pool)
   }
   
+  public func registerSectionHeaderFooterClass(headerFooterClass: UITableViewHeaderFooterView.Type) {
+    let identifier = String(headerFooterClass)
+    let nib = UINib(nibName: identifier, bundle: nil)
+    headerFooterInstances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewHeaderFooterView
+    tableView.registerClass(headerFooterClass, forHeaderFooterViewReuseIdentifier: identifier)
+  }
+  
   public func registerCellClass<U: ObjectConsuming where U.ObjectType == ObjectType>(cellClass: U.Type) {
     let identifier = String(cellClass)
     let nib = UINib(nibName: identifier, bundle: nil)
     tableView.registerNib(nib, forCellReuseIdentifier: identifier)
-    instances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewCell
+    cellInstances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewCell
     
     mappings[identifier] = { object, cell, _ in
       if let consumer = cell as? U { consumer.applyObject(object) }
@@ -162,10 +172,46 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
-    if let cell = instances[identifier] as? HeightCalculatingCell {
+    if let cell = cellInstances[identifier] as? HeightCalculatingCell {
       return cell.heightFor(dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width)
     }
     return UITableViewAutomaticDimension;
+  }
+  
+  
+  public func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    if let identifier = headerNibNameForSectionIndexMatching(section) {
+      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
+    }
+    
+    return nil
+  }
+  
+  @objc
+  public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    if let identifier = footerNibNameForSectionIndexMatching(section) {
+      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
+    }
+    
+    return nil
+  }
+  
+  public func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    if let identifier = headerNibNameForSectionIndexMatching(section),
+      let view = headerFooterInstances[identifier] as? HeightCalculatingCell {
+      return view.heightFor(nil, width: tableView.frame.size.width)
+    }
+    
+    return UITableViewAutomaticDimension
+  }
+  
+  public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    if let identifier = headerNibNameForSectionIndexMatching(section),
+      let view = headerFooterInstances[identifier] as? HeightCalculatingCell {
+      return view.heightFor(nil, width: tableView.frame.size.width)
+    }
+    
+    return UITableViewAutomaticDimension
   }
   
   @objc
