@@ -14,8 +14,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
-  public var footerNibNameForSectionIndexMatching: (Int -> String?) = { _ in nil }
-  public var headerNibNameForSectionIndexMatching: (Int -> String?) = { _ in nil }
+  public var footerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
+  public var headerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   
   public let didSelectCellSignal = Pipe<(cell: UITableViewCell?, object: ObjectType?)>()
   public let willDisplayCellSignal = Pipe<(UITableViewCell, NSIndexPath)>()
@@ -179,8 +179,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   
   public func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if let identifier = headerNibNameForSectionIndexMatching(section) {
-      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
+    if let headerClass = headerClassForSectionIndexMatching(section) {
+      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(headerClass))
     }
     
     return nil
@@ -188,23 +188,16 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    if let identifier = footerNibNameForSectionIndexMatching(section) {
-      var view: UITableViewHeaderFooterView!
-      view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
-      if view == nil {
-        view =
-          UINib(nibName: identifier, bundle: nil).instantiateWithOwner(self, options: nil).first! as! UITableViewHeaderFooterView
-      }
-      
-      return view
+    if let footerClass = footerClassForSectionIndexMatching(section) {
+      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(footerClass))
     }
     
     return nil
   }
   
   public func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    if let identifier = headerNibNameForSectionIndexMatching(section),
-      let view = headerFooterInstances[identifier] as? HeightCalculatingCell {
+    if let headerClass = headerClassForSectionIndexMatching(section),
+      let view = headerFooterInstances[String(headerClass)] as? HeightCalculatingCell {
       return view.heightFor(nil, width: tableView.frame.size.width)
     }
     
@@ -212,8 +205,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   }
   
   public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    if let identifier = footerNibNameForSectionIndexMatching(section),
-      let view = headerFooterInstances[identifier] as? HeightCalculatingCell {
+    if let footerClass = footerClassForSectionIndexMatching(section),
+      let view = headerFooterInstances[String(footerClass)] as? HeightCalculatingCell {
       return view.heightFor(nil, width: tableView.frame.size.width)
     }
     
