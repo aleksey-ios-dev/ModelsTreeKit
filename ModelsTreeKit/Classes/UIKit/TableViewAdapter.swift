@@ -193,8 +193,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       var view: UITableViewHeaderFooterView!
       view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
       if view == nil {
-        view = UINib(nibName: identifier, bundle: nil).instantiateWithOwner(self, options: nil).first! as! UITableViewHeaderFooterView
+        view =
+          UINib(nibName: identifier, bundle: nil).instantiateWithOwner(self, options: nil).first! as! UITableViewHeaderFooterView
       }
+      
+      return view
     }
     
     return nil
