@@ -190,7 +190,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
     if let identifier = footerNibNameForSectionIndexMatching(section) {
-      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
+      var view: UITableViewHeaderFooterView!
+      view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(identifier)
+      if view == nil {
+        view = UINib(nibName: identifier, bundle: nil).instantiateWithOwner(self, options: nil).first! as! UITableViewHeaderFooterView
+      }
     }
     
     return nil
@@ -206,7 +210,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   }
   
   public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    if let identifier = headerNibNameForSectionIndexMatching(section),
+    if let identifier = footerNibNameForSectionIndexMatching(section),
       let view = headerFooterInstances[identifier] as? HeightCalculatingCell {
       return view.heightFor(nil, width: tableView.frame.size.width)
     }
