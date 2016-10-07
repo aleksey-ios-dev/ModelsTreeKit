@@ -117,8 +117,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   public func registerSectionHeaderFooterClass(headerFooterClass: UITableViewHeaderFooterView.Type) {
     let identifier = String(headerFooterClass)
-    let nib = UINib(nibName: identifier, bundle: nil)
-    headerFooterInstances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewHeaderFooterView
+    headerFooterInstances[identifier] = headerFooterClass.init(reuseIdentifier: String(headerFooterClass))
     tableView.registerClass(headerFooterClass, forHeaderFooterViewReuseIdentifier: identifier)
   }
   
