@@ -17,11 +17,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public var footerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var headerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   
-  public let didSelectCellSignal = Pipe<(cell: UITableViewCell?, object: ObjectType?)>()
-  public let willDisplayCellSignal = Pipe<(UITableViewCell, NSIndexPath)>()
-  public let didEndDisplayingCellSignal = Pipe<(UITableViewCell, NSIndexPath)>()
-  public let willSetObjectSignal = Pipe<(UITableViewCell, NSIndexPath)>()
-  public let didSetObjectSignal = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let didSelectCell = Pipe<(UITableViewCell, NSIndexPath, ObjectType)>()
+  public let willDisplayCell = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let didEndDisplayingCell = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let willSetObject = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let didSetObject = Pipe<(UITableViewCell, NSIndexPath)>()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -151,12 +151,12 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
         cell = (nibs[identifier]!.instantiateWithOwner(nil, options: nil).last as! UITableViewCell)
       }
       
-      willSetObjectSignal.sendNext((cell!, indexPath))
+      willSetObject.sendNext((cell!, indexPath))
       
       let mapping = mappings[identifier]!
       mapping(object, cell!, indexPath)
       
-      didSetObjectSignal.sendNext((cell!, indexPath))
+      didSetObject.sendNext((cell!, indexPath))
       
       return cell!
   }
@@ -215,8 +215,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    didSelectCellSignal.sendNext((cell: tableView.cellForRowAtIndexPath(indexPath),
-      object: dataSource.objectAtIndexPath(indexPath)))
+    didSelectCell.sendNext((
+      tableView.cellForRowAtIndexPath(indexPath)!,
+      indexPath,
+      dataSource.objectAtIndexPath(indexPath)!)
+    )
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
   }
   
@@ -227,11 +230,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       checkable.checked = checkedIndexPaths.contains(indexPath)
     }
   
-    willDisplayCellSignal.sendNext((cell, indexPath))
+    willDisplayCell.sendNext((cell, indexPath))
   }
   
   public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    didEndDisplayingCellSignal.sendNext((cell, indexPath))
+    didEndDisplayingCell.sendNext((cell, indexPath))
   }
   
 }
