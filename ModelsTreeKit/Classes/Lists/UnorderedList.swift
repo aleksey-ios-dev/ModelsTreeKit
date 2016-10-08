@@ -25,16 +25,10 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
   
   private var updatesPool = UpdatesPool<T>()
   
-  private weak var fetchOperation: NSOperation?
-  
-  deinit {
-    fetchOperation?.cancel()
-  }
-  
-  public init(parent: Model?, array: [T] = []) {
+  public init(parent: Model?, objects: [T] = []) {
     super.init(parent: parent)
     
-    objects = Set(array)
+    self.objects = Set(objects)
   }
   
   public func performUpdates(@autoclosure updates: Void -> Void ) {
@@ -106,9 +100,9 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
 
 internal class UpdatesPool<T where T: protocol <Hashable, Equatable>> {
   
-  private(set) var insertions = Set<T>()
-  private(set) var deletions = Set<T>()
-  private(set) var updates = Set<T>()
+  var insertions = Set<T>()
+  var deletions = Set<T>()
+  var updates = Set<T>()
   
   func addObjects(objects: [T], forChangeType changeType: ListChangeType) {
     switch changeType {
