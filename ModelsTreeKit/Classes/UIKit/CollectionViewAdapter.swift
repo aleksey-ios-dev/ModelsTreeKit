@@ -16,12 +16,12 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
   
-  public let didSelectCellSignal = Pipe<(cell: UICollectionViewCell?, object: ObjectType?)>()
-  public let willDisplayCellSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let willCalculateSizeSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let didSelectCell = Pipe<(UICollectionViewCell, NSIndexPath, ObjectType)>()
+  public let willDisplayCell = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let willCalculateSize = Pipe<(UICollectionViewCell, NSIndexPath)>()
   public let didEndDisplayingCell = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let willSetObjectSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let didSetObjectSignal = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let willSetObject = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let didSetObject = Pipe<(UICollectionViewCell, NSIndexPath)>()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -159,10 +159,10 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     identifiersForIndexPaths[indexPath] = identifier
 
     
-    willSetObjectSignal.sendNext((cell, indexPath))
+    willSetObject.sendNext((cell, indexPath))
     let mapping = mappings[identifier]!
     mapping(object, cell, indexPath)
-    didSetObjectSignal.sendNext((cell, indexPath))
+    didSetObject.sendNext((cell, indexPath))
     
     return cell
   }
@@ -173,7 +173,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       checkable.checked = checkedIndexPaths.contains(indexPath)
     }
 
-    willDisplayCellSignal.sendNext((cell, indexPath))
+    willDisplayCell.sendNext((cell, indexPath))
   }
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
@@ -184,7 +184,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
-      willCalculateSizeSignal.sendNext((instances[identifier]!, indexPath))
+      willCalculateSize.sendNext((instances[identifier]!, indexPath))
       return cell.sizeFor(dataSource.objectAtIndexPath(indexPath))
     }
     
@@ -196,6 +196,10 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   }
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    didSelectCellSignal.sendNext(cell: collectionView.cellForItemAtIndexPath(indexPath), object: dataSource.objectAtIndexPath(indexPath))
+    didSelectCell.sendNext((
+      collectionView.cellForItemAtIndexPath(indexPath)!,
+      indexPath,
+      dataSource.objectAtIndexPath(indexPath)!)
+    )
   }
 }
