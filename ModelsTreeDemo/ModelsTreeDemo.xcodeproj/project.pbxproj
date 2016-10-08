@@ -14,8 +14,8 @@
 		5B1A79841D73D8DA003A7768 /* Array+RemoveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79591D73D8DA003A7768 /* Array+RemoveObject.swift */; };
 		5B1A79851D73D8DA003A7768 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A795C1D73D8DA003A7768 /* KeychainItemWrapper.m */; };
 		5B1A79861D73D8DA003A7768 /* FetchedResultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A795E1D73D8DA003A7768 /* FetchedResultsList.swift */; };
-		5B1A79871D73D8DA003A7768 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A795F1D73D8DA003A7768 /* List.swift */; };
-		5B1A79881D73D8DA003A7768 /* ListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79601D73D8DA003A7768 /* ListDataSource.swift */; };
+		5B1A79871D73D8DA003A7768 /* UnorderedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A795F1D73D8DA003A7768 /* UnorderedList.swift */; };
+		5B1A79881D73D8DA003A7768 /* UnorderedListDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79601D73D8DA003A7768 /* UnorderedListDataAdapter.swift */; };
 		5B1A79891D73D8DA003A7768 /* ObjectsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79611D73D8DA003A7768 /* ObjectsDataSource.swift */; };
 		5B1A798A1D73D8DA003A7768 /* StaticDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79621D73D8DA003A7768 /* StaticDataSource.swift */; };
 		5B1A798B1D73D8DA003A7768 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79641D73D8DA003A7768 /* Model.swift */; };
@@ -70,6 +70,7 @@
 		5B547B701D6870D6003A6DFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B6E1D6870D6003A6DFE /* Main.storyboard */; };
 		5B547B721D6870D6003A6DFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B711D6870D6003A6DFE /* Assets.xcassets */; };
 		5B547B751D6870D6003A6DFE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B731D6870D6003A6DFE /* LaunchScreen.storyboard */; };
+		5BE7D73C1DA8E075009A2504 /* OrderedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7D73B1DA8E075009A2504 /* OrderedList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,8 +83,8 @@
 		5B1A795B1D73D8DA003A7768 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		5B1A795C1D73D8DA003A7768 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		5B1A795E1D73D8DA003A7768 /* FetchedResultsList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsList.swift; sourceTree = "<group>"; };
-		5B1A795F1D73D8DA003A7768 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
-		5B1A79601D73D8DA003A7768 /* ListDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListDataSource.swift; sourceTree = "<group>"; };
+		5B1A795F1D73D8DA003A7768 /* UnorderedList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnorderedList.swift; sourceTree = "<group>"; };
+		5B1A79601D73D8DA003A7768 /* UnorderedListDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnorderedListDataAdapter.swift; sourceTree = "<group>"; };
 		5B1A79611D73D8DA003A7768 /* ObjectsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectsDataSource.swift; sourceTree = "<group>"; };
 		5B1A79621D73D8DA003A7768 /* StaticDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticDataSource.swift; sourceTree = "<group>"; };
 		5B1A79641D73D8DA003A7768 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -143,6 +144,7 @@
 		5B547B711D6870D6003A6DFE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5B547B741D6870D6003A6DFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5B547B761D6870D6003A6DFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5BE7D73B1DA8E075009A2504 /* OrderedList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,8 +237,9 @@
 			isa = PBXGroup;
 			children = (
 				5B1A795E1D73D8DA003A7768 /* FetchedResultsList.swift */,
-				5B1A795F1D73D8DA003A7768 /* List.swift */,
-				5B1A79601D73D8DA003A7768 /* ListDataSource.swift */,
+				5B1A795F1D73D8DA003A7768 /* UnorderedList.swift */,
+				5BE7D73B1DA8E075009A2504 /* OrderedList.swift */,
+				5B1A79601D73D8DA003A7768 /* UnorderedListDataAdapter.swift */,
 				5B1A79611D73D8DA003A7768 /* ObjectsDataSource.swift */,
 				5B1A79621D73D8DA003A7768 /* StaticDataSource.swift */,
 			);
@@ -489,7 +492,7 @@
 				5B1A79901D73D8DA003A7768 /* Service.swift in Sources */,
 				5B1A79971D73D8DA003A7768 /* SessionCredentials.swift in Sources */,
 				5B1A79C01D73D8F3003A7768 /* NSObject+DeinitObservable.swift in Sources */,
-				5B1A79881D73D8DA003A7768 /* ListDataSource.swift in Sources */,
+				5B1A79881D73D8DA003A7768 /* UnorderedListDataAdapter.swift in Sources */,
 				5B1A79C81D73D8F3003A7768 /* Signal+Equatable.swift in Sources */,
 				5B1A79931D73D8DA003A7768 /* GlobalEvent.swift in Sources */,
 				5B1A798A1D73D8DA003A7768 /* StaticDataSource.swift in Sources */,
@@ -499,6 +502,7 @@
 				5B1A79CB1D73D8F3003A7768 /* Signal+Validator.swift in Sources */,
 				5B1A79C61D73D8F3003A7768 /* Signal+Comparable.swift in Sources */,
 				5B1A798B1D73D8DA003A7768 /* Model.swift in Sources */,
+				5BE7D73C1DA8E075009A2504 /* OrderedList.swift in Sources */,
 				5B1A79D51D73D8F3003A7768 /* UISwitch+Signal.swift in Sources */,
 				5B1A79821D73D8DA003A7768 /* BubbleNotification.swift in Sources */,
 				5B1A79C41D73D8F3003A7768 /* Signal+Binding.swift in Sources */,
@@ -530,7 +534,7 @@
 				5B1A79851D73D8DA003A7768 /* KeychainItemWrapper.m in Sources */,
 				5B1A798F1D73D8DA003A7768 /* RootProtocols.swift in Sources */,
 				5B1A79951D73D8DA003A7768 /* SessionController.swift in Sources */,
-				5B1A79871D73D8DA003A7768 /* List.swift in Sources */,
+				5B1A79871D73D8DA003A7768 /* UnorderedList.swift in Sources */,
 				5B1A79D81D73D8F3003A7768 /* UIView+Signal.swift in Sources */,
 				5B1A79961D73D8DA003A7768 /* SessionControllerConfiguration.swift in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  ListDataSource.swift
+//  UnorderedListDataAdapter.swift
 //  SessionSwift
 //
 //  Created by aleksey on 16.10.15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ListDataSource<ObjectType, GroupKeyType where
+public class UnorderedListDataAdapter<ObjectType, GroupKeyType where
   ObjectType: Hashable, ObjectType: Equatable,
 GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType> {
   
@@ -22,7 +22,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   private var sections = Sections()
   private let pool = AutodisposePool()
   
-  public init(list: List<ObjectType>) {
+  public init(list: UnorderedList<ObjectType>) {
     super.init()
     
     list.beginUpdatesSignal.subscribeNext { [weak self] in self?.beginUpdates() }.putInto(pool)
@@ -46,7 +46,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
   
   //Helpers
   
-  public func fetchAllFrom(list: List<ObjectType>) {
+  public func fetchAllFrom(list: UnorderedList<ObjectType>) {
     sections = arrangedSectionsFrom(list.objects)
   }
   
