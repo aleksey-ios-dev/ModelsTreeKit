@@ -186,7 +186,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
       willCalculateSize.sendNext((instances[identifier]!, indexPath))
-      return cell.sizeForObject(dataSource.objectAtIndexPath(indexPath), userInfo: userInfoForCellSizeMatching(indexPath))
+      return cell.size(forObject: dataSource.objectAtIndexPath(indexPath), userInfo: userInfoForCellSizeMatching(indexPath))
     }
     
     if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {

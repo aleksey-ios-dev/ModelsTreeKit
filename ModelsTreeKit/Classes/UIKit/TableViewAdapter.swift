@@ -175,7 +175,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
     if let cell = cellInstances[identifier] as? HeightCalculatingCell {
-      return cell.heightForObject(dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfoForCellHeightMatching(indexPath))
+      return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfoForCellHeightMatching(indexPath))
     }
     return UITableViewAutomaticDimension;
   }
@@ -201,7 +201,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     if let headerClass = headerClassForSectionIndexMatching(section),
       let view = headerFooterInstances[String(headerClass)] as? HeightCalculatingCell {
-      return view.heightForObject(nil, width: tableView.frame.size.width, userInfo: userInfoForSectionHeaderHeightMatching(section))
+      return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfoForSectionHeaderHeightMatching(section))
     }
     
     return UITableViewAutomaticDimension
@@ -210,7 +210,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
     if let footerClass = footerClassForSectionIndexMatching(section),
       let view = headerFooterInstances[String(footerClass)] as? HeightCalculatingCell {
-      return view.heightForObject(nil, width: tableView.frame.size.width, userInfo: userInfoForSectionFooterHeightMatching(section))
+      return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfoForSectionFooterHeightMatching(section))
     }
     
     return UITableViewAutomaticDimension
