@@ -120,7 +120,7 @@ internal class UpdatesPool<T where T: protocol <Hashable, Equatable>> {
   
   func optimizeFor(objects: Set<T>) {
     optimizeDuplicatingEntries()
-    updates.unionInPlace(objects.intersect(insertions))
+    updates.unionInPlace(insertions.intersect(objects))
     insertions.subtractInPlace(updates)
     deletions.intersectInPlace(objects)
   }
