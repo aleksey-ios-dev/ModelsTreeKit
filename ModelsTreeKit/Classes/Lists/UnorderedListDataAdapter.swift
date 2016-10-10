@@ -149,7 +149,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       for object in updates {
         guard
           let oldIndexPath = indexPathFor(object, inSections: oldSections),
-          let newIndexPath = indexPathFor(object, inSections: oldSections)
+          let newIndexPath = indexPathFor(object, inSections: sections)
           else {
             continue
         }
