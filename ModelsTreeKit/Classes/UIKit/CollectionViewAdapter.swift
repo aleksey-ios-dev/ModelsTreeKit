@@ -15,6 +15,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   typealias UpdateAction = Void -> Void
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
+  public var userInfoForCellSizeMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
   
   public let didSelectCell = Pipe<(UICollectionViewCell, NSIndexPath, ObjectType)>()
   public let willDisplayCell = Pipe<(UICollectionViewCell, NSIndexPath)>()
@@ -185,7 +186,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
       willCalculateSize.sendNext((instances[identifier]!, indexPath))
-      return cell.sizeFor(dataSource.objectAtIndexPath(indexPath))
+      return cell.sizeForObject(dataSource.objectAtIndexPath(indexPath), userInfo: userInfoForCellSizeMatching(indexPath))
     }
     
     if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {

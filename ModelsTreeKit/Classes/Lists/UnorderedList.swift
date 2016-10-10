@@ -31,7 +31,7 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
     self.objects = Set(objects)
   }
   
-  public func performUpdates(@autoclosure updates: Void -> Void ) {
+  public func performUpdates(@autoclosure updates: Void -> Void) {
     beginUpdates()
     updates()
     endUpdates()
