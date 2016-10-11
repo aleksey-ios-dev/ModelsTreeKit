@@ -93,8 +93,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
         }
       case .Move:
         if let fromIndexPath = fromIndexPath, let toIndexPath = toIndexPath {
-          strongSelf.tableView.moveRowAtIndexPath(fromIndexPath,
-            toIndexPath: toIndexPath)
+          strongSelf.tableView.deleteRowsAtIndexPaths([fromIndexPath], withRowAnimation: .Fade)
+          strongSelf.tableView.insertRowsAtIndexPaths([toIndexPath], withRowAnimation: .Fade)
         }
       }
     }.putInto(pool)
