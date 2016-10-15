@@ -8,21 +8,19 @@
 
 import Foundation
 
-public class OrderedListDataAdapter<ObjectType, GroupKeyType where
-  ObjectType: Hashable, ObjectType: Equatable,
-GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType> {
+public class OrderedListDataAdapter<ObjectType where
+  ObjectType: Hashable, ObjectType: Equatable>: ObjectsDataSource<ObjectType> {
   
-  typealias Section = (objects: [ObjectType], key: GroupKeyType?)
+  typealias Section = (objects: [ObjectType], key: String?)
   typealias Sections = [Section]
   
-  public var groupingCriteria: (ObjectType -> GroupKeyType)?
-  public var groupsSortingCriteria: (GroupKeyType, GroupKeyType) -> Bool = { return $0 < $1 }
-  public var groupContentsSortingCriteria: ((ObjectType, ObjectType) -> Bool)?
+  public var groupingCriteria: (ObjectType -> String)?
+  public let groupsSortingCriteria: (String, String) -> Bool = { return $0 < $1 }
   
   private var sections = Sections()
   private let pool = AutodisposePool()
   
-  public init(list: UnorderedList<ObjectType>) {
+  public init(list: OrderedList<ObjectType>) {
     super.init()
     
     list.beginUpdatesSignal.subscribeNext { [weak self] in self?.beginUpdates() }.putInto(pool)
@@ -32,14 +30,43 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
       strongSelf.sections = strongSelf.arrangedSectionsFrom(objects)
       }.putInto(pool)
     
-    list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
+    list.didChangeContentSignal.subscribeNext { [weak self] appendedObjects, deletions, updates in
       guard let strongSelf = self else { return }
       let oldSections = strongSelf.sections
-      strongSelf.applyInsertions(insertions, deletions: deletions, updates: updates)
-      strongSelf.pushInsertions(
-        insertions,
+      strongSelf.applyAppendedObjects(appendedObjects, deletions: deletions, updates: updates)
+      strongSelf.pushAppendedObjects(
+        appendedObjects,
         deletions: deletions,
         updates: updates,
-        oldSections: oldSections)
+        oldSections: oldSections
+      )
       }.putInto(pool)
+  }
+  
+  
+  private func beginUpdates() {
+    beginUpdatesSignal.sendNext()
+  }
+  
+  private func endUpdates() {
+    endUpdatesSignal.sendNext()
+  }
+  
+  private func applyAppendedObjects(appendedObjects: [ObjectType], deletions: Set<ObjectType>, updates: Set<ObjectType>) {
+  }
+  
+  private func pushAppendedObjects(
+    appendedObjects: [ObjectType],
+    deletions: Set<ObjectType>,
+    updates: Set<ObjectType>,
+    oldSections: Sections) {
+  }
+  
+  private func arrangedSectionsFrom(objects: [ObjectType]) -> Sections {
+    return []
+  }
+  
+    
+
+  
 }
