@@ -95,9 +95,11 @@ internal class OrderedListUpdatesPool<T where T: protocol <Hashable, Equatable>>
   
   func optimizeFor(objects: Set<T>) {
     deletions.intersectInPlace(objects)
+    updates.subtractInPlace(deletions)
     updates.intersectInPlace(objects)
-    appendedObjects = appendedObjects.filter { !self.deletions.contains($0) }
-    appendedObjects = appendedObjects.filter { !objects.contains($0) }
+    appendedObjects = appendedObjects.removeDuplicates().filter {
+      !self.deletions.contains($0) && !objects.contains($0)
+    }
   }
   
 }
