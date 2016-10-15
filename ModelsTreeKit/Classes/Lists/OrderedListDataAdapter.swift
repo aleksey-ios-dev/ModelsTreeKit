@@ -11,13 +11,10 @@ import Foundation
 public class OrderedListDataAdapter<ObjectType where
   ObjectType: Hashable, ObjectType: Equatable>: ObjectsDataSource<ObjectType> {
   
-  typealias Section = (objects: [ObjectType], key: String?)
-  typealias Sections = [Section]
-  
   public var groupingCriteria: (ObjectType -> String)?
   public let groupsSortingCriteria: (String, String) -> Bool = { return $0 < $1 }
   
-  private var sections = Sections()
+  private(set) var sections = [StaticObjectsSection<ObjectType>]()
   private let pool = AutodisposePool()
   
   public init(list: OrderedList<ObjectType>) {
@@ -53,16 +50,39 @@ public class OrderedListDataAdapter<ObjectType where
   }
   
   private func applyAppendedObjects(appendedObjects: [ObjectType], deletions: Set<ObjectType>, updates: Set<ObjectType>) {
+    guard let groupingCriteria = groupingCriteria else {
+      if self.sections.isEmpty {
+        self.sections.append(StaticObjectsSection(title: nil, objects: []))
+      }
+      let section = self.sections.first!
+      section.objects += appendedObjects
+      section.objects = section.objects.filter { !deletions.contains($0) }
+      
+      return
+    }
+    
+    var lastSectionKey = sections.last?.title
+    
+    for object in appendedObjects {
+      if groupingCriteria(object) == lastSectionKey {
+        let lastSection = sections.last!
+        lastSection.objects += [object]
+      } else {
+        lastSectionKey = groupingCriteria(object)
+        let newSection = StaticObjectsSection(title: lastSectionKey, objects: [object])
+        self.sections.append(newSection)
+      }
+    }
   }
   
   private func pushAppendedObjects(
     appendedObjects: [ObjectType],
     deletions: Set<ObjectType>,
     updates: Set<ObjectType>,
-    oldSections: Sections) {
+    oldSections: [StaticObjectsSection<ObjectType>]) {
   }
   
-  private func arrangedSectionsFrom(objects: [ObjectType]) -> Sections {
+  private func arrangedSectionsFrom(objects: [ObjectType]) -> [StaticObjectsSection<ObjectType>] {
     return []
   }
   

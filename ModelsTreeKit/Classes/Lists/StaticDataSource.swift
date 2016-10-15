@@ -5,14 +5,18 @@
 
 import Foundation
 
-public struct StaticObjectsSection<U> {
+public class StaticObjectsSection<U>: CustomStringConvertible {
   
   public private(set) var title: String?
-  public private(set) var objects: [U]
+  public var objects: [U]
   
   public init(title: String?, objects: [U]) {
     self.title = title
     self.objects = objects
+  }
+  
+  public var description: String {
+    return String(StaticObjectsSection) + ", title: \(title)" + ", objects: \(objects)"
   }
   
 }
