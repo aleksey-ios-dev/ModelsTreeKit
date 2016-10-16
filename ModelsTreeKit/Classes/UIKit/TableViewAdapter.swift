@@ -131,7 +131,9 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     cellInstances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewCell
     
     mappings[identifier] = { object, cell, _ in
-      if let consumer = cell as? U { consumer.applyObject(object) }
+//      if let consumer = cell as? U {
+        (cell as! U).applyObject(object)
+//}
     }
   }
   

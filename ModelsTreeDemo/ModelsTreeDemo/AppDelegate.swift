@@ -29,7 +29,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     list.performUpdates {
-      $0.append([1, 2, 4, 5])
+      $0.append([4, 5])
+    }
+    
+    list.performUpdates {
+      $0.delete([1, 2, 3])
     }
     
     return true

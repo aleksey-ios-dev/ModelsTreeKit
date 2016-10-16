@@ -70,6 +70,8 @@
 		5B547B701D6870D6003A6DFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B6E1D6870D6003A6DFE /* Main.storyboard */; };
 		5B547B721D6870D6003A6DFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B711D6870D6003A6DFE /* Assets.xcassets */; };
 		5B547B751D6870D6003A6DFE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B731D6870D6003A6DFE /* LaunchScreen.storyboard */; };
+		5B74356B1DB26C10004E7616 /* TestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B74356A1DB26C10004E7616 /* TestCell.swift */; };
+		5B74356D1DB26C1B004E7616 /* TestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B74356C1DB26C1B004E7616 /* TestCell.xib */; };
 		5BB7E1A71DB2018F00B866B4 /* Set+ObjectEqualTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7E1A61DB2018F00B866B4 /* Set+ObjectEqualTo.swift */; };
 		5BB7E1A91DB20B8300B866B4 /* Array+RemoveDuplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7E1A81DB20B8300B866B4 /* Array+RemoveDuplicates.swift */; };
 		5BB7E1AB1DB20DA300B866B4 /* OrderedListDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7E1AA1DB20DA300B866B4 /* OrderedListDataAdapter.swift */; };
@@ -147,6 +149,8 @@
 		5B547B711D6870D6003A6DFE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5B547B741D6870D6003A6DFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5B547B761D6870D6003A6DFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5B74356A1DB26C10004E7616 /* TestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCell.swift; sourceTree = "<group>"; };
+		5B74356C1DB26C1B004E7616 /* TestCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestCell.xib; sourceTree = "<group>"; };
 		5BB7E1A61DB2018F00B866B4 /* Set+ObjectEqualTo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Set+ObjectEqualTo.swift"; sourceTree = "<group>"; };
 		5BB7E1A81DB20B8300B866B4 /* Array+RemoveDuplicates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+RemoveDuplicates.swift"; sourceTree = "<group>"; };
 		5BB7E1AA1DB20DA300B866B4 /* OrderedListDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedListDataAdapter.swift; sourceTree = "<group>"; };
@@ -406,6 +410,8 @@
 				5B1A794F1D73D8DA003A7768 /* ModelsTreeKit */,
 				5B547B6A1D6870D6003A6DFE /* AppDelegate.swift */,
 				5B547B6C1D6870D6003A6DFE /* ViewController.swift */,
+				5B74356A1DB26C10004E7616 /* TestCell.swift */,
+				5B74356C1DB26C1B004E7616 /* TestCell.xib */,
 				5B547B6E1D6870D6003A6DFE /* Main.storyboard */,
 				5B547B711D6870D6003A6DFE /* Assets.xcassets */,
 				5B547B731D6870D6003A6DFE /* LaunchScreen.storyboard */,
@@ -475,6 +481,7 @@
 				5B1A799D1D73D8DA003A7768 /* Info.plist in Resources */,
 				5B547B751D6870D6003A6DFE /* LaunchScreen.storyboard in Resources */,
 				5B547B721D6870D6003A6DFE /* Assets.xcassets in Resources */,
+				5B74356D1DB26C1B004E7616 /* TestCell.xib in Resources */,
 				5B547B701D6870D6003A6DFE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -495,6 +502,7 @@
 				5B1A79891D73D8DA003A7768 /* ObjectsDataSource.swift in Sources */,
 				5B1A798D1D73D8DA003A7768 /* ObjectConsuming.swift in Sources */,
 				5B1A79D31D73D8F3003A7768 /* UISlider+Signal.swift in Sources */,
+				5B74356B1DB26C10004E7616 /* TestCell.swift in Sources */,
 				5BB7E1A91DB20B8300B866B4 /* Array+RemoveDuplicates.swift in Sources */,
 				5B1A79981D73D8DA003A7768 /* UnauthorizedSession.swift in Sources */,
 				5B1A799B1D73D8DA003A7768 /* TableViewAdapter.swift in Sources */,
