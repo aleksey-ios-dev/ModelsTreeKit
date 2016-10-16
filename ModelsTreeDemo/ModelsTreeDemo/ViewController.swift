@@ -26,13 +26,18 @@ class ViewController: UIViewController {
       adapter.nibNameForObjectMatching = { _ in String(TestCell) }
       
       var arr = [Int]()
-      for i in 0...100 {
+      for i in 0...3000 {
         arr.append(i)
       }
       
       list.performUpdates { $0.append(arr) }
-
     }
+
+  @IBAction func addMore(sender: AnyObject?) {
+    list.performUpdates {
+      $0.append([4, 5, 6, 7, 8])
+    }
+  }
 
 
 

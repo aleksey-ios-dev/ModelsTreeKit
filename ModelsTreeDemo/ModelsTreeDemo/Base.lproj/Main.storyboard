@@ -19,16 +19,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ar2-Kw-0Zh">
-                                <rect key="frame" x="20" y="0.0" width="560" height="600"/>
+                                <rect key="frame" x="20" y="50" width="560" height="500"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U20-3y-xpN">
+                                <rect key="frame" x="277" y="558" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="addMore:" destination="BYZ-38-t0r" eventType="touchUpInside" id="trp-ZZ-rkI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="U20-3y-xpN" secondAttribute="bottom" constant="12" id="2Rh-74-izR"/>
                             <constraint firstItem="ar2-Kw-0Zh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="3qW-eQ-JJ1"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ar2-Kw-0Zh" secondAttribute="bottom" id="7wY-7e-Es9"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ar2-Kw-0Zh" secondAttribute="bottom" constant="50" id="7wY-7e-Es9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ar2-Kw-0Zh" secondAttribute="trailing" id="dfE-ee-kpk"/>
-                            <constraint firstItem="ar2-Kw-0Zh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="dxP-zV-gvH"/>
+                            <constraint firstItem="ar2-Kw-0Zh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="50" id="dxP-zV-gvH"/>
+                            <constraint firstItem="U20-3y-xpN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xZj-0V-fN6"/>
                         </constraints>
                     </view>
                     <connections>
