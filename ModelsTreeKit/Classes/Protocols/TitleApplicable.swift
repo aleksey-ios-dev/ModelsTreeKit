@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol TitleApplicable {
+public protocol TitleApplicable {
   
   func applyTitle(title: String) -> Void
   
