@@ -65,6 +65,7 @@
 		5B1A79D61D73D8F3003A7768 /* UITextField+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79BA1D73D8F3003A7768 /* UITextField+Signal.swift */; };
 		5B1A79D71D73D8F3003A7768 /* USegmentedControl+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79BB1D73D8F3003A7768 /* USegmentedControl+Signal.swift */; };
 		5B1A79D81D73D8F3003A7768 /* UIView+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79BC1D73D8F3003A7768 /* UIView+Signal.swift */; };
+		5B26179B1DB4DB6A003D3D14 /* TitleApplicable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B26179A1DB4DB6A003D3D14 /* TitleApplicable.swift */; };
 		5B547B6B1D6870D6003A6DFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B547B6A1D6870D6003A6DFE /* AppDelegate.swift */; };
 		5B547B6D1D6870D6003A6DFE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B547B6C1D6870D6003A6DFE /* ViewController.swift */; };
 		5B547B701D6870D6003A6DFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B547B6E1D6870D6003A6DFE /* Main.storyboard */; };
@@ -142,6 +143,7 @@
 		5B1A79BA1D73D8F3003A7768 /* UITextField+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Signal.swift"; sourceTree = "<group>"; };
 		5B1A79BB1D73D8F3003A7768 /* USegmentedControl+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "USegmentedControl+Signal.swift"; sourceTree = "<group>"; };
 		5B1A79BC1D73D8F3003A7768 /* UIView+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Signal.swift"; sourceTree = "<group>"; };
+		5B26179A1DB4DB6A003D3D14 /* TitleApplicable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleApplicable.swift; sourceTree = "<group>"; };
 		5B547B671D6870D6003A6DFE /* ModelsTreeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModelsTreeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B547B6A1D6870D6003A6DFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B547B6C1D6870D6003A6DFE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 			children = (
 				00BEAFA61D9CDA43000A9C0F /* Checkable.swift */,
 				5B1A79671D73D8DA003A7768 /* ObjectConsuming.swift */,
+				5B26179A1DB4DB6A003D3D14 /* TitleApplicable.swift */,
 				5B1A79681D73D8DA003A7768 /* TableViewCell.swift */,
 			);
 			path = Protocols;
@@ -530,6 +533,7 @@
 				5B1A79861D73D8DA003A7768 /* FetchedResultsList.swift in Sources */,
 				5B1A79D01D73D8F3003A7768 /* UIButton+Signal.swift in Sources */,
 				5BB7E1AB1DB20DA300B866B4 /* OrderedListDataAdapter.swift in Sources */,
+				5B26179B1DB4DB6A003D3D14 /* TitleApplicable.swift in Sources */,
 				5B1A79991D73D8DA003A7768 /* TSTTransitionViewController.m in Sources */,
 				5B1A79BF1D73D8F3003A7768 /* Disposable.swift in Sources */,
 				5B1A79BE1D73D8F3003A7768 /* DeinitObservable.swift in Sources */,

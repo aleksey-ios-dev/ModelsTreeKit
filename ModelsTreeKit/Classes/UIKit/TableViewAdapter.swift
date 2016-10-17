@@ -25,6 +25,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public let didEndDisplayingCell = Pipe<(UITableViewCell, NSIndexPath)>()
   public let willSetObject = Pipe<(UITableViewCell, NSIndexPath)>()
   public let didSetObject = Pipe<(UITableViewCell, NSIndexPath)>()
+  public let willDisplaySectionHeader = Pipe<(UITableViewHeaderFooterView, Int, String?)>()
+  public let willDisplaySectionFooter = Pipe<(UITableViewHeaderFooterView, Int)>()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -131,9 +133,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     cellInstances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UITableViewCell
     
     mappings[identifier] = { object, cell, _ in
-//      if let consumer = cell as? U {
-        (cell as! U).applyObject(object)
-//}
+      (cell as! U).applyObject(object)
     }
   }
   
@@ -184,8 +184,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   
   public func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if let headerClass = headerClassForSectionIndexMatching(section) {
-      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(headerClass))
+    if let headerClass = headerClassForSectionIndexMatching(section),
+      let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(headerClass)) {
+      willDisplaySectionHeader.sendNext((view, section, dataSource.titleForSection(atIndex: section)))
+      
+      return view
     }
     
     return nil
@@ -193,8 +196,15 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    if let footerClass = footerClassForSectionIndexMatching(section) {
-      return tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(footerClass))
+    if let footerClass = footerClassForSectionIndexMatching(section),
+    let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(footerClass)) {
+      if let titleApplicable = view as? TitleApplicable,
+      let sectionTitle = dataSource.titleForSection(atIndex: section) {
+        titleApplicable.applyTitle(sectionTitle)
+      }
+      willDisplaySectionFooter.sendNext((view, section))
+      
+      return view
     }
     
     return nil

@@ -209,7 +209,9 @@ public class OrderedListDataAdapter<ObjectType where
   func objectAtIndexPath(indexPath: NSIndexPath, inSections sections: [StaticObjectsSection<ObjectType>]) -> ObjectType? {
     return sections[indexPath.section].objects[indexPath.row]
   }
-
-
+  
+  override func titleForSection(atIndex sectionIndex: Int) -> String? {
+    return sections[sectionIndex].title
+  }
   
 }

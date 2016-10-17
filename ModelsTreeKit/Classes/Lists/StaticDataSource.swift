@@ -55,4 +55,8 @@ public class StaticDataSource<ObjectType where ObjectType: Equatable, ObjectType
     return NSIndexPath(forRow: objectRow, inSection: objectSection) 
   }
   
+  override func titleForSection(atIndex sectionIndex: Int) -> String? {
+    return sections[sectionIndex].title
+  }
+  
 }

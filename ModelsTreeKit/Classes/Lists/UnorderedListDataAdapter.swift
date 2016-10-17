@@ -75,6 +75,10 @@ GroupKeyType: Hashable, GroupKeyType: Comparable>: ObjectsDataSource<ObjectType>
     return sections[indexPath.section].objects[indexPath.row]
   }
   
+  override func titleForSection(atIndex sectionIndex: Int) -> String? {
+    return sections[sectionIndex].key as? String
+  }
+  
   //Private
   
   private func arrangedSectionsFrom(objects: Set<ObjectType>) -> Sections {
