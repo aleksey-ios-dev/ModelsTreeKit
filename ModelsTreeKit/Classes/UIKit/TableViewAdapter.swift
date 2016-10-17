@@ -186,6 +186,10 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerClass = headerClassForSectionIndexMatching(section),
       let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(headerClass)) {
+      if let titleApplicable = view as? TitleApplicable,
+        let sectionTitle = dataSource.titleForSection(atIndex: section) {
+        titleApplicable.applyTitle(sectionTitle)
+      }
       willDisplaySectionHeader.sendNext((view, section, dataSource.titleForSection(atIndex: section)))
       
       return view
@@ -198,10 +202,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
     if let footerClass = footerClassForSectionIndexMatching(section),
     let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(footerClass)) {
-      if let titleApplicable = view as? TitleApplicable,
-      let sectionTitle = dataSource.titleForSection(atIndex: section) {
-        titleApplicable.applyTitle(sectionTitle)
-      }
       willDisplaySectionFooter.sendNext((view, section))
       
       return view
