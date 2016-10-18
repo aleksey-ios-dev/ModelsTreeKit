@@ -68,7 +68,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
 
-      if strongSelf.animatesReload {
+      if !strongSelf.animatesReload {
         tableView.reloadData()
         
         return
