@@ -15,7 +15,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   typealias UpdateAction = Void -> Void
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
-  public var viewForSupplementaryViewOfKindMatching: ((String, NSIndexPath) -> UICollectionReusableView)!
+  public var viewForSupplementaryViewOfKindMatching: ((String, NSIndexPath) -> UICollectionReusableView)?
   public var userInfoForCellSizeMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
   
   public let didSelectCell = Pipe<(UICollectionViewCell, NSIndexPath, ObjectType)>()
@@ -182,7 +182,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   }
   
   public func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-    return viewForSupplementaryViewOfKindMatching((kind, indexPath))
+    return viewForSupplementaryViewOfKindMatching!((kind, indexPath))
   }
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
@@ -195,6 +195,14 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
     willEndDisplayingSupplementaryView.sendNext((view, elementKind, indexPath))
+  }
+  
+  public override func respondsToSelector(aSelector: Selector) -> Bool {
+    if aSelector == #selector(collectionView(_:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)) {
+      return viewForSupplementaryViewOfKindMatching != nil
+    } else {
+      return super.respondsToSelector(aSelector)
+    }
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

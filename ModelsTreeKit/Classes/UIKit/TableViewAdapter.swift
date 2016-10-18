@@ -13,6 +13,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   
+  public var animatesReload = false
+  
   public var nibNameForObjectMatching: (ObjectType -> String)!
   public var footerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var headerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
@@ -65,6 +67,13 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
+
+      if strongSelf.animatesReload {
+        tableView.reloadData()
+        
+        return
+      }
+      
       UIView.animateWithDuration(0.1, animations: {
         strongSelf.tableView.alpha = 0},
         completion: { completed in
