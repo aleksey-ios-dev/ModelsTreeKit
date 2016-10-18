@@ -25,6 +25,9 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   public let willSetObject = Pipe<(UICollectionViewCell, NSIndexPath)>()
   public let didSetObject = Pipe<(UICollectionViewCell, NSIndexPath)>()
   
+  public let willDisplaySupplementaryView = Pipe<(UICollectionReusableView, String, NSIndexPath)>()
+  public let willEndDisplayingSupplementaryView = Pipe<(UICollectionReusableView, String, NSIndexPath)>()
+  
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
       collectionView.indexPathsForVisibleItems().forEach {
@@ -184,6 +187,14 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
     didEndDisplayingCell.sendNext((cell, indexPath))
+  }
+  
+  public func collectionView(collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
+    willDisplaySupplementaryView.sendNext((view, elementKind, indexPath))
+  }
+  
+  public func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
+    willEndDisplayingSupplementaryView.sendNext((view, elementKind, indexPath))
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
