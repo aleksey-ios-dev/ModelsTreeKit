@@ -15,6 +15,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   typealias UpdateAction = Void -> Void
   
   public var nibNameForObjectMatching: (ObjectType -> String)!
+  public var viewForSupplementaryViewOfKindMatching: ((String, NSIndexPath) -> UICollectionReusableView)!
   public var userInfoForCellSizeMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
   
   public let didSelectCell = Pipe<(UICollectionViewCell, NSIndexPath, ObjectType)>()
@@ -175,6 +176,10 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     }
 
     willDisplayCell.sendNext((cell, indexPath))
+  }
+  
+  public func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+    return viewForSupplementaryViewOfKindMatching((kind, indexPath))
   }
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
