@@ -198,7 +198,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   }
   
   public override func respondsToSelector(aSelector: Selector) -> Bool {
-    if aSelector == #selector(collectionView(_:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)) {
+    if aSelector == #selector(collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:)) {
       return viewForSupplementaryViewOfKindMatching != nil
     } else {
       return super.respondsToSelector(aSelector)
