@@ -56,6 +56,11 @@ public class OrderedList<T where T: Hashable, T: Equatable>: Model {
     )
   }
   
+  public func replaceWith(objects: [T]) {
+    self.objects = objects
+    didReplaceContentSignal.sendNext(self.objects)
+  }
+  
   //Operations on objects. Use ONLY inside performBatchUpdate() call!
   
   public func append(objects: [T]) {

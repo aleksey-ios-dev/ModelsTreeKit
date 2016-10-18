@@ -23,9 +23,8 @@ public class OrderedListDataAdapter<ObjectType where
     list.beginUpdatesSignal.subscribeNext { [weak self] in self?.beginUpdates() }.putInto(pool)
     list.endUpdatesSignal.subscribeNext { [weak self] in self?.endUpdates() }.putInto(pool)
     list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
-      guard let strongSelf = self else { return }
-      strongSelf.sections = strongSelf.arrangedSectionsFrom(objects)
-      }.putInto(pool)
+      self?.rearrangeAndPushReload(withObjects: objects)
+    }.putInto(pool)
     
     list.didChangeContentSignal.subscribeNext { [weak self] appendedObjects, deletions, updates in
       guard let strongSelf = self else { return }
@@ -192,6 +191,12 @@ public class OrderedListDataAdapter<ObjectType where
     }
     
     return objectFound ? NSIndexPath(forRow: row, inSection: section) : nil
+  }
+  
+  private func rearrangeAndPushReload(withObjects objects: [ObjectType]) {
+    sections = []
+    applyAppendedObjects(objects)
+    reloadDataSignal.sendNext()
   }
   
   public override func numberOfSections() -> Int {

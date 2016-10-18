@@ -34,13 +34,14 @@ class ViewController: UIViewController {
     }
 
   @IBAction func addMore(sender: AnyObject?) {
-    let last = list.objects.last!
-    var arr = [Int]()
-    for i in last...last + 20 {
-      arr.append(i)
-    }
-    list.performUpdates {
-      $0.delete([3])
-    }
+    list.replaceWith([1, 2, 3])
+//    let last = list.objects.last!
+//    var arr = [Int]()
+//    for i in last...last + 20 {
+//      arr.append(i)
+//    }
+//    list.performUpdates {
+//      $0.delete([3])
+//    }
   }
 }
