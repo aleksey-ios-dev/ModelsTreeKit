@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00BEAFA71D9CDA43000A9C0F /* Checkable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BEAFA61D9CDA43000A9C0F /* Checkable.swift */; };
+		5B197B891DB792D600E18965 /* UIDatePicker+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B197B881DB792D600E18965 /* UIDatePicker+Signal.swift */; };
 		5B1A79811D73D8DA003A7768 /* Archivable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79531D73D8DA003A7768 /* Archivable.swift */; };
 		5B1A79821D73D8DA003A7768 /* BubbleNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79551D73D8DA003A7768 /* BubbleNotification.swift */; };
 		5B1A79831D73D8DA003A7768 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79571D73D8DA003A7768 /* Error.swift */; };
@@ -81,6 +82,7 @@
 
 /* Begin PBXFileReference section */
 		00BEAFA61D9CDA43000A9C0F /* Checkable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkable.swift; sourceTree = "<group>"; };
+		5B197B881DB792D600E18965 /* UIDatePicker+Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDatePicker+Signal.swift"; sourceTree = "<group>"; };
 		5B1A79501D73D8DA003A7768 /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		5B1A79531D73D8DA003A7768 /* Archivable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Archivable.swift; sourceTree = "<group>"; };
 		5B1A79551D73D8DA003A7768 /* BubbleNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleNotification.swift; sourceTree = "<group>"; };
@@ -378,6 +380,7 @@
 			children = (
 				5B1A79B21D73D8F3003A7768 /* ControlProxy.h */,
 				5B1A79B31D73D8F3003A7768 /* ControlProxy.m */,
+				5B197B881DB792D600E18965 /* UIDatePicker+Signal.swift */,
 				5B1A79B41D73D8F3003A7768 /* UIButton+Signal.swift */,
 				5B1A79B51D73D8F3003A7768 /* UIControl+Signal.swift */,
 				5B1A79B61D73D8F3003A7768 /* UISearchBar+Signal.swift */,
@@ -517,6 +520,7 @@
 				5B1A79C81D73D8F3003A7768 /* Signal+Equatable.swift in Sources */,
 				5B1A79931D73D8DA003A7768 /* GlobalEvent.swift in Sources */,
 				5B1A798A1D73D8DA003A7768 /* StaticDataSource.swift in Sources */,
+				5B197B891DB792D600E18965 /* UIDatePicker+Signal.swift in Sources */,
 				00BEAFA71D9CDA43000A9C0F /* Checkable.swift in Sources */,
 				5B1A79841D73D8DA003A7768 /* Array+RemoveObject.swift in Sources */,
 				5B1A79CE1D73D8F3003A7768 /* Subscription.swift in Sources */,
