@@ -58,5 +58,9 @@ public class Session: Model {
     controller?.session(self, didCloseWithParams: params)
   }
   
+  func refresh(withParams params: SessionCompletionParams) {
+    credentials = SessionCredentials(params: params)
+  }
+  
 }
 
