@@ -29,6 +29,10 @@
                                     <action selector="addMore:" destination="BYZ-38-t0r" eventType="touchUpInside" id="trp-ZZ-rkI"/>
                                 </connections>
                             </button>
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A9t-cM-jrR">
+                                <rect key="frame" x="20" y="0.0" width="560" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -41,11 +45,13 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="searchBar" destination="A9t-cM-jrR" id="0gw-rk-Cy8"/>
                         <outlet property="tableView" destination="ar2-Kw-0Zh" id="g06-uR-W6h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="139" y="136"/>
         </scene>
     </scenes>
 </document>

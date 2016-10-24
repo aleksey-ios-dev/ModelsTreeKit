@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
 
   @IBOutlet private weak var tableView: UITableView!
+  @IBOutlet private weak var searchBar: UISearchBar!
   
   private var adapter: TableViewAdapter<Int>!
   private let list = OrderedList<Int>(parent: nil)
@@ -18,6 +19,7 @@ class ViewController: UIViewController {
   
     override func viewDidLoad() {
         super.viewDidLoad()
+      
       dataAdapter = OrderedListDataAdapter(list: list)
       dataAdapter.groupingCriteria = { $0 > 3 ? "2" : "1" }
       adapter = TableViewAdapter(dataSource: dataAdapter, tableView: tableView)
