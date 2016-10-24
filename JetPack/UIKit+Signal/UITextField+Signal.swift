@@ -22,8 +22,8 @@ extension UITextField {
   }
   
   public var editingSignal: Observable<Bool> {
-    let observable = Observable<Bool>(value: editing)
-    editingBeginSignal.map { true }.distinctLatest(editingEndSignal.map { true }).map { $0 == true && $1 == nil }.bindTo(observable)
+    let observable = Signals.merge([editingBeginSignal.map { true }, editingEndSignal.map { false }]).observable()
+    observable.value = editing
     
     return observable
   }
