@@ -27,8 +27,12 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public let didEndDisplayingCell = Pipe<(UITableViewCell, NSIndexPath)>()
   public let willSetObject = Pipe<(UITableViewCell, NSIndexPath)>()
   public let didSetObject = Pipe<(UITableViewCell, NSIndexPath)>()
-  public let willDisplaySectionHeader = Pipe<(UITableViewHeaderFooterView, Int, String?)>()
-  public let willDisplaySectionFooter = Pipe<(UITableViewHeaderFooterView, Int)>()
+  
+  public let willDisplaySectionHeader = Pipe<(UIView, Int)>()
+  public let didEndDisplayingSectionHeader = Pipe<(UIView, Int)>()
+  
+  public let willDisplaySectionFooter = Pipe<(UIView, Int)>()
+  public let didEndDisplayingSectionFooter = Pipe<(UIView, Int)>()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -191,7 +195,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     return UITableViewAutomaticDimension;
   }
   
-  
+  @objc
   public func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerClass = headerClassForSectionIndexMatching(section),
       let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(headerClass)) {
@@ -199,12 +203,31 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
         let sectionTitle = dataSource.titleForSection(atIndex: section) {
         titleApplicable.applyTitle(sectionTitle)
       }
-      willDisplaySectionHeader.sendNext((view, section, dataSource.titleForSection(atIndex: section)))
       
       return view
     }
     
     return nil
+  }
+  
+  @objc
+  public func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    willDisplaySectionHeader.sendNext((view, section))
+  }
+  
+  @objc
+  public func tableView(tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
+    didEndDisplayingSectionHeader.sendNext((view, section))
+  }
+  
+  @objc
+  public func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+    willDisplaySectionFooter.sendNext(view, section)
+  }
+  
+  @objc
+  public func tableView(tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
+    willDisplaySectionFooter.sendNext(view, section)
   }
   
   @objc
