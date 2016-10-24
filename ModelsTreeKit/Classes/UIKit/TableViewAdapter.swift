@@ -15,7 +15,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   public var animatesReload = false
   
-  public var nibNameForObjectMatching: (ObjectType -> String)!
+  public var nibNameForObjectMatching: ((ObjectType, NSIndexPath) -> String)!
   public var footerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var headerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var userInfoForCellHeightMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
@@ -161,7 +161,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView,
     cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       let object = dataSource.objectAtIndexPath(indexPath)!;
-      let identifier = nibNameForObjectMatching(object)
+      let identifier = nibNameForObjectMatching((object, indexPath))
       var cell = tableView.dequeueReusableCellWithIdentifier(identifier)
       identifiersForIndexPaths[indexPath] = identifier
       
@@ -188,7 +188,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
+    let identifier = nibNameForObjectMatching((dataSource.objectAtIndexPath(indexPath)!, indexPath))
     if let cell = cellInstances[identifier] as? HeightCalculatingCell {
       return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfoForCellHeightMatching(indexPath))
     }

@@ -14,7 +14,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   typealias UpdateAction = Void -> Void
   
-  public var nibNameForObjectMatching: (ObjectType -> String)!
+  public var nibNameForObjectMatching: ((ObjectType, NSIndexPath) -> String)!
   public var viewForSupplementaryViewOfKindMatching: ((String, NSIndexPath) -> UICollectionReusableView)?
   public var userInfoForCellSizeMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
   
@@ -159,7 +159,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     let object = dataSource.objectAtIndexPath(indexPath)!;
     
-    let identifier = nibNameForObjectMatching(object)
+    let identifier = nibNameForObjectMatching(object, indexPath)
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
     identifiersForIndexPaths[indexPath] = identifier
 
@@ -206,7 +206,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-    let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!)
+    let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!, indexPath)
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
       willCalculateSize.sendNext((instances[identifier]!, indexPath))
