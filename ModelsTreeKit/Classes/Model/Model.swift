@@ -111,7 +111,7 @@ public class Model {
   //Errors
   
   //TODO: extensions
-  private var registeredErrors = [String: Set<Int>]()
+  private var registeredErrors = [String: Set<String>]()
   
   public final func register(for error: ErrorCode) {
     var allCodes = registeredErrors[error.dynamicType.domain] ?? []
