@@ -136,7 +136,7 @@ public class Model {
   
   public final func isRegistered(for error: Error) -> Bool {
     guard let codes = registeredErrors[error.domain] else { return false }
-    return codes.contains(error.code)
+    return codes.contains(error.code.rawValue)
   }
   
   public func raise(error: Error) {

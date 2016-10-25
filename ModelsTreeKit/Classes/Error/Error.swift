@@ -24,17 +24,17 @@ public protocol ErrorCode {
 public struct Error: ErrorType {
   
   public var hashValue: Int {
-    return (code + domain).hashValue
+    return (code.rawValue + domain).hashValue
   }
   
   public let domain: String
-  public let code: String
+  public let code: ErrorCode
   public let context: String?
   public let underlyingError: NSError?
   
   public init(code: ErrorCode, context: String? = nil, underlyingError: NSError? = nil) {
     self.domain = code.dynamicType.domain
-    self.code = code.rawValue
+    self.code = code
     self.context = context
     self.underlyingError = underlyingError
   }
