@@ -14,6 +14,12 @@ public protocol ErrorCodesList {
   
 }
 
+public protocol ErrorContext {
+  
+  var rawValue: String { get }
+  
+}
+
 public protocol ErrorCode {
   
   static var domain: String { get }
@@ -29,10 +35,10 @@ public struct Error: ErrorType {
   
   public let domain: String
   public let code: ErrorCode
-  public let context: String?
+  public let context: ErrorContext?
   public let underlyingError: NSError?
   
-  public init(code: ErrorCode, context: String? = nil, underlyingError: NSError? = nil) {
+  public init(code: ErrorCode, context: ErrorContext? = nil, underlyingError: NSError? = nil) {
     self.domain = code.dynamicType.domain
     self.code = code
     self.context = context
@@ -51,7 +57,7 @@ public struct Error: ErrorType {
     
     var descriptionString = "\(domain).\(code)"
     if let context = context {
-      descriptionString += ".\(context)"
+      descriptionString += ".\(context.rawValue)"
     }
     
     return descriptionString
