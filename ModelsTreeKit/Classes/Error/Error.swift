@@ -55,7 +55,7 @@ public struct Error: ErrorType {
   
   private func descriptionString() -> String {
     
-    var descriptionString = "\(domain).\(code)"
+    var descriptionString = "\(domain).\(code.rawValue)"
     if let context = context {
       descriptionString += ".\(context.rawValue)"
     }
