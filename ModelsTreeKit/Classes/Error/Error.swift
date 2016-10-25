@@ -48,7 +48,13 @@ public struct Error: ErrorType {
   }
   
   private func descriptionString() -> String {
-    return "\(domain).\(code.rawValue)"
+    
+    var descriptionString = "\(domain).\(code.rawValue)"
+    if let context = context {
+      descriptionString += ".\(context)"
+    }
+    
+    return descriptionString
   }
   
 }
@@ -58,7 +64,7 @@ extension Error: Hashable, Equatable {
 }
 
 public func ==(a: Error, b: Error) -> Bool {
-  return a.code.rawValue == b.code.rawValue && a.domain == b.domain
+  return a.code == b.code
 }
 
 public func ==(a: ErrorCode, b: ErrorCode) -> Bool {
