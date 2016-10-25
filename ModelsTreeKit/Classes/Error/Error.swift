@@ -24,17 +24,17 @@ public protocol ErrorCode {
 public struct Error: ErrorType {
   
   public var hashValue: Int {
-    return (code.rawValue + domain).hashValue
+    return (code + domain).hashValue
   }
   
   public let domain: String
-  public let code: ErrorCode
+  public let code: String
   public let context: String?
   public let underlyingError: NSError?
   
   public init(code: ErrorCode, context: String? = nil, underlyingError: NSError? = nil) {
     self.domain = code.dynamicType.domain
-    self.code = code
+    self.code = code.rawValue
     self.context = context
     self.underlyingError = underlyingError
   }
@@ -49,7 +49,7 @@ public struct Error: ErrorType {
   
   private func descriptionString() -> String {
     
-    var descriptionString = "\(domain).\(code.rawValue)"
+    var descriptionString = "\(domain).\(code)"
     if let context = context {
       descriptionString += ".\(context)"
     }
