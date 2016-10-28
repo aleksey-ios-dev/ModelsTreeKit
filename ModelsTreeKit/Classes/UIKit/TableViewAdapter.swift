@@ -35,6 +35,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public let didEndDisplayingSectionFooter = Pipe<(UIView, Int)>()
   
   public let didScroll = Pipe<UIScrollView>()
+  public let willBeginDragging = Pipe<UIScrollView>()
+  public let didEndDragging = Pipe<(scrollView: UIScrollView, willDecelerate: Bool)>()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -290,6 +292,16 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func scrollViewDidScroll(scrollView: UIScrollView) {
     didScroll.sendNext(scrollView)
+  }
+  
+  @objc
+  public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    willBeginDragging.sendNext(scrollView)
+  }
+  
+  @objc
+  public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    didEndDragging.sendNext((scrollView, decelerate))
   }
   
 }
