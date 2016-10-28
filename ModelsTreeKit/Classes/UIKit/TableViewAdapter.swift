@@ -9,9 +9,7 @@
 import Foundation
 import UIKit
 
-extension TableViewAdapter: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate { }
-
-public class TableViewAdapter<ObjectType>: NSObject {
+public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate{
   
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   
@@ -292,7 +290,6 @@ public class TableViewAdapter<ObjectType>: NSObject {
   @objc
   public func scrollViewDidScroll(scrollView: UIScrollView) {
     didScroll.sendNext(scrollView)
-    
   }
   
 }
