@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
-public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITableViewDelegate {
+extension TableViewAdapter: UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate { }
+
+public class TableViewAdapter<ObjectType>: NSObject {
   
   typealias DataSourceType = ObjectsDataSource<ObjectType>
   
@@ -33,6 +35,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   public let willDisplaySectionFooter = Pipe<(UIView, Int)>()
   public let didEndDisplayingSectionFooter = Pipe<(UIView, Int)>()
+  
+  public let didScroll = Pipe<UIScrollView>()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -280,8 +284,15 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     willDisplayCell.sendNext((cell, indexPath))
   }
   
+  @objc
   public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     didEndDisplayingCell.sendNext((cell, indexPath))
+  }
+  
+  @objc
+  public func scrollViewDidScroll(scrollView: UIScrollView) {
+    didScroll.sendNext(scrollView)
+    
   }
   
 }
