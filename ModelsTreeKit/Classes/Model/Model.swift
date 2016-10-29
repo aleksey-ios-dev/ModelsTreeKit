@@ -210,7 +210,7 @@ extension Model {
   
   public final func printSubtree(params: [TreeInfoOptions] = []) {
     print("\n")
-    printTreeLevel(0, params: params)
+    printTree(withPrefix: nil, isLastElement: true)
     print("\n")
   }
   
@@ -218,15 +218,31 @@ extension Model {
     session.printSubtree(params)
   }
   
-  private func printTreeLevel(level: Int, params: [TreeInfoOptions] = []) {
-    var output = "|"
-    let indent = "  |"
+  private enum NodDecoration: String {
+    case EntryPoint = "──"
+    case Middle = "├─"
+    case Last = "└─"
+  }
+  
+  private func printTree(withPrefix prefix: String?, isLastElement: Bool, params: [TreeInfoOptions] = []) {
+    var indent = ""
     
-    for _ in 0..<level {
-      output += indent
+    if let prefix = prefix {
+      if prefix.isEmpty {
+        indent = "   "
+      } else {
+        indent = "│  "
+      }
     }
     
-    output += "\(String(self).componentsSeparatedByString(".").last!)"
+    let currentPrefix = (prefix ?? "") + indent
+    
+    var marker: NodDecoration = isLastElement ? .Last : .Middle
+    if prefix == nil {
+      marker = .EntryPoint
+    }
+    
+    var output = currentPrefix + marker.rawValue + "\(String(self).componentsSeparatedByString(".").last!)"
     
     if params.contains(.Representation) && representationDeinitDisposable != nil {
       output += "  | (R)"
@@ -254,11 +270,10 @@ extension Model {
         codes.forEach { output += "\($0) " }
       }
     }
-
     print(output)
     
-    childModels.sort { return $0.timeStamp.compare($1.timeStamp) == .OrderedAscending }.forEach { $0.printTreeLevel(level + 1, params:  params) }
-
+    let models = childModels.sort { return $0.timeStamp.compare($1.timeStamp) == .OrderedAscending }
+    models.forEach { $0.printTree(withPrefix: currentPrefix, isLastElement: models.last == $0) }
   }
   
 }
