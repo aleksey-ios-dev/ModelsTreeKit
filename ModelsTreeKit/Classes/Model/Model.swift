@@ -40,7 +40,7 @@ public class Model {
   public func applyRepresentation(representation: DeinitObservable) {
     representationDeinitDisposable = representation.deinitSignal.subscribeNext { [weak self] _ in
       self?.parent?.removeChild(self!)
-    }.autodispose()
+      }.autodispose()
   }
   
   //Lifecycle
@@ -172,7 +172,7 @@ public class Model {
   public final func raise(
     globalEvent: GlobalEventName,
     withObject object: Any? = nil,
-    userInfo: [String: Any] = [:]) {
+               userInfo: [String: Any] = [:]) {
     let event = GlobalEvent(name: globalEvent, object: object, userInfo: userInfo)
     session.propagate(event)
   }
@@ -210,7 +210,7 @@ extension Model {
   
   public final func printSubtree(params: [TreeInfoOptions] = []) {
     print("\n")
-    printTree(withPrefix: nil, isLastElement: true)
+    printTree(withPrefix: nil, decoration: .EntryPoint, params: params)
     print("\n")
   }
   
@@ -224,25 +224,23 @@ extension Model {
     case Last = "└─"
   }
   
-  private func printTree(withPrefix prefix: String?, isLastElement: Bool, params: [TreeInfoOptions] = []) {
-    var indent = ""
-    
-    if let prefix = prefix {
-      if prefix.isEmpty {
-        indent = "   "
-      } else {
-        indent = "│  "
-      }
-    }
+  private func printTree(withPrefix prefix: String?, decoration: NodDecoration, params: [TreeInfoOptions] = []) {
+    var indent = prefix == nil ? "" : "   "
     
     let currentPrefix = (prefix ?? "") + indent
     
-    var marker: NodDecoration = isLastElement ? .Last : .Middle
-    if prefix == nil {
-      marker = .EntryPoint
+    var nextIndent = ""
+    if let prefix = prefix {
+      if decoration == .Last {
+        nextIndent = "   "
+      } else {
+        nextIndent = "   │"
+      }
     }
     
-    var output = currentPrefix + marker.rawValue + "\(String(self).componentsSeparatedByString(".").last!)"
+    var nextPrefix = (prefix ?? "") + nextIndent
+    
+    var output = currentPrefix + decoration.rawValue + "\(String(self).componentsSeparatedByString(".").last!)"
     
     if params.contains(.Representation) && representationDeinitDisposable != nil {
       output += "  | (R)"
@@ -273,7 +271,17 @@ extension Model {
     print(output)
     
     let models = childModels.sort { return $0.timeStamp.compare($1.timeStamp) == .OrderedAscending }
-    models.forEach { $0.printTree(withPrefix: currentPrefix, isLastElement: models.last == $0) }
+    
+    models.forEach {
+      var decoration: NodDecoration
+      if models.count == 1 {
+        decoration = .Last
+      } else {
+        decoration = $0 == models.last ? .Last : .Middle
+      }
+      
+      $0.printTree(withPrefix: nextPrefix, decoration: decoration, params: params)
+    }
   }
   
 }
