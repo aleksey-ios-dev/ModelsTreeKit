@@ -18,7 +18,7 @@ public class Observable<T>: Signal<T> {
   
   public typealias ObservingHandler = ((new: T?, old: T?, initial: T?) -> Void)
   
-  public init(value: T) {
+  public init(_ value: T) {
     super.init()
     
     _value = value

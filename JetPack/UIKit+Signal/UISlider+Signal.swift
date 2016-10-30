@@ -12,7 +12,7 @@ extension UISlider {
   
   public var valueSignal: Observable<Float> {
     get {
-      let observable = Observable<Float>(value: value)
+      let observable = Observable<Float>(value)
       signalForControlEvents(.ValueChanged).map { ($0 as! UISlider).value }.skipRepeating().bindTo(observable)
       
       return observable
@@ -21,7 +21,7 @@ extension UISlider {
   
   public var isAtMaximumSignal: Observable<Bool> {
     get {
-      let observable = Observable<Bool>(value: value == maximumValue)
+      let observable = Observable<Bool>(value == maximumValue)
       valueSignal.filter { [weak self] in return self!.maximumValue == $0 }.map { _ in return true}.bindTo(observable)
       
       return observable
@@ -30,7 +30,7 @@ extension UISlider {
   
   public var isAtMinimumSignal: Observable<Bool> {
     get {
-      let observable = Observable<Bool>(value: value == minimumValue)
+      let observable = Observable<Bool>(value == minimumValue)
       valueSignal.filter { [weak self] in return self!.minimumValue == $0 }.map { _ in return true}.bindTo(observable)
       
       return observable
