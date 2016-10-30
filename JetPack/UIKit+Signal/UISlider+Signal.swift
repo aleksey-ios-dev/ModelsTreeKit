@@ -13,7 +13,7 @@ extension UISlider {
   public var valueSignal: Observable<Float> {
     get {
       let observable = Observable<Float>(value)
-      signalForControlEvents(.ValueChanged).map { ($0 as! UISlider).value }.skipRepeating().bindTo(observable)
+      signalForControlEvents(.ValueChanged).map { [weak self] _ in self!.value }.bindTo(observable)
       
       return observable
     }
