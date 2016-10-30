@@ -16,6 +16,8 @@ extension UITextField {
     let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text ?? "" }.filter { $0 != nil }.map { $0! }
     
     let observable = Observable<String>(text ?? "")
+    textObservable.value == text ?? ""
+    
     Signals.merge([textObservable, onClearSignal]).bindTo(observable)
     
     return observable
