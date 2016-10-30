@@ -52,7 +52,6 @@
 		5B1A79C81D73D8F3003A7768 /* Signal+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79AA1D73D8F3003A7768 /* Signal+Equatable.swift */; };
 		5B1A79C91D73D8F3003A7768 /* Signal+KVO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79AB1D73D8F3003A7768 /* Signal+KVO.swift */; };
 		5B1A79CA1D73D8F3003A7768 /* Signal+Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79AC1D73D8F3003A7768 /* Signal+Operations.swift */; };
-		5B1A79CB1D73D8F3003A7768 /* Signal+Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79AD1D73D8F3003A7768 /* Signal+Validator.swift */; };
 		5B1A79CC1D73D8F3003A7768 /* Signal+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79AE1D73D8F3003A7768 /* Signal+Void.swift */; };
 		5B1A79CD1D73D8F3003A7768 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79AF1D73D8F3003A7768 /* Signal.swift */; };
 		5B1A79CE1D73D8F3003A7768 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A79B01D73D8F3003A7768 /* Subscription.swift */; };
@@ -132,7 +131,6 @@
 		5B1A79AA1D73D8F3003A7768 /* Signal+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Equatable.swift"; sourceTree = "<group>"; };
 		5B1A79AB1D73D8F3003A7768 /* Signal+KVO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+KVO.swift"; sourceTree = "<group>"; };
 		5B1A79AC1D73D8F3003A7768 /* Signal+Operations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Operations.swift"; sourceTree = "<group>"; };
-		5B1A79AD1D73D8F3003A7768 /* Signal+Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Validator.swift"; sourceTree = "<group>"; };
 		5B1A79AE1D73D8F3003A7768 /* Signal+Void.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Signal+Void.swift"; sourceTree = "<group>"; };
 		5B1A79AF1D73D8F3003A7768 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		5B1A79B01D73D8F3003A7768 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
@@ -370,7 +368,6 @@
 				5B1A79AA1D73D8F3003A7768 /* Signal+Equatable.swift */,
 				5B1A79AB1D73D8F3003A7768 /* Signal+KVO.swift */,
 				5B1A79AC1D73D8F3003A7768 /* Signal+Operations.swift */,
-				5B1A79AD1D73D8F3003A7768 /* Signal+Validator.swift */,
 				5B1A79AE1D73D8F3003A7768 /* Signal+Void.swift */,
 				5B1A79AF1D73D8F3003A7768 /* Signal.swift */,
 				5B1A79B01D73D8F3003A7768 /* Subscription.swift */,
@@ -531,7 +528,6 @@
 				00BEAFA71D9CDA43000A9C0F /* Checkable.swift in Sources */,
 				5B1A79841D73D8DA003A7768 /* Array+RemoveObject.swift in Sources */,
 				5B1A79CE1D73D8F3003A7768 /* Subscription.swift in Sources */,
-				5B1A79CB1D73D8F3003A7768 /* Signal+Validator.swift in Sources */,
 				5B1A79C61D73D8F3003A7768 /* Signal+Comparable.swift in Sources */,
 				5B1A798B1D73D8DA003A7768 /* Model.swift in Sources */,
 				5BF2CA361DB1EA2400230EF1 /* OrderedList.swift in Sources */,

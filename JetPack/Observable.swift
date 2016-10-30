@@ -18,21 +18,25 @@ public class Observable<T>: Signal<T> {
   
   public typealias ObservingHandler = ((new: T?, old: T?, initial: T?) -> Void)
   
-  public init(value: T? = nil) {
+  public init(value: T) {
     super.init()
     
     _value = value
   }
   
+  override init() {
+    super.init()
+  }
+  
   public var value: T {
     get {
-      return _value
+      return _value!
     } set {
       _value = newValue
     }
   }
   
-  internal var _value: T! {
+  internal var _value: T? {
     willSet {
       if let newValue = newValue { super.sendNext(newValue) }
     }
