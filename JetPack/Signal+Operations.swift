@@ -181,10 +181,6 @@ public extension Signal {
   public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
     let persistentBlocker = blocker.observable()
     return filter { newValue in
-      
-      guard let _ = persistentBlocker.value else {
-        return true
-      }
       return persistentBlocker.value == false
     }
   }
