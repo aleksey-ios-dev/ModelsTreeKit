@@ -12,7 +12,7 @@ extension UIDatePicker {
   
   public var dateSignal: Observable<NSDate> {
     get {
-      let observable = Observable<NSDate>(value: date)
+      let observable = Observable<NSDate>(date)
       signalForControlEvents(.ValueChanged).map { ($0 as! UIDatePicker).date }.bindTo(observable)
       
       return observable
