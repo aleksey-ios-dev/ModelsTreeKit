@@ -206,16 +206,21 @@ extension Model {
     case BubbleNotifications
     case Errors
     case ErrorsVerbous
+    case YouAreHere
   }
   
   public final func printSubtree(params: [TreeInfoOptions] = []) {
+    _printSubtree(params, sender: self)
+  }
+  
+  private func _printSubtree(params: [TreeInfoOptions] = [], sender: Model) {
     print("\n")
-    printTree(withPrefix: nil, decoration: .EntryPoint, params: params)
+    printTree(withPrefix: nil, decoration: .EntryPoint, params: params, sender: sender)
     print("\n")
   }
   
   public final func printSessionTree(withOptions params: [TreeInfoOptions] = []) {
-    session.printSubtree(params)
+    session._printSubtree(params, sender: self)
   }
   
   private enum NodDecoration: String {
@@ -224,13 +229,13 @@ extension Model {
     case Last = "└─"
   }
   
-  private func printTree(withPrefix prefix: String?, decoration: NodDecoration, params: [TreeInfoOptions] = []) {
-    var indent = prefix == nil ? "" : "   "
+  private func printTree(withPrefix prefix: String?, decoration: NodDecoration, params: [TreeInfoOptions] = [], sender: Model) {
+    let indent = prefix == nil ? "" : "   "
     
     let currentPrefix = (prefix ?? "") + indent
     
     var nextIndent = ""
-    if let prefix = prefix {
+    if prefix != nil {
       if decoration == .Last {
         nextIndent = "   "
       } else {
@@ -238,9 +243,12 @@ extension Model {
       }
     }
     
-    var nextPrefix = (prefix ?? "") + nextIndent
+    let nextPrefix = (prefix ?? "") + nextIndent
     
     var output = currentPrefix + decoration.rawValue + "\(String(self).componentsSeparatedByString(".").last!)"
+    if params.contains(.YouAreHere) && sender == self {
+      output += " <- "
+    }
     
     if params.contains(.Representation) && representationDeinitDisposable != nil {
       output += "  | (R)"
@@ -280,7 +288,7 @@ extension Model {
         decoration = $0 == models.last ? .Last : .Middle
       }
       
-      $0.printTree(withPrefix: nextPrefix, decoration: decoration, params: params)
+      $0.printTree(withPrefix: nextPrefix, decoration: decoration, params: params, sender: sender)
     }
   }
   
