@@ -37,6 +37,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public let didScroll = Pipe<UIScrollView>()
   public let willBeginDragging = Pipe<UIScrollView>()
   public let didEndDragging = Pipe<(scrollView: UIScrollView, willDecelerate: Bool)>()
+  private var behaviors = [UITableViewDelegate]()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -154,6 +155,10 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     }
   }
   
+  func addBehavior(behavior: UITableViewDelegate) {
+    behaviors.append(behavior)
+  }
+  
   //UITableViewDataSource
   
   @objc
@@ -217,6 +222,10 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     willDisplaySectionHeader.sendNext((view, section))
+    behaviors.forEach { if $0.respondsToSelector(#selector(UITableViewDelegate.tableView(_:willDisplayHeaderView:forSection:))) {
+      $0.tableView!(tableView, willDisplayHeaderView: view, forSection: section)
+      }
+    }
   }
   
   @objc
@@ -282,6 +291,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     }
   
     willDisplayCell.sendNext((cell, indexPath))
+    behaviors.forEach {
+      if $0.respondsToSelector(#selector(UITableViewDelegate.tableView(_:willDisplayCell:forRowAtIndexPath:))) {
+        $0.tableView?(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath)
+      }
+    }
   }
   
   @objc
