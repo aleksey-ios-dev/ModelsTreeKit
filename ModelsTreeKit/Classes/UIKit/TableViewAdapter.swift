@@ -155,7 +155,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     }
   }
   
-  func addBehavior(behavior: UITableViewDelegate) {
+  public func addBehavior(behavior: UITableViewDelegate) {
     behaviors.append(behavior)
   }
   
