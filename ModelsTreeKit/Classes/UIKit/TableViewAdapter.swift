@@ -18,7 +18,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public var nibNameForObjectMatching: ((ObjectType, NSIndexPath) -> String)!
   public var footerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var headerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
-  public var userInfoForCellHeightMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
+  public var userInfoForCellHeightMatching: (NSIndexPath -> [String: AnyObject]) = { _ in return [:] }
   public var userInfoForSectionHeaderHeightMatching: (Int -> [String: AnyObject]) = { _ in return [:] }
   public var userInfoForSectionFooterHeightMatching: (Int -> [String: AnyObject]) = { _ in return [:] }
   
@@ -201,7 +201,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     let identifier = nibNameForObjectMatching((dataSource.objectAtIndexPath(indexPath)!, indexPath))
     if let cell = cellInstances[identifier] as? HeightCalculatingCell {
       var userInfo = userInfoForCellHeightMatching(indexPath)
-      behaviors.forEach { userInfo?.append($0.heightCalculationUserInfo(forCellAtIndexPath: indexPath)) }
+      behaviors.forEach { userInfo.append($0.heightCalculationUserInfo(forCellAtIndexPath: indexPath)) }
       
       return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfoForCellHeightMatching(indexPath))
     }
