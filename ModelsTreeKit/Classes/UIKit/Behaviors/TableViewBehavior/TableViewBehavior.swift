@@ -12,7 +12,9 @@ public protocol TableViewBehavior: UITableViewDelegate {
   
   weak var tableView: UITableView! { get set }
   
-  func heightCalculationUserInfo(forCellAtIndexPath indexPath: NSIndexPath) -> [String: AnyObject]
+  func cellHeightCalculationUserInfo(forCellAtIndexPath indexPath: NSIndexPath) -> [String: AnyObject]
+  func sectionHeaderHeightCalculationUserInfo(forHeaderAtIndex section: Int) -> [String: AnyObject]
+  func sectionFooterHeightCalculationUserInfo(forFooterAtIndex section: Int) -> [String: AnyObject]
   
 }
 
@@ -22,4 +24,12 @@ extension TableViewBehavior {
     return [:]
   }
   
+  func sectionHeaderHeightCalculationUserInfo(forHeaderAtIndex section: Int) -> [String: AnyObject] {
+    return [:]
+  }
+  
+func sectionFooterHeightCalculationUserInfo(forFooterAtIndex section: Int) -> [String: AnyObject] {
+    return [:]
+  }
+
 }

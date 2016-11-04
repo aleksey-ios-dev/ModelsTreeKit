@@ -19,8 +19,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public var footerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var headerClassForSectionIndexMatching: (Int -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var userInfoForCellHeightMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
-  public var userInfoForSectionHeaderHeightMatching: (Int -> [String: AnyObject]?) = { _ in return nil }
-  public var userInfoForSectionFooterHeightMatching: (Int -> [String: AnyObject]?) = { _ in return nil }
+  public var userInfoForSectionHeaderHeightMatching: (Int -> [String: AnyObject]) = { _ in return [:] }
+  public var userInfoForSectionFooterHeightMatching: (Int -> [String: AnyObject]) = { _ in return [:] }
   
   public let didSelectCell = Pipe<(UITableViewCell, NSIndexPath, ObjectType)>()
   public let willDisplayCell = Pipe<(UITableViewCell, NSIndexPath)>()
@@ -226,15 +226,13 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
     willDisplaySectionHeader.sendNext((view, section))
-    behaviors.forEach { if $0.respondsToSelector(#selector(UITableViewDelegate.tableView(_:willDisplayHeaderView:forSection:))) {
-      $0.tableView!(tableView, willDisplayHeaderView: view, forSection: section)
-      }
-    }
+    behaviors.forEach { $0.tableView?(tableView, willDisplayHeaderView: view, forSection: section) }
   }
   
   @objc
   public func tableView(tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
     didEndDisplayingSectionHeader.sendNext((view, section))
+    behaviors.forEach { $0.tableView?(tableView, didEndDisplayingHeaderView: view, forSection: section) }
   }
   
   @objc
@@ -262,7 +260,10 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     if let headerClass = headerClassForSectionIndexMatching(section),
       let view = headerFooterInstances[String(headerClass)] as? HeightCalculatingCell {
-      return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfoForSectionHeaderHeightMatching(section))
+      var userInfo = userInfoForSectionHeaderHeightMatching(section)
+      behaviors.forEach { userInfo.append($0.sectionHeaderHeightCalculationUserInfo(forHeaderAtIndex: section)) }
+      
+      return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfo)
     }
     
     return UITableViewAutomaticDimension
@@ -271,7 +272,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
     if let footerClass = footerClassForSectionIndexMatching(section),
       let view = headerFooterInstances[String(footerClass)] as? HeightCalculatingCell {
-      return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfoForSectionFooterHeightMatching(section))
+      
+      var userInfo = userInfoForSectionHeaderHeightMatching(section)
+      behaviors.forEach { userInfo.append($0.sectionFooterHeightCalculationUserInfo(forFooterAtIndex: section)) }
+      
+      return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfo)
     }
     
     return UITableViewAutomaticDimension
