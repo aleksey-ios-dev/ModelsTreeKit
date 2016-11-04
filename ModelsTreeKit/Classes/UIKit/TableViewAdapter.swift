@@ -37,7 +37,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public let didScroll = Pipe<UIScrollView>()
   public let willBeginDragging = Pipe<UIScrollView>()
   public let didEndDragging = Pipe<(scrollView: UIScrollView, willDecelerate: Bool)>()
-  private var behaviors = [UITableViewDelegate]()
+  private var behaviors = [TableViewBehavior]()
   
   public var checkedIndexPaths = [NSIndexPath]() {
     didSet {
@@ -155,7 +155,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     }
   }
   
-  public func addBehavior(behavior: UITableViewDelegate) {
+  public func addBehavior(behavior: TableViewBehavior) {
+    behavior.tableView = tableView
     behaviors.append(behavior)
   }
   
