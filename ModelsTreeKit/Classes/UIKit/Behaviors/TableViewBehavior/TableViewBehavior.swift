@@ -18,7 +18,7 @@ public protocol TableViewBehavior: UITableViewDelegate {
   
 }
 
-extension TableViewBehavior {
+public extension TableViewBehavior {
   
   func cellHeightCalculationUserInfo(forCellAtIndexPath indexPath: NSIndexPath) -> [String: AnyObject] {
     return [:]
