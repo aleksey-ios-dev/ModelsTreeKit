@@ -203,7 +203,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       var userInfo = userInfoForCellHeightMatching(indexPath)
       behaviors.forEach { userInfo.append($0.heightCalculationUserInfo(forCellAtIndexPath: indexPath)) }
       
-      return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfoForCellHeightMatching(indexPath))
+      return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfo)
     }
     return UITableViewAutomaticDimension;
   }
