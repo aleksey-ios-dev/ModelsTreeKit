@@ -201,7 +201,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     let identifier = nibNameForObjectMatching((dataSource.objectAtIndexPath(indexPath)!, indexPath))
     if let cell = cellInstances[identifier] as? HeightCalculatingCell {
       var userInfo = userInfoForCellHeightMatching(indexPath)
-      behaviors.forEach { userInfo.append($0.heightCalculationUserInfo(forCellAtIndexPath: indexPath)) }
+      behaviors.forEach { userInfo.append($0.cellHeightCalculationUserInfo(forCellAtIndexPath: indexPath)) }
       
       return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfo)
     }

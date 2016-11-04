@@ -28,7 +28,7 @@ extension TableViewBehavior {
     return [:]
   }
   
-func sectionFooterHeightCalculationUserInfo(forFooterAtIndex section: Int) -> [String: AnyObject] {
+  func sectionFooterHeightCalculationUserInfo(forFooterAtIndex section: Int) -> [String: AnyObject] {
     return [:]
   }
 
