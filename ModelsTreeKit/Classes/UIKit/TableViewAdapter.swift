@@ -68,15 +68,15 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.beginUpdates()
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       self?.tableView.endUpdates()
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
-
+      
       if !strongSelf.animatesReload {
         tableView.reloadData()
         
@@ -89,9 +89,9 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
           strongSelf.tableView.reloadData()
           UIView.animateWithDuration(0.2, animations: {
             strongSelf.tableView.alpha = 1
-        })
+          })
       })
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
       guard let strongSelf = self else { return }
@@ -117,7 +117,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
           strongSelf.tableView.insertRowsAtIndexPaths([toIndexPath], withRowAnimation: .Fade)
         }
       }
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
       guard let strongSelf = self else { return }
@@ -135,7 +135,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       default:
         break
       }
-    }.putInto(pool)
+      }.putInto(pool)
   }
   
   public func registerSectionHeaderFooterClass(headerFooterClass: UITableViewHeaderFooterView.Type) {
@@ -169,24 +169,24 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView,
-    cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      let object = dataSource.objectAtIndexPath(indexPath)!;
-      let identifier = nibNameForObjectMatching((object, indexPath))
-      var cell = tableView.dequeueReusableCellWithIdentifier(identifier)
-      identifiersForIndexPaths[indexPath] = identifier
-      
-      if cell == nil {
-        cell = (nibs[identifier]!.instantiateWithOwner(nil, options: nil).last as! UITableViewCell)
-      }
-      
-      willSetObject.sendNext((cell!, indexPath))
-      
-      let mapping = mappings[identifier]!
-      mapping(object, cell!, indexPath)
-      
-      didSetObject.sendNext((cell!, indexPath))
-      
-      return cell!
+                        cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    let object = dataSource.objectAtIndexPath(indexPath)!;
+    let identifier = nibNameForObjectMatching((object, indexPath))
+    var cell = tableView.dequeueReusableCellWithIdentifier(identifier)
+    identifiersForIndexPaths[indexPath] = identifier
+    
+    if cell == nil {
+      cell = (nibs[identifier]!.instantiateWithOwner(nil, options: nil).last as! UITableViewCell)
+    }
+    
+    willSetObject.sendNext((cell!, indexPath))
+    
+    let mapping = mappings[identifier]!
+    mapping(object, cell!, indexPath)
+    
+    didSetObject.sendNext((cell!, indexPath))
+    
+    return cell!
   }
   
   @objc
@@ -248,7 +248,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
     if let footerClass = footerClassForSectionIndexMatching(section),
-    let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(footerClass)) {
+      let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(String(footerClass)) {
       willDisplaySectionFooter.sendNext((view, section))
       
       return view
@@ -294,11 +294,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-  
+    
     if var checkable = cell as? Checkable {
       checkable.checked = checkedIndexPaths.contains(indexPath)
     }
-  
+    
     willDisplayCell.sendNext((cell, indexPath))
     behaviors.forEach {
       if $0.respondsToSelector(#selector(UITableViewDelegate.tableView(_:willDisplayCell:forRowAtIndexPath:))) {
@@ -320,6 +320,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
     willBeginDragging.sendNext(scrollView)
+    behaviors.forEach { $0.scrollViewWillBeginDragging?(scrollView) }
   }
   
   @objc
