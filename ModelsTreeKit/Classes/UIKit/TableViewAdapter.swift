@@ -169,7 +169,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(tableView: UITableView,
-                        cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let object = dataSource.objectAtIndexPath(indexPath)!;
     let identifier = nibNameForObjectMatching((object, indexPath))
     var cell = tableView.dequeueReusableCellWithIdentifier(identifier)
@@ -205,6 +205,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       
       return cell.height(forObject: dataSource.objectAtIndexPath(indexPath), width: tableView.frame.size.width, userInfo: userInfo)
     }
+    
     return UITableViewAutomaticDimension;
   }
   
@@ -238,11 +239,13 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
     willDisplaySectionFooter.sendNext(view, section)
+    behaviors.forEach { $0.tableView?(tableView, willDisplayFooterView: view, forSection: section) }
   }
   
   @objc
   public func tableView(tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
     willDisplaySectionFooter.sendNext(view, section)
+    behaviors.forEach { $0.tableView?(tableView, didEndDisplayingFooterView: view, forSection: section) }
   }
   
   @objc
@@ -290,31 +293,28 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       dataSource.objectAtIndexPath(indexPath)!)
     )
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    behaviors.forEach { $0.tableView?(tableView, didSelectRowAtIndexPath: indexPath) }
   }
   
   @objc
   public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    
     if var checkable = cell as? Checkable {
       checkable.checked = checkedIndexPaths.contains(indexPath)
     }
-    
     willDisplayCell.sendNext((cell, indexPath))
-    behaviors.forEach {
-      if $0.respondsToSelector(#selector(UITableViewDelegate.tableView(_:willDisplayCell:forRowAtIndexPath:))) {
-        $0.tableView?(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-      }
-    }
+    behaviors.forEach { $0.tableView?(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath) }
   }
   
   @objc
   public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     didEndDisplayingCell.sendNext((cell, indexPath))
+    behaviors.forEach { $0.tableView?(tableView, didEndDisplayingCell: cell, forRowAtIndexPath: indexPath) }
   }
   
   @objc
   public func scrollViewDidScroll(scrollView: UIScrollView) {
     didScroll.sendNext(scrollView)
+    behaviors.forEach { $0.scrollViewDidScroll?(scrollView) }
   }
   
   @objc
@@ -326,6 +326,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   @objc
   public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     didEndDragging.sendNext((scrollView, decelerate))
+    behaviors.forEach { $0.scrollViewDidEndDragging?(scrollView, willDecelerate: decelerate) }
   }
   
 }
