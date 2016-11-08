@@ -11,7 +11,7 @@ import Foundation
 public extension Model {
   
   func conformingAncestor<T>() -> T? {
-    return parent as? T ?? parent.conformingAncestor()
+    return parent as? T ?? parent?.conformingAncestor()
   }
   
 }
