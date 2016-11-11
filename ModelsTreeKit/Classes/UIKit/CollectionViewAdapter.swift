@@ -37,9 +37,9 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       }
     }
   }
-
+  
   private weak var collectionView: UICollectionView!
-
+  
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UICollectionViewCell]()
   private var identifiersForIndexPaths = [NSIndexPath: String]()
@@ -57,12 +57,12 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     dataSource.beginUpdatesSignal.subscribeNext { [weak self] in
       self?.updateActions.removeAll()
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.endUpdatesSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
       strongSelf.updateActions.forEach { $0() }
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
@@ -73,9 +73,9 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
           strongSelf.collectionView.reloadData()
           UIView.animateWithDuration(0.2, animations: {
             strongSelf.collectionView.alpha = 1
-        })
+          })
       })
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
       guard let strongSelf = self else {
@@ -108,7 +108,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
           }
         }
       }
-    }.putInto(pool)
+      }.putInto(pool)
     
     dataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
       guard let strongSelf = self else { return }
@@ -129,7 +129,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       default:
         break
       }
-    }.putInto(pool)
+      }.putInto(pool)
   }
   
   public func registerCellClass<U: ObjectConsuming where U.ObjectType == ObjectType>(cellClass: U.Type) {
@@ -162,7 +162,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     let identifier = nibNameForObjectMatching(object, indexPath)
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
     identifiersForIndexPaths[indexPath] = identifier
-
+    
     
     willSetObject.sendNext((cell, indexPath))
     let mapping = mappings[identifier]!
@@ -177,7 +177,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     if var checkable = cell as? Checkable {
       checkable.checked = checkedIndexPaths.contains(indexPath)
     }
-
+    
     willDisplayCell.sendNext((cell, indexPath))
   }
   
@@ -195,14 +195,6 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   public func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
     willEndDisplayingSupplementaryView.sendNext((view, elementKind, indexPath))
-  }
-  
-  public override func respondsToSelector(aSelector: Selector) -> Bool {
-    if aSelector == #selector(collectionView(_:viewForSupplementaryElementOfKind:atIndexPath:)) {
-      return viewForSupplementaryViewOfKindMatching != nil
-    } else {
-      return super.respondsToSelector(aSelector)
-    }
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
