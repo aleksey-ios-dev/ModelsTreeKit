@@ -10,6 +10,6 @@ import Foundation
 
 public protocol TitleApplicable {
   
-  func applyTitle(title: String) -> Void
+  func applyTitle(_ title: String) -> Void
   
 }

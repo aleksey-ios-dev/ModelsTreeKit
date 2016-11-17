@@ -12,9 +12,9 @@ public typealias SessionCompletionParams = [String: AnyObject]
 
 protocol SessionDelegate: class {
   
-  func sessionDidPrepareToShowRootRepresenation(session: Session) -> Void
-  func session(session: Session, didCloseWithParams params: Any?) -> Void
-  func sessionDidOpen(session: Session) -> Void
+  func sessionDidPrepareToShowRootRepresenation(_ session: Session) -> Void
+  func session(_ session: Session, didCloseWithParams params: Any?) -> Void
+  func sessionDidOpen(_ session: Session) -> Void
   
 }
 
@@ -44,7 +44,7 @@ public class Session: Model {
   
   public func sessionDidLoad() {}
   
-  func openWithController(controller: SessionController) {
+  func openWithController(_ controller: SessionController) {
     self.controller = controller
     self.services.takeOff()
     self.controller?.sessionDidOpen(self)

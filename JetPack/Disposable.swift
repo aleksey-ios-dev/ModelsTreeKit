@@ -13,8 +13,8 @@ public protocol Disposable: class {
   func dispose()
   func deliverOnMainThread() -> Disposable
   func autodispose() -> Disposable
-  func putInto(pool: AutodisposePool) -> Disposable
-  func takeUntil(signal: Pipe<Void>) -> Disposable
-  func ownedBy(object: DeinitObservable) -> Disposable
+  @discardableResult func putInto(_ pool: AutodisposePool) -> Disposable
+  func takeUntil(_ signal: Pipe<Void>) -> Disposable
+  func ownedBy(_ object: DeinitObservable) -> Disposable
   
 }

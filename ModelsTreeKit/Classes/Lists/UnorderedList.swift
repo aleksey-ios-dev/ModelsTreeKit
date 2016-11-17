@@ -14,7 +14,7 @@ enum ListChangeType {
   
 }
 
-public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
+public class UnorderedList<T>: Model where T: Hashable & Equatable {
   
   let beginUpdatesSignal = Pipe<Void>()
   let endUpdatesSignal = Pipe<Void>()
@@ -31,7 +31,11 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
     self.objects = Set(objects)
   }
   
-  public func performUpdates(updates: UnorderedList -> Void) {
+  public required init(parent: Model?) {
+    fatalError("init(parent:) has not been implemented")
+  }
+  
+  public func performUpdates(updates: (UnorderedList) -> Void) {
     beginUpdates()
     updates(self)
     endUpdates()
@@ -50,20 +54,20 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
   
   //Operations on objects. Use ONLY inside performBatchUpdate() call!
   
-  public func delete(objects: [T]) {
+  public func delete(_ objects: [T]) {
     if objects.isEmpty { return }
-    updatesPool.deletions.unionInPlace(Set(objects))
+    updatesPool.deletions.formUnion(Set(objects))
   }
   
-  public func insert(objects: [T]) {
+  public func insert(_ objects: [T]) {
     if objects.isEmpty { return }
-    updatesPool.insertions.unionInPlace(Set(objects))
+    updatesPool.insertions.formUnion(Set(objects))
   }
   
   //Call outside the batch update block. Informs subscriber that data should be reloaded
   //To perform batch-based replacement use removeAllObjects() and insert() methods within the batch update block
   
-  public func replaceWith(objects: [T]) {
+  public func replaceWith(_ objects: [T]) {
     self.objects = Set(objects)
     didReplaceContentSignal.sendNext(self.objects)
   }
@@ -82,10 +86,10 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
   //Private
   
   private func applyChanges() {
-    updatesPool.optimizeFor(objects)
-    objects.unionInPlace(updatesPool.insertions)
-    objects.unionInPlace(updatesPool.updates)
-    objects.subtractInPlace(updatesPool.deletions)
+    updatesPool.optimizeFor(objects: objects)
+    objects.formUnion(updatesPool.insertions)
+    objects.formUnion(updatesPool.updates)
+    objects.subtract(updatesPool.deletions)
   }
   
   private func pushUpdates() {
@@ -98,7 +102,7 @@ public class UnorderedList<T where T: Hashable, T: Equatable>: Model {
   
 }
 
-internal class UpdatesPool<T where T: protocol <Hashable, Equatable>> {
+internal class UpdatesPool<T> where T: Hashable & Equatable {
   
   var insertions = Set<T>()
   var deletions = Set<T>()
@@ -106,8 +110,8 @@ internal class UpdatesPool<T where T: protocol <Hashable, Equatable>> {
   
   func addObjects(objects: [T], forChangeType changeType: ListChangeType) {
     switch changeType {
-    case .Insertion: insertions.unionInPlace(objects)
-    case .Deletion: deletions.unionInPlace(objects)
+    case .Insertion: insertions.formUnion(objects)
+    case .Deletion: deletions.formUnion(objects)
     default: break
     }
   }
@@ -120,15 +124,15 @@ internal class UpdatesPool<T where T: protocol <Hashable, Equatable>> {
   
   func optimizeFor(objects: Set<T>) {
     optimizeDuplicatingEntries()
-    updates.unionInPlace(insertions.intersect(objects))
-    insertions.subtractInPlace(updates)
-    deletions.intersectInPlace(objects)
+    updates.formUnion(insertions.intersection(objects))
+    insertions.subtract(updates)
+    deletions.formIntersection(objects)
   }
   
   func optimizeDuplicatingEntries() {
-    let commonObjects = insertions.intersect(deletions)
-    insertions.subtractInPlace(commonObjects)
-    deletions.subtractInPlace(commonObjects)
+    let commonObjects = insertions.intersection(deletions)
+    insertions.subtract(commonObjects)
+    deletions.subtract(commonObjects)
   }
   
 }

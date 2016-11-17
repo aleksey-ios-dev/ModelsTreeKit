@@ -10,7 +10,7 @@ import Foundation
 
 extension Set where Element: Equatable, Element: Hashable {
   
-  func objectEqualTo(object: Element) -> Element? {
+  func objectEqualTo(_ object: Element) -> Element? {
     return self.filter { $0 == object }.first
   }
   

@@ -17,7 +17,7 @@ extension Signal where T: Equatable {
     
     let newSignal = Signal<T>()
     observable().subscribeWithOptions([.New, .Old]) { (new, old, initial) in
-      if let new = new where new != old {
+      if let new = new, new != old {
         newSignal.sendNext(new)
       }
     }.putInto(pool)

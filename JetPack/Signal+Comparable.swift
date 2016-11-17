@@ -16,12 +16,10 @@ extension Signal where T: Comparable {
     let nextSignal = Observable<T>()
     
     subscribeNext { [weak nextSignal] newValue in
-      if nextSignal?.value == nil || nextSignal?.value < newValue {
+      if nextSignal?.value == nil || nextSignal!.value < newValue {
         nextSignal?.sendNext(newValue)
       }
     }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
@@ -31,12 +29,10 @@ extension Signal where T: Comparable {
   public func passDescending() -> Observable<T> {
     let nextSignal = Observable<T>()
     subscribeNext { [weak nextSignal] newValue in
-      if nextSignal?.value == nil || nextSignal?.value > newValue {
+      if nextSignal?.value == nil || nextSignal!.value > newValue {
         nextSignal?.sendNext(newValue)
       }
       }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }

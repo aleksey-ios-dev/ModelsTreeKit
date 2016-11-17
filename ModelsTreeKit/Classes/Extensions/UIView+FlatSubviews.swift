@@ -15,7 +15,7 @@ extension UIView {
     
     subviews.forEach {
       flatSubviews.append($0)
-      flatSubviews.appendContentsOf($0.flatSubviews())
+      flatSubviews.append(contentsOf: $0.flatSubviews())
     }
     
     return flatSubviews

@@ -12,26 +12,26 @@ import UIKit
 public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
   
   typealias DataSourceType = ObjectsDataSource<ObjectType>
-  typealias UpdateAction = Void -> Void
+  typealias UpdateAction = (Void) -> Void
   
-  public var nibNameForObjectMatching: ((ObjectType, NSIndexPath) -> String)!
-  public var viewForSupplementaryViewOfKindMatching: ((String, NSIndexPath) -> UICollectionReusableView)?
-  public var userInfoForCellSizeMatching: (NSIndexPath -> [String: AnyObject]?) = { _ in return nil }
+  public var nibNameForObjectMatching: ((ObjectType, IndexPath) -> String)!
+  public var viewForSupplementaryViewOfKindMatching: ((String, IndexPath) -> UICollectionReusableView)?
+  public var userInfoForCellSizeMatching: ((IndexPath) -> [String: AnyObject]?) = { _ in return nil }
   
-  public let didSelectCell = Pipe<(UICollectionViewCell, NSIndexPath, ObjectType)>()
-  public let willDisplayCell = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let willCalculateSize = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let didEndDisplayingCell = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let willSetObject = Pipe<(UICollectionViewCell, NSIndexPath)>()
-  public let didSetObject = Pipe<(UICollectionViewCell, NSIndexPath)>()
+  public let didSelectCell = Pipe<(UICollectionViewCell, IndexPath, ObjectType)>()
+  public let willDisplayCell = Pipe<(UICollectionViewCell, IndexPath)>()
+  public let willCalculateSize = Pipe<(UICollectionViewCell, IndexPath)>()
+  public let didEndDisplayingCell = Pipe<(UICollectionViewCell, IndexPath)>()
+  public let willSetObject = Pipe<(UICollectionViewCell, IndexPath)>()
+  public let didSetObject = Pipe<(UICollectionViewCell, IndexPath)>()
   
-  public let willDisplaySupplementaryView = Pipe<(UICollectionReusableView, String, NSIndexPath)>()
-  public let willEndDisplayingSupplementaryView = Pipe<(UICollectionReusableView, String, NSIndexPath)>()
+  public let willDisplaySupplementaryView = Pipe<(UICollectionReusableView, String, IndexPath)>()
+  public let didEndDisplayingSupplementaryView = Pipe<(UICollectionReusableView, String, IndexPath)>()
   
-  public var checkedIndexPaths = [NSIndexPath]() {
+  public var checkedIndexPaths = [IndexPath]() {
     didSet {
-      collectionView.indexPathsForVisibleItems().forEach {
-        if var checkable = collectionView.cellForItemAtIndexPath($0) as? Checkable {
+      collectionView.indexPathsForVisibleItems.forEach {
+        if var checkable = collectionView.cellForItem(at: $0) as? Checkable {
           checkable.checked = checkedIndexPaths.contains($0)
         }
       }
@@ -42,8 +42,8 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   private var dataSource: ObjectsDataSource<ObjectType>!
   private var instances = [String: UICollectionViewCell]()
-  private var identifiersForIndexPaths = [NSIndexPath: String]()
-  private var mappings: [String: (ObjectType, UICollectionViewCell, NSIndexPath) -> Void] = [:]
+  private var identifiersForIndexPaths = [IndexPath: String]()
+  private var mappings: [String: (ObjectType, UICollectionViewCell, IndexPath) -> Void] = [:]
   private var updateActions = [UpdateAction]()
   
   public init(dataSource: ObjectsDataSource<ObjectType>, collectionView: UICollectionView) {
@@ -67,11 +67,11 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     dataSource.reloadDataSignal.subscribeNext { [weak self] in
       guard let strongSelf = self else { return }
       
-      UIView.animateWithDuration(0.1, animations: {
+      UIView.animate(withDuration: 0.1, animations: {
         strongSelf.collectionView.alpha = 0},
         completion: { completed in
           strongSelf.collectionView.reloadData()
-          UIView.animateWithDuration(0.2, animations: {
+          UIView.animate(withDuration: 0.2, animations: {
             strongSelf.collectionView.alpha = 1
           })
       })
@@ -86,25 +86,25 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       case .Insertion:
         if let toIndexPath = toIndexPath {
           strongSelf.updateActions.append() { [weak strongSelf] in
-            strongSelf?.collectionView.insertItemsAtIndexPaths([toIndexPath])
+            strongSelf?.collectionView.insertItems(at: [toIndexPath])
           }
         }
       case .Deletion:
         strongSelf.updateActions.append() { [weak strongSelf] in
           if let fromIndexPath = fromIndexPath {
-            strongSelf?.collectionView.deleteItemsAtIndexPaths([fromIndexPath])
+            strongSelf?.collectionView.deleteItems(at: [fromIndexPath])
           }
         }
       case .Update:
         strongSelf.updateActions.append() { [weak strongSelf] in
           if let indexPath = toIndexPath {
-            strongSelf?.collectionView.reloadItemsAtIndexPaths([indexPath])
+            strongSelf?.collectionView.reloadItems(at: [indexPath])
           }
         }
       case .Move:
         strongSelf.updateActions.append() { [weak strongSelf] in
           if let fromIndexPath = fromIndexPath, let toIndexPath = toIndexPath {
-            strongSelf?.collectionView.moveItemAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+            strongSelf?.collectionView.moveItem(at: fromIndexPath, to: toIndexPath)
           }
         }
       }
@@ -117,13 +117,13 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       case .Insertion:
         strongSelf.updateActions.append() { [weak strongSelf] in
           if let toIndex = toIndex {
-            strongSelf?.collectionView.insertSections(NSIndexSet(index: toIndex))
+            strongSelf?.collectionView.insertSections(IndexSet(integer: toIndex))
           }
         }
       case .Deletion:
         if let fromIndex = fromIndex {
           strongSelf.updateActions.append() { [weak strongSelf] in
-            strongSelf?.collectionView.deleteSections(NSIndexSet(index: fromIndex))
+            strongSelf?.collectionView.deleteSections(IndexSet(integer: fromIndex))
           }
         }
       default:
@@ -132,11 +132,11 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       }.putInto(pool)
   }
   
-  public func registerCellClass<U: ObjectConsuming where U.ObjectType == ObjectType>(cellClass: U.Type) {
-    let identifier = String(cellClass)
+  public func registerCellClass<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
+    let identifier = String(describing: cellClass)
     let nib = UINib(nibName: identifier, bundle: nil)
-    collectionView.registerNib(nib, forCellWithReuseIdentifier: identifier)
-    instances[identifier] = nib.instantiateWithOwner(self, options: nil).last as? UICollectionViewCell
+    collectionView.register(nib, forCellWithReuseIdentifier: identifier)
+    instances[identifier] = nib.instantiate(withOwner: self, options: nil).last as? UICollectionViewCell
     
     mappings[identifier] = { object, cell, _ in
       if let consumer = cell as? U {
@@ -147,20 +147,19 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
   
   //UICollectionViewDataSource
   
-  public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+  public func numberOfSections(in collectionView: UICollectionView) -> Int {
     return dataSource.numberOfSections()
   }
   
-  public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return dataSource.numberOfObjectsInSection(section)
   }
   
-  public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    
+  public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {    
     let object = dataSource.objectAtIndexPath(indexPath)!;
     
     let identifier = nibNameForObjectMatching(object, indexPath)
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(identifier, forIndexPath: indexPath)
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
     identifiersForIndexPaths[indexPath] = identifier
     
     
@@ -172,8 +171,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     return cell
   }
   
-  public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-    
+  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     if var checkable = cell as? Checkable {
       checkable.checked = checkedIndexPaths.contains(indexPath)
     }
@@ -181,23 +179,23 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     willDisplayCell.sendNext((cell, indexPath))
   }
   
-  public func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-    return viewForSupplementaryViewOfKindMatching!((kind, indexPath))
+  public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    return viewForSupplementaryViewOfKindMatching!(kind, indexPath)
   }
   
-  public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+  public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     didEndDisplayingCell.sendNext((cell, indexPath))
   }
   
-  public func collectionView(collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
+  public func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
     willDisplaySupplementaryView.sendNext((view, elementKind, indexPath))
   }
-  
-  public func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
-    willEndDisplayingSupplementaryView.sendNext((view, elementKind, indexPath))
+
+  public func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+    didEndDisplayingSupplementaryView.sendNext((view, elementKind, indexPath))
   }
   
-  public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+  public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let identifier = nibNameForObjectMatching(dataSource.objectAtIndexPath(indexPath)!, indexPath)
     
     if let cell = instances[identifier] as? SizeCalculatingCell {
@@ -209,12 +207,12 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
       return flowLayout.itemSize
     }
     
-    return CGSizeZero;
+    return CGSize.zero;
   }
   
-  public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     didSelectCell.sendNext((
-      collectionView.cellForItemAtIndexPath(indexPath)!,
+      collectionView.cellForItem(at: indexPath)!,
       indexPath,
       dataSource.objectAtIndexPath(indexPath)!)
     )

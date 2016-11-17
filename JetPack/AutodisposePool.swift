@@ -14,7 +14,7 @@ public class AutodisposePool {
   
   public init() {}
   
-  public func add(disposable: Disposable) {
+  public func add(_ disposable: Disposable) {
     disposables.append(WeakRef(object: disposable))
   }
   

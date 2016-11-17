@@ -10,10 +10,10 @@ import UIKit
 
 extension UIDatePicker {
   
-  public var dateSignal: Observable<NSDate> {
+  public var dateSignal: Observable<Date> {
     get {
-      let observable = Observable<NSDate>(date)
-      signalForControlEvents(.ValueChanged).map { ($0 as! UIDatePicker).date }.bindTo(observable)
+      let observable = Observable<Date>(date)
+      signalForControlEvents(.valueChanged).map { ($0 as! UIDatePicker).date }.bind(to: observable)
       
       return observable
     }

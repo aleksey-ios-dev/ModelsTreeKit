@@ -20,8 +20,8 @@ public class Model {
   public let pool = AutodisposePool()
   public let deinitSignal = Pipe<Void>()
   
-  private let hash = NSProcessInfo.processInfo().globallyUniqueString
-  private let timeStamp = NSDate()
+  fileprivate let hash = ProcessInfo.processInfo.globallyUniqueString
+  fileprivate let timeStamp = Date()
   
   deinit {
     deinitSignal.sendNext()
@@ -35,9 +35,9 @@ public class Model {
   
   //Connection with representation
   
-  private weak var representationDeinitDisposable: Disposable?
+  fileprivate weak var representationDeinitDisposable: Disposable?
   
-  public func applyRepresentation(representation: DeinitObservable) {
+  public func applyRepresentation(_ representation: DeinitObservable) {
     representationDeinitDisposable = representation.deinitSignal.subscribeNext { [weak self] _ in
       self?.parent?.removeChild(self!)
       }.autodispose()
@@ -53,11 +53,11 @@ public class Model {
   
   private(set) lazy var childModels = Set<Model>()
   
-  final func addChild(childModel: Model) {
+  final func addChild(_ childModel: Model) {
     childModels.insert(childModel)
   }
   
-  final func removeChild(childModel: Model) {
+  final func removeChild(_ childModel: Model) {
     childModels.remove(childModel)
   }
   
@@ -79,26 +79,26 @@ public class Model {
   
   //Bubble Notifications
   
-  private var registeredBubbles = Set<String>()
+  fileprivate var registeredBubbles = Set<String>()
   
   public final func register(for bubbleNotification: BubbleNotificationName) {
-    registeredBubbles.insert(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
+    registeredBubbles.insert(type(of: bubbleNotification).domain + "." + bubbleNotification.rawValue)
     pushChildSignal.sendNext(self)
   }
   
   public final func unregister(from bubbleNotification: BubbleNotificationName) {
-    registeredBubbles.remove(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
+    registeredBubbles.remove(type(of: bubbleNotification).domain + "." + bubbleNotification.rawValue)
   }
   
   public final func isRegistered(for bubbleNotification: BubbleNotificationName) -> Bool {
-    return registeredBubbles.contains(bubbleNotification.dynamicType.domain + "." + bubbleNotification.rawValue)
+    return registeredBubbles.contains(type(of: bubbleNotification).domain + "." + bubbleNotification.rawValue)
   }
   
-  public func raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil) {
+  public func raise(_ bubbleNotification: BubbleNotificationName, withObject object: Any? = nil) {
     _raise(bubbleNotification, withObject: object, sender: self)
   }
   
-  public func _raise(bubbleNotification: BubbleNotificationName, withObject object: Any? = nil, sender: Model) {
+  public func _raise(_ bubbleNotification: BubbleNotificationName, withObject object: Any? = nil, sender: Model) {
     if isRegistered(for: bubbleNotification) {
       handle(BubbleNotification(name: bubbleNotification, object: object), sender: sender)
     } else {
@@ -106,20 +106,20 @@ public class Model {
     }
   }
   
-  public func handle(bubbleNotification: BubbleNotification, sender: Model) {}
+  public func handle(_ bubbleNotification: BubbleNotification, sender: Model) {}
   
   //Errors
   
   //TODO: extensions
-  private var registeredErrors = [String: Set<String>]()
+  fileprivate var registeredErrors = [String: Set<String>]()
   
   public final func register(for error: ErrorCode) {
-    var allCodes = registeredErrors[error.dynamicType.domain] ?? []
+    var allCodes = registeredErrors[type(of: error).domain] ?? []
     allCodes.insert(error.rawValue)
-    registeredErrors[error.dynamicType.domain] = allCodes
+    registeredErrors[type(of: error).domain] = allCodes
   }
   
-  public final func register<T where T: ErrorCode>(for errorCodes: [T]) {
+  public final func register<T>(for errorCodes: [T]) where T: ErrorCode {
     var allCodes = registeredErrors[T.domain] ?? []
     let mappedCodes = errorCodes.map { $0.rawValue }
     mappedCodes.forEach { allCodes.insert($0) }
@@ -127,19 +127,19 @@ public class Model {
   }
   
   public final func unregister(from error: ErrorCode) {
-    if let codes = registeredErrors[error.dynamicType.domain] {
+    if let codes = registeredErrors[type(of: error).domain] {
       var filteredCodes = codes
       filteredCodes.remove(error.rawValue)
-      registeredErrors[error.dynamicType.domain] = filteredCodes
+      registeredErrors[type(of: error).domain] = filteredCodes
     }
   }
   
-  public final func isRegistered(for error: Error) -> Bool {
+  public final func isRegistered(for error: ModelsTreeError) -> Bool {
     guard let codes = registeredErrors[error.domain] else { return false }
     return codes.contains(error.code.rawValue)
   }
   
-  public func raise(error: Error) {
+  public func raise(_ error: ModelsTreeError) {
     if isRegistered(for: error) {
       handle(error)
     } else {
@@ -149,13 +149,13 @@ public class Model {
   
   //Override to achieve custom behavior
   
-  public func handle(error: Error) {
+  public func handle(_ error: ModelsTreeError) {
     errorSignal.sendNext(error)
   }
   
   //Global events
   
-  private var registeredGlobalEvents = Set<String>()
+  fileprivate var registeredGlobalEvents = Set<String>()
   
   public final func register(for globalEvent: GlobalEventName) {
     registeredGlobalEvents.insert(globalEvent.rawValue)
@@ -170,21 +170,21 @@ public class Model {
   }
   
   public final func raise(
-    globalEvent: GlobalEventName,
+    _ globalEvent: GlobalEventName,
     withObject object: Any? = nil,
                userInfo: [String: Any] = [:]) {
     let event = GlobalEvent(name: globalEvent, object: object, userInfo: userInfo)
     session.propagate(event)
   }
   
-  private func propagate(globalEvent: GlobalEvent) {
+  private func propagate(_ globalEvent: GlobalEvent) {
     if isRegistered(for: globalEvent.name) {
       handle(globalEvent)
     }
     childModels.forEach { $0.propagate(globalEvent) }
   }
   
-  public func handle(globalEvent: GlobalEvent) {}
+  public func handle(_ globalEvent: GlobalEvent) {}
   
 }
 
@@ -210,7 +210,7 @@ extension Model {
   }
   
   public final func printSubtree(params: [TreeInfoOptions] = []) {
-    _printSubtree(params, sender: self)
+    _printSubtree(params: params, sender: self)
   }
   
   private func _printSubtree(params: [TreeInfoOptions] = [], sender: Model) {
@@ -220,7 +220,7 @@ extension Model {
   }
   
   public final func printSessionTree(withOptions params: [TreeInfoOptions] = []) {
-    session._printSubtree(params, sender: self)
+    session._printSubtree(params: params, sender: self)
   }
   
   private enum NodDecoration: String {
@@ -245,7 +245,7 @@ extension Model {
     
     let nextPrefix = (prefix ?? "") + nextIndent
     
-    var output = currentPrefix + decoration.rawValue + "\(String(self).componentsSeparatedByString(".").last!)"
+    var output = currentPrefix + decoration.rawValue + "\(String(describing: self).components(separatedBy: ".").last!)"
     if params.contains(.YouAreHere) && sender == self {
       output += " <- "
     }
@@ -278,7 +278,7 @@ extension Model {
     }
     print(output)
     
-    let models = childModels.sort { return $0.timeStamp.compare($1.timeStamp) == .OrderedAscending }
+    let models = childModels.sorted { return $0.timeStamp.compare($1.timeStamp) == .orderedAscending }
     
     models.forEach {
       var decoration: NodDecoration

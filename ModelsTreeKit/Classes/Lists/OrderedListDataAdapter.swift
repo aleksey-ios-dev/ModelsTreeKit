@@ -8,10 +8,9 @@
 
 import Foundation
 
-public class OrderedListDataAdapter<ObjectType where
-  ObjectType: Hashable, ObjectType: Equatable>: ObjectsDataSource<ObjectType> {
+public class OrderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType> where ObjectType: Hashable & Equatable {
   
-  public var groupingCriteria: (ObjectType -> String)?
+  public var groupingCriteria: ((ObjectType) -> String)?
   public let groupsSortingCriteria: (String, String) -> Bool = { return $0 < $1 }
   
   private(set) var sections = [StaticObjectsSection<ObjectType>]()
@@ -29,9 +28,9 @@ public class OrderedListDataAdapter<ObjectType where
     list.didChangeContentSignal.subscribeNext { [weak self] appendedObjects, deletions, updates in
       guard let strongSelf = self else { return }
       let oldSections = strongSelf.sections
-      strongSelf.applyAppendedObjects(appendedObjects, deletions: deletions, updates: updates)
-      strongSelf.pushAppendedObjects(
-        appendedObjects,
+      strongSelf.apply(appendedObjects: appendedObjects, deletions: deletions, updates: updates)
+      strongSelf.push(
+        appendedObjects: appendedObjects,
         deletions: deletions,
         updates: updates,
         oldSections: oldSections
@@ -47,12 +46,12 @@ public class OrderedListDataAdapter<ObjectType where
     endUpdatesSignal.sendNext()
   }
   
-  private func applyAppendedObjects(appendedObjects: [ObjectType], deletions: Set<ObjectType>, updates: Set<ObjectType>) {
+  private func apply(appendedObjects: [ObjectType], deletions: Set<ObjectType>, updates: Set<ObjectType>) {
       applyAppendedObjects(appendedObjects)
       applyDeletions(deletions)
     }
     
-  private func applyAppendedObjects(appendedObjects: [ObjectType]) {
+  private func applyAppendedObjects(_ appendedObjects: [ObjectType]) {
     if appendedObjects.isEmpty { return }
     
     if groupingCriteria == nil {
@@ -77,7 +76,7 @@ public class OrderedListDataAdapter<ObjectType where
     }
   }
   
-  private func applyDeletions(deletions: Set<ObjectType>) {
+  private func applyDeletions(_ deletions: Set<ObjectType>) {
     if deletions.isEmpty { return }
     
     if groupingCriteria == nil {
@@ -96,7 +95,7 @@ public class OrderedListDataAdapter<ObjectType where
     sections = sections.filter { !$0.objects.isEmpty }
   }
   
-  private func pushAppendedObjects(
+  private func push(
     appendedObjects: [ObjectType],
     deletions: Set<ObjectType>,
     updates: Set<ObjectType>,
@@ -108,7 +107,7 @@ public class OrderedListDataAdapter<ObjectType where
         object: object,
         changeType: .Insertion,
         fromIndexPath: nil,
-        toIndexPath: indexPathFor(object, inSections: sections))
+        toIndexPath: indexPath(forObject: object, inSections: sections))
       )
     }
     
@@ -116,15 +115,15 @@ public class OrderedListDataAdapter<ObjectType where
       didChangeObjectSignal.sendNext((
         object: object,
         changeType: .Deletion,
-        fromIndexPath: indexPathFor(object, inSections: oldSections),
+        fromIndexPath: indexPath(forObject: object, inSections: oldSections),
         toIndexPath: nil)
       )
     }
     
     for object in updates {
       guard
-        let oldIndexPath = indexPathFor(object, inSections: oldSections),
-        let newIndexPath = indexPathFor(object, inSections: sections)
+        let oldIndexPath = indexPath(forObject: object, inSections: oldSections),
+        let newIndexPath = indexPath(forObject: object, inSections: sections)
         else {
           continue
       }
@@ -141,7 +140,7 @@ public class OrderedListDataAdapter<ObjectType where
     
     //Sections
     
-    for (index, section) in oldSections.enumerate() {
+    for (index, section) in oldSections.enumerated() {
       if sections.filter({ return $0.title == section.title }).isEmpty {
         didChangeSectionSignal.sendNext((
           changeType: .Deletion,
@@ -151,7 +150,7 @@ public class OrderedListDataAdapter<ObjectType where
       }
     }
     
-    for (index, section) in sections.enumerate() {
+    for (index, section) in sections.enumerated() {
       if oldSections.filter({ return $0.title == section.title }).isEmpty {
         didChangeSectionSignal.sendNext((
           changeType: .Insertion,
@@ -167,11 +166,11 @@ public class OrderedListDataAdapter<ObjectType where
     return []
   }
   
-  private func indexPathFor(object: ObjectType, inSections sections: [StaticObjectsSection<ObjectType>]) -> NSIndexPath? {
+  private func indexPath(forObject object: ObjectType, inSections sections: [StaticObjectsSection<ObjectType>]) -> IndexPath? {
     var allObjects: [ObjectType] = []
     
     for section in sections {
-      allObjects.appendContentsOf(section.objects)
+      allObjects.append(contentsOf: section.objects)
     }
     
     if !allObjects.contains(object) { return nil }
@@ -180,17 +179,17 @@ public class OrderedListDataAdapter<ObjectType where
     var section = 0
     var objectFound = false
     
-    for (index, sectionInfo) in sections.enumerate() {
+    for (index, sectionInfo) in sections.enumerated() {
       if sectionInfo.objects.contains(object) {
         objectFound = true
         section = index
-        row = sectionInfo.objects.indexOf(object)!
+        row = sectionInfo.objects.index(of: object)!
         
         break
       }
     }
     
-    return objectFound ? NSIndexPath(forRow: row, inSection: section) : nil
+    return objectFound ? IndexPath(row: row, section: section) : nil
   }
   
   private func rearrangeAndPushReload(withObjects objects: [ObjectType]) {
@@ -203,15 +202,15 @@ public class OrderedListDataAdapter<ObjectType where
     return sections.count
   }
   
-  public override func numberOfObjectsInSection(section: Int) -> Int {
+  public override func numberOfObjectsInSection(_ section: Int) -> Int {
     return sections[section].objects.count
   }
   
-  public override func objectAtIndexPath(indexPath: NSIndexPath) -> ObjectType? {
-    return objectAtIndexPath(indexPath, inSections: sections)
+  public override func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
+    return object(atIndexPath: indexPath, inSections: sections)
   }
   
-  func objectAtIndexPath(indexPath: NSIndexPath, inSections sections: [StaticObjectsSection<ObjectType>]) -> ObjectType? {
+  func object(atIndexPath indexPath: IndexPath, inSections sections: [StaticObjectsSection<ObjectType>]) -> ObjectType? {
     return sections[indexPath.section].objects[indexPath.row]
   }
   

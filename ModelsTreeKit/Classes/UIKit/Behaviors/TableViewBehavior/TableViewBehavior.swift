@@ -12,7 +12,7 @@ public protocol TableViewBehavior: UITableViewDelegate {
   
   weak var tableView: UITableView! { get set }
   
-  func cellHeightCalculationUserInfo(forCellAtIndexPath indexPath: NSIndexPath) -> [String: AnyObject]
+  func cellHeightCalculationUserInfo(forCellAtIndexPath indexPath: IndexPath) -> [String: AnyObject]
   func sectionHeaderHeightCalculationUserInfo(forHeaderAtIndex section: Int) -> [String: AnyObject]
   func sectionFooterHeightCalculationUserInfo(forFooterAtIndex section: Int) -> [String: AnyObject]
   
@@ -20,7 +20,7 @@ public protocol TableViewBehavior: UITableViewDelegate {
 
 public extension TableViewBehavior {
   
-  func cellHeightCalculationUserInfo(forCellAtIndexPath indexPath: NSIndexPath) -> [String: AnyObject] {
+  func cellHeightCalculationUserInfo(forCellAtIndexPath indexPath: IndexPath) -> [String: AnyObject] {
     return [:]
   }
   

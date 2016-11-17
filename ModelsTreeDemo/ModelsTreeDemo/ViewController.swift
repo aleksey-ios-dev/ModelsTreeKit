@@ -24,8 +24,8 @@ class ViewController: UIViewController {
       dataAdapter.groupingCriteria = { $0 > 3 ? "2" : "1" }
       adapter = TableViewAdapter(dataSource: dataAdapter, tableView: tableView)
       
-      adapter.registerCellClass(TestCell.self)
-      adapter.nibNameForObjectMatching = { _ in String(TestCell) }
+      adapter.registerCellClass(cellClass: TestCell.self)
+      adapter.nibNameForObjectMatching = { _ in String(describing: TestCell.self) }
       
       var arr = [Int]()
       for i in 0...5 {

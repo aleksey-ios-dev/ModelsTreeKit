@@ -9,6 +9,6 @@ public protocol ObjectConsuming {
   
   associatedtype ObjectType
   
-  func applyObject(object: ObjectType) -> Void
+  func applyObject(_ object: ObjectType) -> Void
   
 }

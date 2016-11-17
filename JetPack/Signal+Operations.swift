@@ -10,7 +10,7 @@ import Foundation
 
 public struct Signals {
   
-  static func merge<U>(signals: [Signal<U>]) -> Signal<U> {
+  static func merge<U>(_ signals: [Signal<U>]) -> Signal<U> {
     let nextSignal = Signal<U>()
     
     signals.forEach { signal in
@@ -26,47 +26,42 @@ public extension Signal {
   
   //Transforms value, can change passed value type
   
-  public func map<U>(handler: T -> U) -> Signal<U> {
+  public func map<U>(handler: @escaping (T) -> U) -> Signal<U> {
     var nextSignal: Signal<U>!
     if let observableSelf = self as? Observable<T> {
       nextSignal = Observable<U>(handler(observableSelf.value))
     }
     else { nextSignal = Pipe<U>() }
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext(handler($0)) }.putInto(nextSignal.pool)
-    chainSignal(nextSignal)
     
     return nextSignal
   }
   
   //Adds a condition for sending next value, doesn't change passed value type
   
-  public func filter(handler: T -> Bool) -> Pipe<T> {
+  public func filter(handler: @escaping (T) -> Bool) -> Pipe<T> {
     let nextSignal = Pipe<T>()
     subscribeNext { [weak nextSignal] in
       if handler($0) { nextSignal?.sendNext($0) }
       }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
   
   //Applies passed values to the cumulative reduced value
   
-  public func reduce<U>(handler: (newValue: T, reducedValue: U?) -> U) -> Signal<U> {
+  public func reduce<U>(handler: @escaping (_ newValue: T, _ reducedValue: U?) -> U) -> Signal<U> {
     let nextSignal = Observable<U>()
     subscribeNext { [weak nextSignal] in
-      nextSignal?.sendNext(handler(newValue: $0, reducedValue: nextSignal?.value))
+      nextSignal?.sendNext(handler($0, nextSignal?.value))
       }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
   
   //Sends combined value when any of signals fire
   
-  func distinctLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+  func distinctLatest<U>(_ otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let transientSelf = pipe()
     let transientOther = otherSignal.pipe()
     
@@ -82,12 +77,10 @@ public extension Signal {
       nextSignal.sendNext(($0, nil))
       }.putInto(nextSignal.pool)
     
-    chainSignal(nextSignal)
-    
     return nextSignal
   }
   
-  public func combineLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+  public func combineLatest<U>(_ otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let persistentSelf = observable()
     let persistentOther = otherSignal.observable()
     if let observableSelf = self as? Observable<T> {
@@ -109,8 +102,6 @@ public extension Signal {
       guard let otherSignal = persistentOther, let nextSignal = nextSignal else { return }
       nextSignal.sendNext(($0, otherSignal.value))
       }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
@@ -134,8 +125,6 @@ public extension Signal {
       }.map { ($0.0.0, $0.1.0)
       }.filter { $0.0 != nil && $0.1 != nil
       }.map { ($0.0!, $0.1!) }
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
@@ -172,8 +161,6 @@ public extension Signal {
       }.map { ($0.0!, $0.1!)
     }
     
-    chainSignal(nextSignal)
-    
     return nextSignal
   }
   
@@ -188,15 +175,12 @@ public extension Signal {
   
   //Splits signal into two
   
-  public func split<U, V>(splitter: T -> (a: U, b: V)) -> (a: Signal<U>, b: Signal<V>) {
+  public func split<U, V>(splitter: @escaping (T) -> (a: U, b: V)) -> (a: Signal<U>, b: Signal<V>) {
     let signalA = Pipe<U>()
     let signalB = Pipe<V>()
     
     subscribeNext { [weak signalA] in signalA?.sendNext(splitter($0).a) }.putInto(signalA.pool)
     subscribeNext { [weak signalB] in signalB?.sendNext(splitter($0).b) }.putInto(signalB.pool)
-    
-    chainSignal(signalA)
-    chainSignal(signalB)
     
     return (signalA, signalB)
   }

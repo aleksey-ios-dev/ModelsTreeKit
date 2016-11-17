@@ -10,12 +10,10 @@ import Foundation
 
 extension Dictionary {
   
-  mutating func append(anotherDictionary: Dictionary<Key, Value>) -> Dictionary<Key, Value> {
+  mutating func append(_ anotherDictionary: Dictionary<Key, Value>) {
     for (key, value) in anotherDictionary {
       self[key] = value
     }
-    
-    return self
   }
   
 }

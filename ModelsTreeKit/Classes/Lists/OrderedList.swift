@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class OrderedList<T where T: Hashable, T: Equatable>: Model {
+public class OrderedList<T>: Model where T: Hashable & Equatable {
   
   let beginUpdatesSignal = Pipe<Void>()
   let endUpdatesSignal = Pipe<Void>()
@@ -31,7 +31,11 @@ public class OrderedList<T where T: Hashable, T: Equatable>: Model {
     self.objects = objects
   }
   
-  public func performUpdates(updates: OrderedList -> Void) {
+  public required init(parent: Model?) {
+    super.init(parent: parent)
+  }
+  
+  public func performUpdates(updates: (OrderedList) -> Void) {
     beginUpdates()
     updates(self)
     endUpdates()
@@ -56,29 +60,29 @@ public class OrderedList<T where T: Hashable, T: Equatable>: Model {
     )
   }
   
-  public func replaceWith(objects: [T]) {
+  public func replaceWith(_ objects: [T]) {
     self.objects = objects
     didReplaceContentSignal.sendNext(self.objects)
   }
   
   //Operations on objects. Use ONLY inside performBatchUpdate() call!
   
-  public func append(objects: [T]) {
+  public func append(_ objects: [T]) {
     updatesPool.appendedObjects += objects
   }
   
-  public func delete(objects: [T]) {
+  public func delete(_ objects: [T]) {
     if objects.isEmpty { return }
-    updatesPool.deletions.unionInPlace(objects)
+    updatesPool.deletions.formUnion(objects)
   }
   
-  public func update(objects: [T]) {
+  public func update(_ objects: [T]) {
     if objects.isEmpty { return }
-    updatesPool.updates.unionInPlace(objects)
+    updatesPool.updates.formUnion(objects)
   }
   
   private func applyChanges() {
-    updatesPool.optimizeFor(objectsSet)
+    updatesPool.optimize(for: objectsSet)
     objects = objects.filter { !self.updatesPool.deletions.contains($0) }
     objects = objects + updatesPool.appendedObjects
     objects = objects.map { return updatesPool.updates.objectEqualTo($0) ?? $0 }
@@ -86,7 +90,7 @@ public class OrderedList<T where T: Hashable, T: Equatable>: Model {
   
 }
 
-internal class OrderedListUpdatesPool<T where T: protocol <Hashable, Equatable>> {
+internal class OrderedListUpdatesPool<T> where T: Hashable & Equatable {
   
   var appendedObjects = [T]()
   var deletions = Set<T>()
@@ -98,10 +102,10 @@ internal class OrderedListUpdatesPool<T where T: protocol <Hashable, Equatable>>
     updates = []
   }
   
-  func optimizeFor(objects: Set<T>) {
-    deletions.intersectInPlace(objects)
-    updates.subtractInPlace(deletions)
-    updates.intersectInPlace(objects)
+  func optimize(for objects: Set<T>) {
+    deletions.formIntersection(objects)
+    updates.subtract(deletions)
+    updates.formIntersection(objects)
     appendedObjects = appendedObjects.removeDuplicates().filter {
       !self.deletions.contains($0) && !objects.contains($0)
     }
