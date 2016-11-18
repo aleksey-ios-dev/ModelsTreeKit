@@ -11,10 +11,10 @@ import Foundation
 public protocol Disposable: class {
   
   func dispose()
-  func deliverOnMainThread() -> Disposable
-  func autodispose() -> Disposable
+  @discardableResult func deliverOnMainThread() -> Disposable
+  @discardableResult func autodispose() -> Disposable
   @discardableResult func putInto(_ pool: AutodisposePool) -> Disposable
-  func takeUntil(_ signal: Pipe<Void>) -> Disposable
-  func ownedBy(_ object: DeinitObservable) -> Disposable
+  @discardableResult func takeUntil(_ signal: Pipe<Void>) -> Disposable
+  @discardableResult func ownedBy(_ object: DeinitObservable) -> Disposable
   
 }
