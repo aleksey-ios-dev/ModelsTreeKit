@@ -42,7 +42,7 @@ open class Session: Model {
     super.init(parent: parent)
   }
   
-  public func sessionDidLoad() {}
+  open func sessionDidLoad() {}
   
   func openWithController(_ controller: SessionController) {
     self.controller = controller
