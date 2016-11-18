@@ -136,13 +136,13 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       }.putInto(pool)
   }
   
-  public func registerSectionHeaderFooterClass(headerFooterClass: UITableViewHeaderFooterView.Type) {
+  public func registerSectionHeaderFooterClass(_ headerFooterClass: UITableViewHeaderFooterView.Type) {
     let identifier = String(describing: headerFooterClass)
     headerFooterInstances[identifier] = headerFooterClass.init(reuseIdentifier: String(describing: headerFooterClass))
     tableView.register(headerFooterClass, forHeaderFooterViewReuseIdentifier: identifier)
   }
   
-  public func registerCellClass<U: ObjectConsuming>(cellClass: U.Type) where U.ObjectType == ObjectType {
+  public func registerCellClass<U: ObjectConsuming>(_ cellClass: U.Type) where U.ObjectType == ObjectType {
     let identifier = String(describing: cellClass)
     let nib = UINib(nibName: identifier, bundle: nil)
     tableView.register(nib, forCellReuseIdentifier: identifier)
