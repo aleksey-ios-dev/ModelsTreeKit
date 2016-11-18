@@ -28,19 +28,19 @@ public prefix func ! (left: @escaping StringValidator) -> StringValidator {
 
 public struct Validator {
   
-  public static func longerThan(length: Int) -> StringValidator {
+  public static func longerThan(_ length: Int) -> StringValidator {
     return { $0.characters.count > length }
   }
   
-  public static func contains(string: String) -> StringValidator {
+  public static func contains(_ string: String) -> StringValidator {
     return { $0.contains(string) }
   }
   
-  public static func hasPrefix(string: String) -> StringValidator {
+  public static func hasPrefix(_ string: String) -> StringValidator {
     return { $0.hasPrefix(string) }
   }
   
-  public static func hasSuffix(string: String) -> StringValidator {
+  public static func hasSuffix(_ string: String) -> StringValidator {
     return { $0.hasSuffix(string) }
   }
   
