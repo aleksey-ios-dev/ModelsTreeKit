@@ -5,7 +5,7 @@
 
 import Foundation
 
-public class Service {
+open class Service {
   
   private unowned var locator: ServiceLocator
   

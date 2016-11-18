@@ -15,7 +15,6 @@ public func >>><T> (signal: Signal<T>, handler: @escaping ((T) -> Void)) -> Disp
   return signal.subscribeNext(handler)
 }
 
-
 public class Signal<T> {
   
   public var hashValue = ProcessInfo.processInfo.globallyUniqueString.hash
