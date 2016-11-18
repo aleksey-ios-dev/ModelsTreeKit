@@ -108,7 +108,7 @@ public extension Signal {
   
   //Sends combined value every time when both signals fire at least once
   
-  public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
+  public func combineBound<U>(_ otherSignal: Signal<U>) -> Signal<(T, U)> {
     let nextSignal = combineLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
       
       var reducedSelfValue: T? = reducedValue?.0.1
@@ -131,7 +131,7 @@ public extension Signal {
   
   //Zip
   
-  public func zip<U>(otherSignal: Signal <U>) -> Signal<(T, U)> {
+  public func zip<U>(_ otherSignal: Signal <U>) -> Signal<(T, U)> {
     let nextSignal = distinctLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
@@ -166,7 +166,7 @@ public extension Signal {
   
   //Adds blocking signal. false - blocks, true - passes
   
-  public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
+  public func blockWith(_ blocker: Signal<Bool>) -> Signal<T> {
     let persistentBlocker = blocker.observable()
     return filter { newValue in
       return persistentBlocker.value == false
@@ -175,7 +175,7 @@ public extension Signal {
   
   //Splits signal into two
   
-  public func split<U, V>(splitter: @escaping (T) -> (a: U, b: V)) -> (a: Signal<U>, b: Signal<V>) {
+  public func split<U, V>(_ splitter: @escaping (T) -> (a: U, b: V)) -> (a: Signal<U>, b: Signal<V>) {
     let signalA = Pipe<U>()
     let signalB = Pipe<V>()
     
@@ -187,7 +187,7 @@ public extension Signal {
   
   //Skips n first values
   
-  public func skipFirst(n: Int) -> Pipe<T> {
+  public func skipFirst(_ n: Int) -> Pipe<T> {
     let nextSignal = Pipe<T>()
     
     var count = 0
