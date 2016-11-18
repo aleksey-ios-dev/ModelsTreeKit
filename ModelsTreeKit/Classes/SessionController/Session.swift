@@ -52,7 +52,7 @@ open class Session: Model {
     sessionDidLoad()
   }
   
-  public func closeWithParams(params: Any?) {
+  public func closeWithParams(_ params: Any?) {
     sessionWillClose()
     services.prepareToClose()
     controller?.session(self, didCloseWithParams: params)
