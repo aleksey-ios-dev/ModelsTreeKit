@@ -10,7 +10,7 @@ import Foundation
 
 extension Model: DeinitObservable { }
 
-public class Model {
+open class Model {
   
   public private(set) weak var parent: Model!
   
