@@ -45,7 +45,7 @@ open class Model {
   
   //Lifecycle
   
-  public func sessionWillClose() {
+  open func sessionWillClose() {
     childModels.forEach { $0.sessionWillClose() }
   }
   
