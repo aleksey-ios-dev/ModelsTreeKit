@@ -106,7 +106,7 @@ open class Model {
     }
   }
   
-  public func handle(_ bubbleNotification: BubbleNotification, sender: Model) {}
+  open func handle(_ bubbleNotification: BubbleNotification, sender: Model) {}
   
   //Errors
   
@@ -149,7 +149,7 @@ open class Model {
   
   //Override to achieve custom behavior
   
-  public func handle(_ error: ModelsTreeError) {
+  open func handle(_ error: ModelsTreeError) {
     errorSignal.sendNext(error)
   }
   
@@ -184,7 +184,7 @@ open class Model {
     childModels.forEach { $0.propagate(globalEvent) }
   }
   
-  public func handle(_ globalEvent: GlobalEvent) {}
+  open func handle(_ globalEvent: GlobalEvent) {}
   
 }
 
