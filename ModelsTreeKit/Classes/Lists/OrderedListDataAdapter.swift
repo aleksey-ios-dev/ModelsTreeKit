@@ -214,7 +214,7 @@ public class OrderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType> w
     return sections[indexPath.section].objects[indexPath.row]
   }
   
-  override func titleForSection(atIndex sectionIndex: Int) -> String? {
+  override public func titleForSection(atIndex sectionIndex: Int) -> String? {
     return sections[sectionIndex].title
   }
   

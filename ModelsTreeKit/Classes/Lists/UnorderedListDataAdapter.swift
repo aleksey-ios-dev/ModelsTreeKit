@@ -75,7 +75,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable {
     return sections[indexPath.section].objects[indexPath.row]
   }
   
-  override func titleForSection(atIndex sectionIndex: Int) -> String? {
+  override public func titleForSection(atIndex sectionIndex: Int) -> String? {
     return sections[sectionIndex].key as? String
   }
   

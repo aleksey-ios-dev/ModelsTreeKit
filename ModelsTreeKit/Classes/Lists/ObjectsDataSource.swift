@@ -17,15 +17,15 @@ public class ObjectsDataSource<ObjectType> {
     return 0
   }
   
-  func numberOfObjectsInSection(_ section: Int) -> Int {
+  public func numberOfObjectsInSection(_ section: Int) -> Int {
     return 0
   }
   
-  func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
+  public func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
     return nil
   }
   
-  func titleForSection(atIndex sectionIndex: Int) -> String? {
+  public func titleForSection(atIndex sectionIndex: Int) -> String? {
     return nil
   }
   

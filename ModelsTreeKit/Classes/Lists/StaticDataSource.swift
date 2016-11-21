@@ -33,11 +33,11 @@ public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> where 
     return sections.count
   }
   
-  override func numberOfObjectsInSection(_ section: Int) -> Int {
+  override public func numberOfObjectsInSection(_ section: Int) -> Int {
     return sections[section].objects.count
   }
   
-  override func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
+  override public func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
     return sections[indexPath.section].objects[indexPath.row]
   }
   
@@ -55,7 +55,7 @@ public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> where 
     return IndexPath(row: objectRow, section: objectSection)
   }
   
-  override func titleForSection(atIndex sectionIndex: Int) -> String? {
+  override public func titleForSection(atIndex sectionIndex: Int) -> String? {
     return sections[sectionIndex].title
   }
   
