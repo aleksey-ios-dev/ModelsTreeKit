@@ -285,28 +285,28 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   
   @objc
   public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//    didSelectCell.sendNext((
-//      tableView.cellForRowAt(indexPath),
-//      indexPath,
-//      dataSource.objectAtIndexPath(indexPath)!)
-//    )
-//    tableView.deselectRow(at: indexPath, animated: true)
-//    behaviors.forEach { $0.tableView?(tableView, didSelectRowAtIndexPath: indexPath) }
+    didSelectCell.sendNext((
+      tableView.cellForRow(at: indexPath)!,
+      indexPath,
+      dataSource.objectAtIndexPath(indexPath)!)
+    )
+    tableView.deselectRow(at: indexPath, animated: true)
+    behaviors.forEach { $0.tableView?(tableView, didSelectRowAt: indexPath) }
   }
   
   @objc
   public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//    if var checkable = cell as? Checkable {
-//      checkable.checked = checkedIndexPaths.contains(indexPath)
-//    }
-//    willDisplayCell.sendNext((cell, indexPath))
-//    behaviors.forEach { $0.tableView?(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath) }
+    if var checkable = cell as? Checkable {
+      checkable.checked = checkedIndexPaths.contains(indexPath)
+    }
+    willDisplayCell.sendNext((cell, indexPath))
+    behaviors.forEach { $0.tableView?(tableView, willDisplay: cell, forRowAt: indexPath) }
   }
   
   @objc
   public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//    didEndDisplayingCell.sendNext((cell, indexPath))
-//    behaviors.forEach { $0.tableView?(tableView, didEndDisplaying: cell, forRowAtIndexPath: indexPath) }
+    didEndDisplayingCell.sendNext((cell, indexPath))
+    behaviors.forEach { $0.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath) }
   }
   
   @objc
