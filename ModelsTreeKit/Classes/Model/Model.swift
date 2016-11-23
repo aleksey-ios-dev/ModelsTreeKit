@@ -16,7 +16,7 @@ open class Model {
   
   public let pushChildSignal = Pipe<Model>()
   public let wantsRemoveChildSignal = Pipe<Model>()
-  public let errorSignal = Pipe<Error>()
+  public let errorSignal = Pipe<ModelsTreeError>()
   public let pool = AutodisposePool()
   public let deinitSignal = Pipe<Void>()
   

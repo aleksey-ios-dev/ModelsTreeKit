@@ -36,9 +36,9 @@ public struct ModelsTreeError: Error {
   public let domain: String
   public let code: ErrorCode
   public let context: ErrorContext?
-  public let underlyingError: NSError?
+  public let underlyingError: Error?
   
-  public init(code: ErrorCode, context: ErrorContext? = nil, underlyingError: NSError? = nil) {
+  public init(code: ErrorCode, context: ErrorContext? = nil, underlyingError: Error? = nil) {
     self.domain = type(of: code).domain
     self.code = code
     self.context = context
