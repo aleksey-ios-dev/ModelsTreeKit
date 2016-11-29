@@ -15,8 +15,8 @@ open class Service {
   
   //At this point all services from surrounding are instantiated
   
-  public func takeOff() {}
+  open func takeOff() {}
   
-  public func prepareToClose() {}
+  open func prepareToClose() {}
   
 }
