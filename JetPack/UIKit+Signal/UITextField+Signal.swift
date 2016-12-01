@@ -11,17 +11,10 @@ import UIKit
 extension UITextField {
   
   public var textSignal: Observable<String> {
-    let textSignal = signalForControlEvents(.editingChanged).map { ($0 as! UITextField).text ?? "" }
-    let textObservable = textSignal.observable()
-    textObservable.value = text ?? ""
-    let onClearSignal = sig_delegate.clearSignal.map { [weak self] in self?.text ?? "" }.filter { $0 != nil }.map { $0! }
+    let textSignal = signalForControlEvents(.allEditingEvents).map { ($0 as! UITextField).text ?? "" }.observable()
+    textSignal.value = text ?? ""
     
-    let observable = Observable<String>(text ?? "")
-    
-    
-    Signals.merge([textObservable, onClearSignal]).bind(to: observable)
-    
-    return observable
+    return textSignal
   }
   
   public var editingSignal: Observable<Bool> {

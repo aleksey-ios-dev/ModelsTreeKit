@@ -47,7 +47,8 @@ private class ControlSignalEmitter: NSObject {
     UIControlEvents.editingDidEnd.rawValue,
      UIControlEvents.editingDidBegin.rawValue,
     UIControlEvents.editingDidEndOnExit.rawValue,
-    UIControlEvents.touchUpInside.rawValue
+    UIControlEvents.touchUpInside.rawValue,
+    UIControlEvents.allEditingEvents.rawValue
   ]
   
   private let signaturePrefix = "selector"
