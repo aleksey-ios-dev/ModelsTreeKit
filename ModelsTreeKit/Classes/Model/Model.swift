@@ -51,7 +51,7 @@ open class Model {
   
   //Child models
   
-  private(set) lazy var childModels = Set<Model>()
+  public private(set) lazy var childModels = Set<Model>()
   
   final func addChild(_ childModel: Model) {
     childModels.insert(childModel)
