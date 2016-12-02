@@ -16,6 +16,9 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   public var animatesReload = false
   
   public var nibNameForObjectMatching: ((ObjectType, IndexPath) -> String)!
+  public var canEditRowAtIndexPath: ((IndexPath) -> Bool)?
+  public var commitWithEditingStyle: ((UITableViewCellEditingStyle, IndexPath) -> Void)?
+  public var editActionsForRowAtIndexPath: ((IndexPath) -> [UITableViewRowAction])?
   public var footerClassForSectionIndexMatching: ((Int) -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var headerClassForSectionIndexMatching: ((Int) -> UITableViewHeaderFooterView.Type?) = { _ in nil }
   public var userInfoForCellHeightMatching: ((IndexPath) -> [String: AnyObject]) = { _ in return [:] }
@@ -192,7 +195,26 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     return dataSource.numberOfSections()
   }
   
+  @objc
+  public func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
+    return canEditRowAtIndexPath?(indexPath) ?? false
+  }
+  
+  public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    commitWithEditingStyle?(editingStyle, indexPath)
+  }
+  
   // UITableViewDelegate
+  @objc
+  public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    return editActionsForRowAtIndexPath?(indexPath)
+  }
+  
+  public func tableView(tableView: UITableView,
+                 editActionsForRowAtIndexPath indexPath: IndexPath) -> [UITableViewRowAction]? {
+    
+    return editActionsForRowAtIndexPath?(indexPath)
+  }
   
   @objc
   public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -207,7 +229,6 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     return UITableViewAutomaticDimension;
   }
   
-  @objc
   public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerClass = headerClassForSectionIndexMatching(section),
       let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: String(describing: headerClass)) {
