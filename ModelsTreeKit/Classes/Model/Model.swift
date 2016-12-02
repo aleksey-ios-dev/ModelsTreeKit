@@ -201,12 +201,12 @@ public func ==(lhs: Model, rhs: Model) -> Bool {
 extension Model {
   
   public enum TreeInfoOptions {
-    case Representation
-    case GlobalEvents
-    case BubbleNotifications
-    case Errors
-    case ErrorsVerbous
-    case YouAreHere
+    case representation
+    case globalEvents
+    case bubbleNotifications
+    case errors
+    case errorsVerbous
+    case youAreHere
   }
   
   public final func printSubtree(params: [TreeInfoOptions] = []) {
@@ -246,30 +246,30 @@ extension Model {
     let nextPrefix = (prefix ?? "") + nextIndent
     
     var output = currentPrefix + decoration.rawValue + "\(String(describing: self).components(separatedBy: ".").last!)"
-    if params.contains(.YouAreHere) && sender == self {
+    if params.contains(.youAreHere) && sender == self {
       output += " <- "
     }
     
-    if params.contains(.Representation) && representationDeinitDisposable != nil {
+    if params.contains(.representation) && representationDeinitDisposable != nil {
       output += "  | (R)"
     }
     
-    if params.contains(.GlobalEvents) && !registeredGlobalEvents.isEmpty {
+    if params.contains(.globalEvents) && !registeredGlobalEvents.isEmpty {
       output += "  | (E):"
       registeredGlobalEvents.forEach { output += " \($0)" }
     }
     
-    if params.contains(.BubbleNotifications) && !registeredBubbles.isEmpty {
+    if params.contains(.bubbleNotifications) && !registeredBubbles.isEmpty {
       output += "  | (B):"
       registeredBubbles.forEach { output += " \($0)" }
     }
     
-    if params.contains(.ErrorsVerbous) && !registeredErrors.isEmpty {
+    if params.contains(.errorsVerbous) && !registeredErrors.isEmpty {
       output += "  | (Err): "
       for (domain, codes) in registeredErrors {
         codes.forEach { output += "[\(NSLocalizedString("\(domain).\($0)", comment: ""))] " }
       }
-    } else if params.contains(.Errors) && !registeredErrors.isEmpty {
+    } else if params.contains(.errors) && !registeredErrors.isEmpty {
       output += "  | (Err): "
       for (domain, codes) in registeredErrors {
         output += "\(domain) > "
