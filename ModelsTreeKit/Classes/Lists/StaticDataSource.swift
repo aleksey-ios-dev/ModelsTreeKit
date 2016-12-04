@@ -19,6 +19,10 @@ public class StaticObjectsSection<U>: CustomStringConvertible {
     return String(describing: StaticObjectsSection.self) + ", title: \(title)" + ", objects: \(objects)"
   }
   
+  public func copy() -> StaticObjectsSection<U> {
+    return StaticObjectsSection(title: title, objects: objects)
+  }
+  
 }
 
 public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> where ObjectType: Equatable, ObjectType: Hashable {

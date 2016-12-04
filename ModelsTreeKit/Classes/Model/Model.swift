@@ -276,7 +276,6 @@ extension Model {
         codes.forEach { output += "\($0) " }
       }
     }
-    print(output)
     
     let models = childModels.sorted { return $0.timeStamp.compare($1.timeStamp) == .orderedAscending }
     

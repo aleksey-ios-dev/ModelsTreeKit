@@ -27,7 +27,7 @@ public class OrderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType> w
     
     list.didChangeContentSignal.subscribeNext { [weak self] appendedObjects, deletions, updates in
       guard let strongSelf = self else { return }
-      let oldSections = strongSelf.sections
+      let oldSections = strongSelf.sections.map { $0.copy() }
       strongSelf.apply(appendedObjects: appendedObjects, deletions: deletions, updates: updates)
       strongSelf.push(
         appendedObjects: appendedObjects,
