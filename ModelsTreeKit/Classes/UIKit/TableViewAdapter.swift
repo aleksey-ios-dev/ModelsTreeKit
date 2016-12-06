@@ -88,11 +88,11 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       
       UIView.animate(withDuration: 0.1, animations: {
         strongSelf.tableView.alpha = 0},
-        completion: { completed in
-          strongSelf.tableView.reloadData()
-          UIView.animate(withDuration: 0.2, animations: {
-            strongSelf.tableView.alpha = 1
-          })
+                     completion: { completed in
+                      strongSelf.tableView.reloadData()
+                      UIView.animate(withDuration: 0.2, animations: {
+                        strongSelf.tableView.alpha = 1
+                      })
       })
       }.putInto(pool)
     
@@ -101,18 +101,18 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       switch changeType {
       case .Insertion:
         if let toIndexPath = toIndexPath {
-            strongSelf.tableView.insertRows(at: [toIndexPath as IndexPath],
-                                            with: .fade)
+          strongSelf.tableView.insertRows(at: [toIndexPath as IndexPath],
+                                          with: .fade)
         }
       case .Deletion:
         if let fromIndexPath = fromIndexPath {
-            strongSelf.tableView.deleteRows(at: [fromIndexPath as IndexPath],
-                                            with: .fade)
+          strongSelf.tableView.deleteRows(at: [fromIndexPath as IndexPath],
+                                          with: .fade)
         }
       case .Update:
         if let indexPath = toIndexPath {
-            strongSelf.tableView.reloadRows(at: [indexPath as IndexPath],
-                                            with: .fade)
+          strongSelf.tableView.reloadRows(at: [indexPath as IndexPath],
+                                          with: .fade)
         }
       case .Move:
         if let fromIndexPath = fromIndexPath, let toIndexPath = toIndexPath {
@@ -127,7 +127,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
       switch changeType {
       case .Insertion:
         if let toIndex = toIndex {
-            strongSelf.tableView.insertSections(IndexSet(integer: toIndex), with: .fade)
+          strongSelf.tableView.insertSections(IndexSet(integer: toIndex), with: .fade)
         }
       case .Deletion:
         if let fromIndex = fromIndex {
@@ -169,8 +169,8 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   }
   
   @objc
-    public func tableView(_ tableView: UITableView,
-                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  public func tableView(_ tableView: UITableView,
+                        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let object = dataSource.objectAtIndexPath(indexPath)!;
     let identifier = nibNameForObjectMatching((object, indexPath))
     var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
@@ -195,8 +195,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     return dataSource.numberOfSections()
   }
   
-  @objc
-  public func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
+  public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return canEditRowAtIndexPath?(indexPath) ?? false
   }
   
@@ -205,14 +204,9 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
   }
   
   // UITableViewDelegate
+  
   @objc
   public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-    return editActionsForRowAtIndexPath?(indexPath)
-  }
-  
-  public func tableView(tableView: UITableView,
-                 editActionsForRowAtIndexPath indexPath: IndexPath) -> [UITableViewRowAction]? {
-    
     return editActionsForRowAtIndexPath?(indexPath)
   }
   
