@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AuthorizedSession: Session {
+open class AuthorizedSession: Session {
   
   public required init(archivationProxy: ArchivationProxy) {
     super.init()
@@ -35,7 +35,7 @@ extension AuthorizedSession: Archivable {
   
   public func archivationProxy() -> ArchivationProxy {
     var proxy = ArchivationProxy()
-    proxy["credentials"] = credentials?.archivationProxy()
+    proxy["credentials"] = credentials?.archivationProxy() as AnyObject?
     
     return proxy
   }

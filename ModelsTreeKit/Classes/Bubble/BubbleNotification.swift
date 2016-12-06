@@ -16,7 +16,7 @@ public protocol BubbleNotificationName {
 }
 
 public func ==(lhs: BubbleNotificationName, rhs: BubbleNotificationName) -> Bool {
-  return lhs.rawValue == rhs.rawValue
+  return lhs.rawValue == rhs.rawValue && type(of: lhs).domain == type(of: rhs).domain
 }
 
 public struct BubbleNotification {
@@ -24,7 +24,7 @@ public struct BubbleNotification {
   public var name: BubbleNotificationName
   public var domain: String {
     get {
-      return name.dynamicType.domain
+      return type(of: name).domain
     }
   }
   public var object: Any?

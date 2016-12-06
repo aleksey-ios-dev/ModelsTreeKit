@@ -8,8 +8,8 @@ import Foundation
 extension Array where Element: Equatable {
   
   mutating func removeObject(object: Element) {
-    if let index = self.indexOf(object) {
-      self.removeAtIndex(index)
+    if let index = self.index(of: object) {
+      self.remove(at: index)
     }
   }
   

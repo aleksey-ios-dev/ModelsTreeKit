@@ -10,7 +10,7 @@ import Foundation
 
 public class SessionController {
   
-  private enum ArchiverErrors: ErrorType {
+  private enum ArchiverErrors: Error {
     case SessionArchivationFailed, NoSessionForKey
   }
   
@@ -26,14 +26,14 @@ public class SessionController {
   public var serviceConfigurator: ServiceConfigurator!
   
   private var activeSession: Session?
-  private let userDefaults = NSUserDefaults.standardUserDefaults()
+  private let userDefaults = UserDefaults.standard
   
   public func restoreLastOpenedOrStartAnonymousSession() {
     if let lastSession = lastOpenedAuthorizedSession { openSession(lastSession) }
     else { openSession(self.sessionRouter.unauthorizedSessionType().init()) }
   }
   
-  private func openSession(session: Session) {
+  fileprivate func openSession(_ session: Session) {
     activeSession = session
     serviceConfigurator.configure(session)
     session.openWithController(self)
@@ -58,29 +58,29 @@ public class SessionController {
     }
     
     get {
-      guard let key = userDefaults.valueForKey(configuration.keychainAccessKey) as? String else { return nil }
-      do { return try archivedUserSessionForKey(key) }
+      guard let key = userDefaults.value(forKey: configuration.keychainAccessKey) as? String else { return nil }
+      do { return try archivedUserSession(forKey: key) }
       catch { fatalError() }
       
       return nil
     }
   }
   
-  private func archiveUserSession(session: AuthorizedSession?) throws {
+  private func archiveUserSession(_ session: AuthorizedSession?) throws {
     guard
       let session = session,
       let sessionKey = session.credentials?[configuration.credentialsPrimaryKey] as! String?
     else { throw ArchiverErrors.SessionArchivationFailed }
     
-    let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session.archivationProxy())
+    let sessionData = NSKeyedArchiver.archivedData(withRootObject: session.archivationProxy())
     let keychain = KeychainItemWrapper.init(identifier: String(sessionKey.hash), accessGroup: nil)
-    keychain.setObject(sessionData, forKey: kSecAttrService)
+    keychain?.setObject(sessionData, forKey: kSecAttrService)
   }
   
-  private func archivedUserSessionForKey(key: String?) throws -> AuthorizedSession {
+  fileprivate func archivedUserSession(forKey key: String?) throws -> AuthorizedSession {
     guard
-      let sessionData = KeychainItemWrapper(identifier: key , accessGroup: nil).objectForKey(kSecAttrService) as? NSData,
-      let sessionProxy = NSKeyedUnarchiver.unarchiveObjectWithData(sessionData) as? ArchivationProxy
+      let sessionData = KeychainItemWrapper(identifier: key , accessGroup: nil).object(forKey: kSecAttrService) as? Data,
+      let sessionProxy = NSKeyedUnarchiver.unarchiveObject(with: sessionData) as? ArchivationProxy
     else { throw ArchiverErrors.NoSessionForKey }
 
     return sessionRouter.authorizedSessionType().init(archivationProxy: sessionProxy) as! AuthorizedSession
@@ -90,9 +90,9 @@ public class SessionController {
 
 extension SessionController: SessionDelegate {
   
-  func sessionDidOpen(session: Session) {}
+  func sessionDidOpen(_ session: Session) {}
   
-  func session(session: Session, didCloseWithParams params: Any?) {
+  func session(_ session: Session, didCloseWithParams params: Any?) {
     guard let _ = session as? UnauthorizedSession, let loginParams = params as? SessionCompletionParams else {
       lastOpenedAuthorizedSession = nil
       openSession(sessionRouter.unauthorizedSessionType().init() as! UnauthorizedSession)
@@ -102,16 +102,17 @@ extension SessionController: SessionDelegate {
     
     do {
       let uidString = loginParams[configuration.credentialsPrimaryKey.rawValue]!
-      let session = try archivedUserSessionForKey(String(uidString.hash))
+      let session = try archivedUserSession(forKey: String(uidString.hash))
+      session.refresh(withParams: loginParams)
       openSession(session)
     } catch {
       openSession(sessionRouter.authorizedSessionType().init(params: loginParams))
     }
   }
   
-  func sessionDidPrepareToShowRootRepresenation(session: Session) {
-    let representation = representationRouter.representationFor(session: session)
-    let model = modelRouter.modelFor(session: session)
+  func sessionDidPrepareToShowRootRepresenation(_ session: Session) {
+    let representation = representationRouter.representation(forSession: session)
+    let model = modelRouter.model(forSession: session)
 
     if let assignable = representation as? RootModelAssignable { assignable.assignRootModel(model) }
     if let deinitObservable = representation as? DeinitObservable { model.applyRepresentation(deinitObservable) }

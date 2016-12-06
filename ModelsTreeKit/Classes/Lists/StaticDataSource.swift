@@ -5,19 +5,27 @@
 
 import Foundation
 
-public struct StaticObjectsSection<U> {
+public class StaticObjectsSection<U>: CustomStringConvertible {
   
   public private(set) var title: String?
-  public private(set) var objects: [U]
+  public var objects: [U]
   
   public init(title: String?, objects: [U]) {
     self.title = title
     self.objects = objects
   }
   
+  public var description: String {
+    return String(describing: StaticObjectsSection.self) + ", title: \(title)" + ", objects: \(objects)"
+  }
+  
+  public func copy() -> StaticObjectsSection<U> {
+    return StaticObjectsSection(title: title, objects: objects)
+  }
+  
 }
 
-public class StaticDataSource<ObjectType where ObjectType: Equatable, ObjectType: Hashable> : ObjectsDataSource<ObjectType> {
+public class StaticDataSource<ObjectType> : ObjectsDataSource<ObjectType> where ObjectType: Equatable, ObjectType: Hashable {
   
   public override init() { }
   
@@ -29,26 +37,30 @@ public class StaticDataSource<ObjectType where ObjectType: Equatable, ObjectType
     return sections.count
   }
   
-  override func numberOfObjectsInSection(section: Int) -> Int {
+  override public func numberOfObjectsInSection(_ section: Int) -> Int {
     return sections[section].objects.count
   }
   
-  override func objectAtIndexPath(indexPath: NSIndexPath) -> ObjectType? {
+  override public func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
     return sections[indexPath.section].objects[indexPath.row]
   }
   
-  public func indexPath(forObject object: ObjectType) -> NSIndexPath {
+  public func indexPath(forObject object: ObjectType) -> IndexPath {
     var objectRow = 0
     var objectSection = 0
     
-    for (index, section) in sections.enumerate() {
+    for (index, section) in sections.enumerated() {
       if section.objects.contains(object) {
         objectSection = index
-        objectRow = section.objects.indexOf(object)!
+        objectRow = section.objects.index(of: object)!
       }
     }
     
-    return NSIndexPath(forRow: objectRow, inSection: objectSection) 
+    return IndexPath(row: objectRow, section: objectSection)
+  }
+  
+  override public func titleForSection(atIndex sectionIndex: Int) -> String? {
+    return sections[sectionIndex].title
   }
   
 }

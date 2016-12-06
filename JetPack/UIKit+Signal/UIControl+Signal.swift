@@ -10,7 +10,7 @@ import UIKit
 
 extension UIControl {
   
-  public func signalForControlEvents(events: UIControlEvents) -> Pipe<UIControl> {
+  public func signalForControlEvents(_ events: UIControlEvents) -> Pipe<UIControl> {
     return signalEmitter.signalForControlEvents(events)
   }
   
@@ -24,7 +24,7 @@ private class ControlSignalEmitter: NSObject {
     initializeSignalsMap()
   }
   
-  func signalForControlEvents(events: UIControlEvents) -> Pipe<UIControl> {
+  func signalForControlEvents(_ events: UIControlEvents) -> Pipe<UIControl> {
     var correspondingSignals = [Pipe<UIControl>]()
     
     for event in eventsList {
@@ -36,17 +36,19 @@ private class ControlSignalEmitter: NSObject {
     return Signals.merge(correspondingSignals).pipe()
   }
   
-  private static var EmitterHandler: Int = 0
+  fileprivate static var EmitterHandler: Int = 0
   private weak var control: UIControl!
   private var signalsMap = [UInt: Pipe<UIControl>]()
-  private let controlProxy = ControlProxy.newProxy()
+  private let controlProxy = ControlProxy.new()
   
   private let eventsList: [UInt] = [
-    UIControlEvents.EditingChanged.rawValue,
-    UIControlEvents.ValueChanged.rawValue,
-    UIControlEvents.EditingDidEnd.rawValue,
-    UIControlEvents.EditingDidEndOnExit.rawValue,
-    UIControlEvents.TouchUpInside.rawValue
+    UIControlEvents.editingChanged.rawValue,
+    UIControlEvents.valueChanged.rawValue,
+    UIControlEvents.editingDidEnd.rawValue,
+    UIControlEvents.editingDidBegin.rawValue,
+    UIControlEvents.editingDidEndOnExit.rawValue,
+    UIControlEvents.touchUpInside.rawValue,
+    UIControlEvents.allEditingEvents.rawValue
   ]
   
   private let signaturePrefix = "selector"
@@ -58,10 +60,10 @@ private class ControlSignalEmitter: NSObject {
       let signal = signalsMap[eventRawValue]
       let selectorString = signaturePrefix + String(eventRawValue)
       
-      controlProxy.registerBlock({ [weak signal, unowned self] in
+      controlProxy?.register({ [weak signal, unowned self] in
         signal?.sendNext(self.control)
         }, forKey: selectorString)
-      control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), forControlEvents: UIControlEvents(rawValue: eventRawValue))
+      control.addTarget(self.controlProxy, action: NSSelectorFromString(selectorString), for: UIControlEvents(rawValue: eventRawValue))
     }
   }
 

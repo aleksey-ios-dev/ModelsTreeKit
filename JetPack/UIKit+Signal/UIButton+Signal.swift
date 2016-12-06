@@ -11,7 +11,7 @@ import UIKit
 extension UIButton {
   
   public var selectionSignal: Pipe<Void> {
-    get { return signalForControlEvents(.TouchUpInside).map { _ in return Void() } as! Pipe<Void> }
+    get { return signalForControlEvents(.touchUpInside).map { _ in return Void() } as! Pipe<Void> }
   }
   
 //  public var enabledSignal: Observable<Bool> {

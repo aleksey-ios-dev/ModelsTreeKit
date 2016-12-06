@@ -9,26 +9,6 @@ public protocol ObjectConsuming {
   
   associatedtype ObjectType
   
-  var object: ObjectType? { get }
-  
-  func applyObject(object: ObjectType) -> Void
-  
-}
-
-public extension ObjectConsuming {
-  
-  var object: ObjectType {
-    set {
-      self.object = object
-      if let object = self.object {
-        applyObject(object)
-      }
-    }
-    get { return self.object }
-  }
-  
-  func reapplyObject() {
-    if let object = self.object { applyObject(object) }
-  }
+  func applyObject(_ object: ObjectType) -> Void
   
 }

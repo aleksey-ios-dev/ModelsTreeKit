@@ -16,34 +16,47 @@ public enum ObservingOptions {
 
 public class Observable<T>: Signal<T> {
   
-  public typealias ObservingHandler = ((new: T?, old: T?, initial: T?) -> Void)
+  public typealias ObservingHandler = ((_ new: T?, _ old: T?, _ initial: T?) -> Void)
   
-  public init(value: T? = nil) {
+  public init(_ value: T) {
     super.init()
-    self.value = value
+    
+    _value = value
   }
   
-  public var value: T? {
+  override init() {
+    super.init()
+  }
+  
+  public var value: T {
+    get {
+      return _value!
+    } set {
+      _value = newValue
+    }
+  }
+  
+  internal var _value: T? {
     willSet {
       if let newValue = newValue { super.sendNext(newValue) }
     }
   }
   
-  public override func sendNext(value: T) {
+  public override func sendNext(_ value: T) {
     self.value = value
   }
   
-  public override func subscribeNext(handler: SignalHandler) -> Disposable {
+  public override func subscribeNext(_ handler: @escaping SignalHandler) -> Disposable {
     return subscribeNextStartingFromInitial(true, handler: handler)
   }
   
-  public func subscribeWithOptions(options: [ObservingOptions], handler: ObservingHandler) -> Disposable {
-    let initialValue = value
+  public func subscribeWithOptions(_ options: [ObservingOptions], handler: @escaping ObservingHandler) -> Disposable {
+    let initialValue = _value
     
     let extendedObservable = map { [weak self] (newValue: T?) -> (T?, T?, T?) in
       guard let _self = self else { return (new: nil, old: nil, initial: nil)}
       let initial = options.contains(.Initial) ? initialValue : nil
-      let old = options.contains(.Old) ? _self.value : nil
+      let old = options.contains(.Old) ? _self._value : nil
       let new = options.contains(.New) ? newValue : nil
       
       return (new, old, initial)
@@ -58,9 +71,9 @@ public class Observable<T>: Signal<T> {
     return subscription
   }
   
-  private func subscribeNextStartingFromInitial(startingFromInitial: Bool, handler: SignalHandler) -> Disposable {
+  private func subscribeNextStartingFromInitial(_ startingFromInitial: Bool, handler: @escaping SignalHandler) -> Disposable {
     let subscription = super.subscribeNext(handler) as! Subscription<T>
-    if let value = value where startingFromInitial { subscription.handler?(value) }
+    if startingFromInitial { subscription.handler?(value) }
     
     return subscription
   }

@@ -8,26 +8,26 @@
 
 import Foundation
 
-infix operator >>> { associativity left precedence 160 }
+precedencegroup Chaining { higherThan: MultiplicationPrecedence }
+infix operator >>> : Chaining
 
-public func >>><T> (signal: Signal<T>, handler: (T -> Void)) -> Disposable {
+public func >>><T> (signal: Signal<T>, handler: @escaping ((T) -> Void)) -> Disposable {
   return signal.subscribeNext(handler)
 }
 
-
 public class Signal<T> {
   
-  public var hashValue = NSProcessInfo.processInfo().globallyUniqueString.hash
+  public var hashValue = ProcessInfo.processInfo.globallyUniqueString.hash
   
-  public typealias SignalHandler = T -> Void
-  public typealias StateHandler = Bool -> Void
+  public typealias SignalHandler = (T) -> Void
+  public typealias StateHandler = (Bool) -> Void
     
   var nextHandlers = [Invocable]()
   var completedHandlers = [Invocable]()
   
   //Destructor is executed before the signal's deallocation. A good place to cancel your network operation.
   
-  var destructor: (Void -> Void)?
+  var destructor: ((Void) -> Void)?
   
   var pool = AutodisposePool()
     
@@ -36,7 +36,7 @@ public class Signal<T> {
     pool.drain()
   }
     
-  public func sendNext(newValue: T) {
+  public func sendNext(_ newValue: T) {
     nextHandlers.forEach { $0.invoke(newValue) }
   }
   
@@ -46,25 +46,11 @@ public class Signal<T> {
   
   //Adds handler to signal and returns subscription
   
-  public func subscribeNext(handler: SignalHandler) -> Disposable {
+  public func subscribeNext(_ handler: @escaping SignalHandler) -> Disposable {
     let wrapper = Subscription(handler: handler, signal: self)
     nextHandlers.append(wrapper)
     
     return wrapper
-  }
-  
-  public func subscribeCompleted(handler: StateHandler) -> Disposable {
-    let wrapper = Subscription(handler: nil, signal: self)
-    wrapper.stateHandler = handler
-    completedHandlers.append(wrapper)
-    
-    return wrapper
-  }
-  
-  func chainSignal<U>(nextSignal: Signal<U>) -> Signal<U> {
-    subscribeCompleted { [weak nextSignal] _ in nextSignal?.sendCompleted() }.putInto(nextSignal.pool)
-    
-    return nextSignal
   }
   
 }

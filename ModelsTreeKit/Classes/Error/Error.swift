@@ -14,25 +14,35 @@ public protocol ErrorCodesList {
   
 }
 
-public protocol ErrorCode {
+public protocol ErrorContext {
   
-  static var domain: String { get }
-  var rawValue: Int { get }
+  var rawValue: String { get }
   
 }
 
-public struct Error: ErrorType {
+public protocol ErrorCode {
+  
+  static var domain: String { get }
+  var rawValue: String { get }
+  
+}
+
+public struct ModelsTreeError: Error {
   
   public var hashValue: Int {
-    return (code.rawValue.hashValue + domain.hashValue).hashValue
+    return (code.rawValue + domain).hashValue
   }
   
   public let domain: String
   public let code: ErrorCode
+  public let context: ErrorContext?
+  public let underlyingError: Error?
   
-  public init(code: ErrorCode) {
-    self.domain = code.dynamicType.domain
+  public init(code: ErrorCode, context: ErrorContext? = nil, underlyingError: Error? = nil) {
+    self.domain = type(of: code).domain
     self.code = code
+    self.context = context
+    self.underlyingError = underlyingError
   }
   
   public func localizedDescription() -> String {
@@ -44,15 +54,23 @@ public struct Error: ErrorType {
   }
   
   private func descriptionString() -> String {
-    return "\(domain).\(code.rawValue)"
+    
+    var descriptionString = "\(domain).\(code.rawValue)"
+    if let context = context {
+      descriptionString += ".\(context.rawValue)"
+    }
+    
+    return descriptionString
   }
   
 }
 
-extension Error: Hashable, Equatable {
-  
+extension ModelsTreeError: Hashable, Equatable {}
+
+public func ==(a: ModelsTreeError, b: ModelsTreeError) -> Bool {
+  return a.code == b.code
 }
 
-public func ==(a: Error, b: Error) -> Bool {
-  return a.code.rawValue == b.code.rawValue && a.domain == b.domain
+public func ==(a: ErrorCode, b: ErrorCode) -> Bool {
+  return a.rawValue == b.rawValue && type(of: a).domain == type(of: b).domain
 }

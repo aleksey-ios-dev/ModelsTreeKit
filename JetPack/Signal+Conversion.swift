@@ -15,8 +15,7 @@ public extension Signal {
     
     let nextSignal = Observable<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
-    chainSignal(nextSignal)
-    if let observable = self as? Observable<T>, let value = observable.value {
+    if let observable = self as? Observable<T>, let value = observable._value {
       nextSignal.sendNext(value)
     }
     
@@ -28,7 +27,6 @@ public extension Signal {
     
     let nextSignal = Pipe<T>()
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext($0) }.putInto(nextSignal.pool)
-    chainSignal(nextSignal)
     
     return nextSignal
   }

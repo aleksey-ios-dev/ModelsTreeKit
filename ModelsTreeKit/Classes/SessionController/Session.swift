@@ -12,13 +12,13 @@ public typealias SessionCompletionParams = [String: AnyObject]
 
 protocol SessionDelegate: class {
   
-  func sessionDidPrepareToShowRootRepresenation(session: Session) -> Void
-  func session(session: Session, didCloseWithParams params: Any?) -> Void
-  func sessionDidOpen(session: Session) -> Void
+  func sessionDidPrepareToShowRootRepresenation(_ session: Session) -> Void
+  func session(_ session: Session, didCloseWithParams params: Any?) -> Void
+  func sessionDidOpen(_ session: Session) -> Void
   
 }
 
-public class Session: Model {
+open class Session: Model {
   
   public var services: ServiceLocator!
   public var credentials: SessionCredentials?
@@ -42,9 +42,9 @@ public class Session: Model {
     super.init(parent: parent)
   }
   
-  public func sessionDidLoad() {}
+  open func sessionDidLoad() {}
   
-  func openWithController(controller: SessionController) {
+  func openWithController(_ controller: SessionController) {
     self.controller = controller
     self.services.takeOff()
     self.controller?.sessionDidOpen(self)
@@ -52,10 +52,14 @@ public class Session: Model {
     sessionDidLoad()
   }
   
-  public func closeWithParams(params: Any?) {
+  public func closeWithParams(_ params: Any?) {
     sessionWillClose()
     services.prepareToClose()
     controller?.session(self, didCloseWithParams: params)
+  }
+  
+  func refresh(withParams params: SessionCompletionParams) {
+    credentials = SessionCredentials(params: params)
   }
   
 }

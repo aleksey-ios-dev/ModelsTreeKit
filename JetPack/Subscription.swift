@@ -10,28 +10,28 @@ import Foundation
 
 protocol Invocable: class {
   
-  func invoke(data: Any) -> Void
-  func invokeState(data: Bool) -> Void
+  func invoke(_ data: Any) -> Void
+  func invokeState(_ data: Bool) -> Void
   
 }
 
 class Subscription<U> : Invocable, Disposable {
   
-  var handler: (U -> Void)?
-  var stateHandler: (Bool -> Void)?
+  var handler: ((U) -> Void)?
+  var stateHandler: ((Bool) -> Void)?
   
   private var signal: Signal<U>
   private var deliversOnMainThread = false
   private var autodisposes = false
   
-  init(handler: (U -> Void)?, signal: Signal<U>) {
+  init(handler: ((U) -> Void)?, signal: Signal<U>) {
     self.handler = handler
     self.signal = signal;
   }
   
-  func invoke(data: Any) -> Void {
+  func invoke(_ data: Any) -> Void {
     if deliversOnMainThread {
-      dispatch_async(dispatch_get_main_queue()) { [weak self] in
+      DispatchQueue.main.async { [weak self] in
         self?.handler?(data as! U)
       }
     } else {
@@ -40,9 +40,9 @@ class Subscription<U> : Invocable, Disposable {
     if autodisposes { dispose() }
   }
   
-  func invokeState(data: Bool) -> Void {
+  func invokeState(_ data: Bool) -> Void {
     if deliversOnMainThread {
-      dispatch_async(dispatch_get_main_queue()) { [weak self] in
+      DispatchQueue.main.async { [weak self] in
         self?.stateHandler?(data)
       }
     } else {
@@ -56,25 +56,29 @@ class Subscription<U> : Invocable, Disposable {
     handler = nil
   }
   
+  @discardableResult
   func deliverOnMainThread() -> Disposable {
     deliversOnMainThread = true
     
     return self
   }
   
+  @discardableResult
   func autodispose() -> Disposable {
     autodisposes = true
     
     return self
   }
   
-  func putInto(pool: AutodisposePool) -> Disposable {
+  @discardableResult
+  func putInto(_ pool: AutodisposePool) -> Disposable {
     pool.add(self)
     
     return self
   }
   
-  func takeUntil(signal: Pipe<Void>) -> Disposable {
+  @discardableResult
+  func takeUntil(_ signal: Pipe<Void>) -> Disposable {
     signal.subscribeNext { [weak self] in
       self?.dispose()
     }.putInto(self.signal.pool)
@@ -82,7 +86,7 @@ class Subscription<U> : Invocable, Disposable {
     return self
   }
   
-  func ownedBy(object: DeinitObservable) -> Disposable {
+  func ownedBy(_ object: DeinitObservable) -> Disposable {
     return takeUntil(object.deinitSignal)
   }
   

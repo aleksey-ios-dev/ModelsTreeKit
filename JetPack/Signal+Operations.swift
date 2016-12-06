@@ -10,7 +10,7 @@ import Foundation
 
 public struct Signals {
   
-  static func merge<U>(signals: [Signal<U>]) -> Signal<U> {
+  static func merge<U>(_ signals: [Signal<U>]) -> Signal<U> {
     let nextSignal = Signal<U>()
     
     signals.forEach { signal in
@@ -26,47 +26,42 @@ public extension Signal {
   
   //Transforms value, can change passed value type
   
-  public func map<U>(handler: T -> U) -> Signal<U> {
+  public func map<U>(handler: @escaping (T) -> U) -> Signal<U> {
     var nextSignal: Signal<U>!
-    if self is Observable { nextSignal = Observable<U>() }
+    if let observableSelf = self as? Observable<T> {
+      nextSignal = Observable<U>(handler(observableSelf.value))
+    }
     else { nextSignal = Pipe<U>() }
     subscribeNext { [weak nextSignal] in nextSignal?.sendNext(handler($0)) }.putInto(nextSignal.pool)
-    chainSignal(nextSignal)
     
     return nextSignal
   }
   
   //Adds a condition for sending next value, doesn't change passed value type
   
-  public func filter(handler: T -> Bool) -> Signal<T> {
-    var nextSignal: Signal<T>!
-    if self is Observable { nextSignal = Observable<T>() }
-    else { nextSignal = Pipe<T>() }
+  public func filter(handler: @escaping (T) -> Bool) -> Pipe<T> {
+    let nextSignal = Pipe<T>()
     subscribeNext { [weak nextSignal] in
       if handler($0) { nextSignal?.sendNext($0) }
       }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
   
   //Applies passed values to the cumulative reduced value
   
-  public func reduce<U>(handler: (newValue: T, reducedValue: U?) -> U) -> Signal<U> {
+  public func reduce<U>(handler: @escaping (_ newValue: T, _ reducedValue: U?) -> U) -> Signal<U> {
     let nextSignal = Observable<U>()
     subscribeNext { [weak nextSignal] in
-      nextSignal?.sendNext(handler(newValue: $0, reducedValue: nextSignal?.value))
+      nextSignal?.sendNext(handler($0, nextSignal?.value))
       }.putInto(nextSignal.pool)
-    
-    chainSignal(nextSignal)
     
     return nextSignal
   }
   
   //Sends combined value when any of signals fire
   
-  func distinctLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+  func distinctLatest<U>(_ otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let transientSelf = pipe()
     let transientOther = otherSignal.pipe()
     
@@ -82,14 +77,19 @@ public extension Signal {
       nextSignal.sendNext(($0, nil))
       }.putInto(nextSignal.pool)
     
-    chainSignal(nextSignal)
-    
     return nextSignal
   }
   
-  public func combineLatest<U>(otherSignal: Signal<U>) -> Signal<(T?, U?)> {
+  public func combineLatest<U>(_ otherSignal: Signal<U>) -> Signal<(T?, U?)> {
     let persistentSelf = observable()
     let persistentOther = otherSignal.observable()
+    if let observableSelf = self as? Observable<T> {
+      persistentSelf.value = observableSelf.value
+    }
+    
+    if let observableOther = otherSignal as? Observable<U> {
+      persistentOther.value = observableOther.value
+    }
     
     let nextSignal = Observable<(T?, U?)>()
     
@@ -103,20 +103,12 @@ public extension Signal {
       nextSignal.sendNext(($0, otherSignal.value))
       }.putInto(nextSignal.pool)
     
-    chainSignal(nextSignal)
-    
     return nextSignal
-  }
-  
-  //Sends combined value when any of signals fires and both signals have last passed value
-  
-  public func combineNoNull<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
-    return combineLatest(otherSignal).filter { $0 != nil && $1 != nil }.map { ($0!, $1!) }
   }
   
   //Sends combined value every time when both signals fire at least once
   
-  public func combineBound<U>(otherSignal: Signal<U>) -> Signal<(T, U)> {
+  public func combineBound<U>(_ otherSignal: Signal<U>) -> Signal<(T, U)> {
     let nextSignal = combineLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T? , T?), (U?, U?)) in
       
       var reducedSelfValue: T? = reducedValue?.0.1
@@ -134,14 +126,12 @@ public extension Signal {
       }.filter { $0.0 != nil && $0.1 != nil
       }.map { ($0.0!, $0.1!) }
     
-    chainSignal(nextSignal)
-    
     return nextSignal
   }
   
   //Zip
   
-  public func zip<U>(otherSignal: Signal <U>) -> Signal<(T, U)> {
+  public func zip<U>(_ otherSignal: Signal <U>) -> Signal<(T, U)> {
     let nextSignal = distinctLatest(otherSignal).reduce { (newValue, reducedValue) -> ((T?, [T]), (U?, [U])) in
       let newSelfValue = newValue.0
       let newOtherValue = newValue.1
@@ -171,52 +161,37 @@ public extension Signal {
       }.map { ($0.0!, $0.1!)
     }
     
-    chainSignal(nextSignal)
-    
     return nextSignal
   }
   
   //Adds blocking signal. false - blocks, true - passes
   
-  public func blockWith(blocker: Signal<Bool>) -> Signal<T> {
+  public func blockWith(_ blocker: Signal<Bool>) -> Signal<T> {
     let persistentBlocker = blocker.observable()
     return filter { newValue in
-      
-      guard let _ = persistentBlocker.value else {
-        return true
-      }
       return persistentBlocker.value == false
     }
   }
   
   //Splits signal into two
   
-  public func split<U, V>(splitter: T -> (a: U, b: V)) -> (a: Signal<U>, b: Signal<V>) {
+  public func split<U, V>(_ splitter: @escaping (T) -> (a: U, b: V)) -> (a: Signal<U>, b: Signal<V>) {
     let signalA = Pipe<U>()
     let signalB = Pipe<V>()
     
     subscribeNext { [weak signalA] in signalA?.sendNext(splitter($0).a) }.putInto(signalA.pool)
     subscribeNext { [weak signalB] in signalB?.sendNext(splitter($0).b) }.putInto(signalB.pool)
     
-    chainSignal(signalA)
-    chainSignal(signalB)
-    
     return (signalA, signalB)
   }
   
-  //Skips n first values 
+  //Skips n first values
   
-  public func skipFirst(n: Int) -> Signal<T> {
-    let nextSignal: Signal<T>
+  public func skipFirst(_ n: Int) -> Pipe<T> {
+    let nextSignal = Pipe<T>()
     
-    if self is Observable<T> {
-      nextSignal = Observable<T>()
-    } else {
-      nextSignal = Pipe<T>()
-    }
-   
     var count = 0
-
+    
     subscribeNext { [weak nextSignal] in
       if count >= n {
         nextSignal?.sendNext($0)
