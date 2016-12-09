@@ -10,7 +10,7 @@ import Foundation
 
 public struct Signals {
   
-  static func merge<U>(_ signals: [Signal<U>]) -> Signal<U> {
+  public static func merge<U>(_ signals: [Signal<U>]) -> Signal<U> {
     let nextSignal = Signal<U>()
     
     signals.forEach { signal in
