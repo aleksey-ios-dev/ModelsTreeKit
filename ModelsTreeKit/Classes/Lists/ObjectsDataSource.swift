@@ -5,13 +5,17 @@
 
 import Foundation
 
-public class ObjectsDataSource<ObjectType> {
+public class ObjectsDataSource<ObjectType>: Equatable {
   
   let beginUpdatesSignal = Pipe<Void>()
   let endUpdatesSignal = Pipe<Void>()
   let didChangeObjectSignal = Pipe<(object: ObjectType, changeType: ListChangeType, fromIndexPath: IndexPath?, toIndexPath: IndexPath?)>()
   let didChangeSectionSignal = Pipe<(changeType: ListChangeType, fromIndex: Int?, toIndex: Int?)>()
   let reloadDataSignal = Pipe<Void>()
+  let uid = NSUUID()
+  var hashValue: Int {
+    return uid.hashValue
+  }
   
   func numberOfSections() -> Int {
     return 0
@@ -29,4 +33,8 @@ public class ObjectsDataSource<ObjectType> {
     return nil
   }
   
+}
+
+public func ==<T>(lhs: ObjectsDataSource<T>, rhs: ObjectsDataSource<T>) -> Bool {
+  return lhs.uid == rhs.uid
 }

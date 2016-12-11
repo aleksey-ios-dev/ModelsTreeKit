@@ -15,15 +15,16 @@ class ViewController: UIViewController {
   
   private var adapter: TableViewAdapter<Int>!
   private var dataAdapter: ObjectsDataSource<Int>!
-  let list = UnorderedList<Int>(parent: nil, objects: [5, 4])
+  let list = UnorderedList<Int>(parent: nil, objects: [1, 2])
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     let listAdapter = UnorderedListDataAdapter<Int, String>(list: list)
     listAdapter.groupContentsSortingCriteria = { $0 < $1 }
+    listAdapter.groupingCriteria = { return $0 > 3 ? "2" : "1" }
     list.performUpdates {
-      $0.insert([1, 2, 9])
+      $0.insert([3, 4, 5])
     }
     
     let staticSource = createStaticDataSource()
@@ -38,13 +39,13 @@ class ViewController: UIViewController {
   
   private func createStaticDataSource() -> ObjectsDataSource<Int> {
     let source = StaticDataSource<Int>()
-    source.sections = [StaticObjectsSection(title: nil, objects: [1, 2, 3])]
+    source.sections = [StaticObjectsSection(title: nil, objects: [10, 20, 30])]
     
     return source
   }
   
   @IBAction private func addMore(sender: AnyObject?) {
-        list.performUpdates { $0.delete([5, 4]) }
+    list.performUpdates { $0.delete([1, 2, 3]) }
   }
   
 }

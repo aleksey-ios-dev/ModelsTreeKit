@@ -12,16 +12,22 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
   
   public typealias ContainedDataSourceType = ObjectsDataSource<ObjectType>
   
+  private let pool = AutodisposePool()
   private let dataSources: [ContainedDataSourceType]
   
   public init(dataSources: [ContainedDataSourceType]) {
     self.dataSources = dataSources
+    
+    super.init()
+    
+    subscribeForUpdates(inSources: dataSources)
   }
   
   // MARK: - Access to objects and sections
   
   public override func numberOfSections() -> Int {
-    return dataSources.reduce(0) { $0 + $1.numberOfSections() }
+    return dataSources.reduce(0) { totalNumberOfSections, dataSource in
+      totalNumberOfSections + dataSource.numberOfSections() }
   }
   
   public override func numberOfObjectsInSection(_ section: Int) -> Int {
@@ -46,6 +52,59 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
       sectionsPassed += source.numberOfSections()
     }
     return result
+  }
+  
+  private func subscribeForUpdates(inSources sources: [ContainedDataSourceType]) {
+    sources.forEach { source in
+      source.beginUpdatesSignal.subscribeNext { [weak self] in
+        self?.beginUpdatesSignal.sendNext()
+      }.putInto(pool)
+      
+      source.endUpdatesSignal.subscribeNext { [weak self] in
+        self?.endUpdatesSignal.sendNext()
+      }.putInto(pool)
+      
+      source.didChangeObjectSignal.subscribeNext { [weak self] object, changeType, fromIndexPath, toIndexPath in
+        self?.didChangeObjectSignal.sendNext(
+          (object: object,
+           changeType: changeType,
+           fromIndexPath: self?.absoluteIndexPath(fromRelative: fromIndexPath, in: source),
+           toIndexPath: self?.absoluteIndexPath(fromRelative: toIndexPath, in: source)
+          )
+        )
+      }.putInto(pool)
+
+      source.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
+        guard let _self = self else { return }
+        
+        let precedingDataSources = _self.dataSources.prefix(upTo: _self.dataSources.index(of: source)!)
+        let precedingSectionsCount = precedingDataSources.reduce(0) { totalSectionsCount, dataSource in
+          return totalSectionsCount + (dataSource != source ? dataSource.numberOfSections() : 0)
+        }
+        
+        _self.didChangeSectionSignal.sendNext(
+          (changeType: changeType,
+           fromIndex: fromIndex != nil ? precedingSectionsCount + fromIndex! : nil,
+           toIndex: toIndex != nil ? precedingSectionsCount + toIndex! : nil
+          )
+        )
+      }.putInto(pool)
+      
+      source.reloadDataSignal.subscribeNext { [weak self] in
+        self?.reloadDataSignal.sendNext()
+      }.putInto(pool)
+    }
+  }
+  
+  private func absoluteIndexPath(fromRelative relativeIndexPath: IndexPath?, in source: ContainedDataSourceType) -> IndexPath? {
+    guard let relativeIndexPath = relativeIndexPath else { return nil }
+    
+    let precedingDataSources = dataSources.prefix(upTo: dataSources.index(of: source)!)
+    let precedingSectionsCount = precedingDataSources.reduce(0) { totalSectionsCount, dataSource in
+        return totalSectionsCount + (dataSource != source ? dataSource.numberOfSections() : 0)
+    }
+    
+    return IndexPath(row: relativeIndexPath.row, section: precedingSectionsCount + relativeIndexPath.section)
   }
 
 }
