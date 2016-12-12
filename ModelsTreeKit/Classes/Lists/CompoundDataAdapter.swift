@@ -32,11 +32,13 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
   
   public override func numberOfObjectsInSection(_ section: Int) -> Int {
     let flatSection = flatSections()[section]
+    
     return flatSection.dataSource.numberOfObjectsInSection(flatSection.relativeSectionIndex)
   }
   
   public override func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
     let flatSection = flatSections()[indexPath.section]
+    
     return flatSection.dataSource.objectAtIndexPath(IndexPath(row: indexPath.row, section: flatSection.relativeSectionIndex))
   }
   
@@ -51,6 +53,7 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
       }
       sectionsPassed += source.numberOfSections()
     }
+    
     return result
   }
   
@@ -101,7 +104,7 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
     
     let precedingDataSources = dataSources.prefix(upTo: dataSources.index(of: source)!)
     let precedingSectionsCount = precedingDataSources.reduce(0) { totalSectionsCount, dataSource in
-        return totalSectionsCount + (dataSource != source ? dataSource.numberOfSections() : 0)
+      return totalSectionsCount + (dataSource != source ? dataSource.numberOfSections() : 0)
     }
     
     return IndexPath(row: relativeIndexPath.row, section: precedingSectionsCount + relativeIndexPath.section)
