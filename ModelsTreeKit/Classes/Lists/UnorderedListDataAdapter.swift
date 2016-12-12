@@ -42,6 +42,8 @@ GroupKeyType: Hashable, GroupKeyType: Comparable {
         updates: updates,
         oldSections: oldSections)
     }.putInto(pool)
+    
+    fetchAllFrom(list: list)
   }
   
   //Helpers

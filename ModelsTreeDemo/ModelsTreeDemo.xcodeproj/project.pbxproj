@@ -75,6 +75,7 @@
 		5B74356D1DB26C1B004E7616 /* TestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B74356C1DB26C1B004E7616 /* TestCell.xib */; };
 		5B7456B11DCC78970051C1B2 /* TableViewBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7456B01DCC78970051C1B2 /* TableViewBehavior.swift */; };
 		5B9F425D1DC32C8600D35DA7 /* Model+Access.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9F425C1DC32C8600D35DA7 /* Model+Access.swift */; };
+		5BAA2E711DFD526000BABF79 /* CompoundDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAA2E701DFD526000BABF79 /* CompoundDataAdapter.swift */; };
 		5BB7E1A71DB2018F00B866B4 /* Set+ObjectEqualTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7E1A61DB2018F00B866B4 /* Set+ObjectEqualTo.swift */; };
 		5BB7E1A91DB20B8300B866B4 /* Array+RemoveDuplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7E1A81DB20B8300B866B4 /* Array+RemoveDuplicates.swift */; };
 		5BB7E1AB1DB20DA300B866B4 /* OrderedListDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB7E1AA1DB20DA300B866B4 /* OrderedListDataAdapter.swift */; };
@@ -159,6 +160,7 @@
 		5B74356C1DB26C1B004E7616 /* TestCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestCell.xib; sourceTree = "<group>"; };
 		5B7456B01DCC78970051C1B2 /* TableViewBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewBehavior.swift; sourceTree = "<group>"; };
 		5B9F425C1DC32C8600D35DA7 /* Model+Access.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+Access.swift"; sourceTree = "<group>"; };
+		5BAA2E701DFD526000BABF79 /* CompoundDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompoundDataAdapter.swift; sourceTree = "<group>"; };
 		5BB7E1A61DB2018F00B866B4 /* Set+ObjectEqualTo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Set+ObjectEqualTo.swift"; sourceTree = "<group>"; };
 		5BB7E1A81DB20B8300B866B4 /* Array+RemoveDuplicates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+RemoveDuplicates.swift"; sourceTree = "<group>"; };
 		5BB7E1AA1DB20DA300B866B4 /* OrderedListDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedListDataAdapter.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				5B1A79601D73D8DA003A7768 /* UnorderedListDataAdapter.swift */,
 				5B1A79611D73D8DA003A7768 /* ObjectsDataSource.swift */,
 				5B1A79621D73D8DA003A7768 /* StaticDataSource.swift */,
+				5BAA2E701DFD526000BABF79 /* CompoundDataAdapter.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -562,6 +565,7 @@
 				5B1A79CE1D73D8F3003A7768 /* Subscription.swift in Sources */,
 				5B1A79C61D73D8F3003A7768 /* Signal+Comparable.swift in Sources */,
 				5B1A798B1D73D8DA003A7768 /* Model.swift in Sources */,
+				5BAA2E711DFD526000BABF79 /* CompoundDataAdapter.swift in Sources */,
 				5BF2CA361DB1EA2400230EF1 /* OrderedList.swift in Sources */,
 				5B1A79D51D73D8F3003A7768 /* UISwitch+Signal.swift in Sources */,
 				5B1A79821D73D8DA003A7768 /* BubbleNotification.swift in Sources */,
