@@ -31,23 +31,23 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
   }
   
   public override func numberOfObjectsInSection(_ section: Int) -> Int {
-    let flatSection = flatSections()[section]!
+    let flatSection = flatSections()[section]
     return flatSection.dataSource.numberOfObjectsInSection(flatSection.relativeSectionIndex)
   }
   
   public override func objectAtIndexPath(_ indexPath: IndexPath) -> ObjectType? {
-    let flatSection = flatSections()[indexPath.section]!
+    let flatSection = flatSections()[indexPath.section]
     return flatSection.dataSource.objectAtIndexPath(IndexPath(row: indexPath.row, section: flatSection.relativeSectionIndex))
   }
   
   // MARK: - Helpers
   
-  private func flatSections() -> [Int: (relativeSectionIndex: Int, dataSource: ContainedDataSourceType)] {
-    var result = [Int: (relativeSectionIndex: Int, dataSource: ContainedDataSourceType)]()
+  private func flatSections() -> [(relativeSectionIndex: Int, dataSource: ContainedDataSourceType)] {
+    var result = [(relativeSectionIndex: Int, dataSource: ContainedDataSourceType)]()
     var sectionsPassed = 0
     for source in dataSources {
       for i in 0..<source.numberOfSections() {
-        result[i + sectionsPassed] = (relativeSectionIndex: i, dataSource: source)
+        result.append((relativeSectionIndex: i, dataSource: source))
       }
       sectionsPassed += source.numberOfSections()
     }
