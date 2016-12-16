@@ -66,7 +66,7 @@ public class SessionController {
     }
   }
   
-  private func archiveUserSession(_ session: AuthorizedSession?) throws {
+  fileprivate func archiveUserSession(_ session: AuthorizedSession?) throws {
     guard
       let session = session,
       let sessionKey = session.credentials?[configuration.credentialsPrimaryKey] as! String?
@@ -118,6 +118,12 @@ extension SessionController: SessionDelegate {
     if let deinitObservable = representation as? DeinitObservable { model.applyRepresentation(deinitObservable) }
     
     navigationManager.showRootRepresentation(representation)
+  }
+  
+  func sessionNeedsSave(_ session: Session) {
+    if let session = session as? AuthorizedSession {
+      try! archiveUserSession(session)
+    }
   }
   
 }

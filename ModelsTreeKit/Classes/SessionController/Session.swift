@@ -15,6 +15,7 @@ protocol SessionDelegate: class {
   func sessionDidPrepareToShowRootRepresenation(_ session: Session) -> Void
   func session(_ session: Session, didCloseWithParams params: Any?) -> Void
   func sessionDidOpen(_ session: Session) -> Void
+  func sessionNeedsSave(_ session: Session) -> Void
   
 }
 

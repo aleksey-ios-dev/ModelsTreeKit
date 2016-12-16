@@ -15,8 +15,8 @@ class ViewController: UIViewController {
   
   private var adapter: TableViewAdapter<Int>!
   private var dataAdapter: ObjectsDataSource<Int>!
-  let list1 = UnorderedList<Int>(parent: nil, objects: [1, 2])
-  let list2 = UnorderedList<Int>(parent: nil, objects: [-9, 10])
+  let list1 = UnorderedList<Int>(parent: nil, objects: [1, 2, 3])
+  let list2 = UnorderedList<Int>(parent: nil, objects: [-7, 0, 10, 15])
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -30,6 +30,7 @@ class ViewController: UIViewController {
     listAdapter2.groupingCriteria = { return $0 > 0 ? "2" : "1" }
 
     dataAdapter = CompoundDataAdapter(dataSources: [listAdapter1, listAdapter2])
+    
     adapter = TableViewAdapter(dataSource: dataAdapter, tableView: tableView)
     
     adapter.registerCellClass(TestCell.self)
@@ -37,7 +38,7 @@ class ViewController: UIViewController {
   }
   
   @IBAction private func addMore(sender: AnyObject?) {
-    list1.performUpdates { $0.insert([6]) }
+    list1.performUpdates { $0.insert([6]); $0.delete([1, 3]) }
     list2.performUpdates { $0.insert([-151, 12]) }
   }
   

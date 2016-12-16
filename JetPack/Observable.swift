@@ -45,7 +45,7 @@ public class Observable<T>: Signal<T> {
   public override func sendNext(_ value: T) {
     self.value = value
   }
-  
+
   public override func subscribeNext(_ handler: @escaping SignalHandler) -> Disposable {
     return subscribeNextStartingFromInitial(true, handler: handler)
   }
