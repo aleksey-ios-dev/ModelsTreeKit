@@ -30,6 +30,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable {
     list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
       guard let strongSelf = self else { return }
       strongSelf.sections = strongSelf.arrangedSections(fromObjects: objects)
+      strongSelf.reloadDataSignal.sendNext()
     }.putInto(pool)
     
     list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
