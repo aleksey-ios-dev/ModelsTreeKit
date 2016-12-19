@@ -8,15 +8,14 @@
 
 import Foundation
 
-public class UnorderedListDataAdapter<ObjectType, GroupKeyType>: ObjectsDataSource<ObjectType> where
-  ObjectType: Hashable, ObjectType: Equatable,
-GroupKeyType: Hashable, GroupKeyType: Comparable {
+public class UnorderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType> where
+  ObjectType: Hashable, ObjectType: Equatable {
   
-  typealias Section = (objects: [ObjectType], key: GroupKeyType?)
+  typealias Section = (objects: [ObjectType], key: String?)
   typealias Sections = [Section]
   
-  public var groupingCriteria: ((ObjectType) -> GroupKeyType)?
-  public var groupsSortingCriteria: (GroupKeyType, GroupKeyType) -> Bool = { return $0 < $1 }
+  public var groupingCriteria: ((ObjectType) -> String)?
+  public var groupsSortingCriteria: (String, String) -> Bool = { return $0 < $1 }
   public var groupContentsSortingCriteria: ((ObjectType, ObjectType) -> Bool)?
   
   private var sections = Sections()
@@ -30,6 +29,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable {
     list.didReplaceContentSignal.subscribeNext() { [weak self] objects in
       guard let strongSelf = self else { return }
       strongSelf.sections = strongSelf.arrangedSections(fromObjects: objects)
+      strongSelf.reloadDataSignal.sendNext()
     }.putInto(pool)
     
     list.didChangeContentSignal.subscribeNext { [weak self] insertions, deletions, updates in
@@ -78,7 +78,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable {
   }
   
   override public func titleForSection(atIndex sectionIndex: Int) -> String? {
-    return sections[sectionIndex].key as? String
+    return sections[sectionIndex].key
   }
   
   //Private
@@ -94,7 +94,7 @@ GroupKeyType: Hashable, GroupKeyType: Comparable {
       }
     }
     
-    var groupsDictionary = [GroupKeyType: [ObjectType]]()
+    var groupsDictionary = [String: [ObjectType]]()
     
     for object in objects {
       let key = groupingBlock(object)

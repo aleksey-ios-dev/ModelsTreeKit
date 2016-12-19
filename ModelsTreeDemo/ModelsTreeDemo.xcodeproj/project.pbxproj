@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -82,6 +82,7 @@
 		5BD597901DCC9342009687FA /* Dictionary+Join.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD5978F1DCC9342009687FA /* Dictionary+Join.swift */; };
 		5BDABC131DBE1E94009CFC59 /* UIView+FlatSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDABC121DBE1E94009CFC59 /* UIView+FlatSubviews.swift */; };
 		5BF2CA361DB1EA2400230EF1 /* OrderedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF2CA351DB1EA2400230EF1 /* OrderedList.swift */; };
+		5BFEE3231E0591180086F6CE /* MapDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEE3221E0591180086F6CE /* MapDataAdapter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -167,6 +168,7 @@
 		5BD5978F1DCC9342009687FA /* Dictionary+Join.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Join.swift"; sourceTree = "<group>"; };
 		5BDABC121DBE1E94009CFC59 /* UIView+FlatSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+FlatSubviews.swift"; sourceTree = "<group>"; };
 		5BF2CA351DB1EA2400230EF1 /* OrderedList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedList.swift; sourceTree = "<group>"; };
+		5BFEE3221E0591180086F6CE /* MapDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDataAdapter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,6 +272,7 @@
 				5B1A79611D73D8DA003A7768 /* ObjectsDataSource.swift */,
 				5B1A79621D73D8DA003A7768 /* StaticDataSource.swift */,
 				5BAA2E701DFD526000BABF79 /* CompoundDataAdapter.swift */,
+				5BFEE3221E0591180086F6CE /* MapDataAdapter.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -498,7 +501,7 @@
 				};
 			};
 			buildConfigurationList = 5B547B621D6870D6003A6DFE /* Build configuration list for PBXProject "ModelsTreeDemo" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -541,6 +544,7 @@
 				5B1A79921D73D8DA003A7768 /* AuthorizedSession.swift in Sources */,
 				5B1A798E1D73D8DA003A7768 /* TableViewCell.swift in Sources */,
 				5B1A79C21D73D8F3003A7768 /* Observable.swift in Sources */,
+				5BFEE3231E0591180086F6CE /* MapDataAdapter.swift in Sources */,
 				5B1A79811D73D8DA003A7768 /* Archivable.swift in Sources */,
 				5B1A79891D73D8DA003A7768 /* ObjectsDataSource.swift in Sources */,
 				5B1A798D1D73D8DA003A7768 /* ObjectConsuming.swift in Sources */,
@@ -674,6 +678,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -714,6 +719,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -727,7 +733,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ale-------------------------ksey.chernish.ModelsTreeDemo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BridgingHeader.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -740,7 +746,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ale-------------------------ksey.chernish.ModelsTreeDemo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BridgingHeader.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
