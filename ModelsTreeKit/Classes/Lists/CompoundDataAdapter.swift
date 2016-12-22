@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> where ObjectType: Equatable, ObjectType: Hashable {
+public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> {
   
   public typealias ContainedDataSourceType = ObjectsDataSource<ObjectType>
   

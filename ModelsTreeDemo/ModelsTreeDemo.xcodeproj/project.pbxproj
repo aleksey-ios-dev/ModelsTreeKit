@@ -74,6 +74,7 @@
 		5B74356B1DB26C10004E7616 /* TestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B74356A1DB26C10004E7616 /* TestCell.swift */; };
 		5B74356D1DB26C1B004E7616 /* TestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B74356C1DB26C1B004E7616 /* TestCell.xib */; };
 		5B7456B11DCC78970051C1B2 /* TableViewBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7456B01DCC78970051C1B2 /* TableViewBehavior.swift */; };
+		5B9651691E0B97E300402688 /* Wrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9651681E0B97E300402688 /* Wrapper.swift */; };
 		5B9A2D0A1E0B73AC00D2D565 /* CollectionType+SafeCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9A2D091E0B73AC00D2D565 /* CollectionType+SafeCheck.swift */; };
 		5B9F425D1DC32C8600D35DA7 /* Model+Access.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9F425C1DC32C8600D35DA7 /* Model+Access.swift */; };
 		5BAA2E711DFD526000BABF79 /* CompoundDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAA2E701DFD526000BABF79 /* CompoundDataAdapter.swift */; };
@@ -161,6 +162,7 @@
 		5B74356A1DB26C10004E7616 /* TestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCell.swift; sourceTree = "<group>"; };
 		5B74356C1DB26C1B004E7616 /* TestCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestCell.xib; sourceTree = "<group>"; };
 		5B7456B01DCC78970051C1B2 /* TableViewBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewBehavior.swift; sourceTree = "<group>"; };
+		5B9651681E0B97E300402688 /* Wrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapper.swift; sourceTree = "<group>"; };
 		5B9A2D091E0B73AC00D2D565 /* CollectionType+SafeCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CollectionType+SafeCheck.swift"; sourceTree = "<group>"; };
 		5B9F425C1DC32C8600D35DA7 /* Model+Access.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+Access.swift"; sourceTree = "<group>"; };
 		5BAA2E701DFD526000BABF79 /* CompoundDataAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompoundDataAdapter.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				5B1A794F1D73D8DA003A7768 /* ModelsTreeKit */,
 				5B547B6A1D6870D6003A6DFE /* AppDelegate.swift */,
 				5B547B6C1D6870D6003A6DFE /* ViewController.swift */,
+				5B9651681E0B97E300402688 /* Wrapper.swift */,
 				5B74356A1DB26C10004E7616 /* TestCell.swift */,
 				5B74356C1DB26C1B004E7616 /* TestCell.xib */,
 				5B547B6E1D6870D6003A6DFE /* Main.storyboard */,
@@ -613,6 +616,7 @@
 				5B1A79871D73D8DA003A7768 /* UnorderedList.swift in Sources */,
 				5B1A79D81D73D8F3003A7768 /* UIView+Signal.swift in Sources */,
 				5B1A79961D73D8DA003A7768 /* SessionControllerConfiguration.swift in Sources */,
+				5B9651691E0B97E300402688 /* Wrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
