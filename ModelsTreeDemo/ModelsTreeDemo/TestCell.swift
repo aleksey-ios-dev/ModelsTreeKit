@@ -9,11 +9,9 @@
 import UIKit
 
 class TestCell: UITableViewCell, ObjectConsuming {
-  typealias ObjectType = Int
-
   
-  func applyObject(_ object: Int) {
-    textLabel?.text = String(object)
+  func applyObject(_ object: String) {
+    textLabel?.text = object
   }
   
 }

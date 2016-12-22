@@ -6,17 +6,18 @@
 //  Copyright © 2016 Aleksey Chernish. All rights reserved.
 //
 
-class MapDataAdapter<T, U>: ObjectsDataSource<U> where
+public class MapDataAdapter<T, U>: ObjectsDataSource<U> where
   T: Equatable, T: Hashable,
   U: Equatable, U: Hashable {
+  
+  public private(set) var sections = [StaticObjectsSection<U>]()
   
   private var mappedDataSource: ObjectsDataSource<T>
   private var mapper: ((T) -> U)
   private let pool = AutodisposePool()
   private let changesPool = MappedSourceChangesPool<T>()
-  private(set) var sections = [StaticObjectsSection<U>]()
   
-  init(mappedDataSource: ObjectsDataSource<T>, mapper: @escaping (T) -> U) {
+  public init(mappedDataSource: ObjectsDataSource<T>, mapper: @escaping (T) -> U) {
     self.mappedDataSource = mappedDataSource
     self.mapper = mapper
     
@@ -25,6 +26,26 @@ class MapDataAdapter<T, U>: ObjectsDataSource<U> where
     remapFromSource()
     subscribeForMappedSource()
   }
+  
+  // MARK: - Access
+  
+  public override func objectAtIndexPath(_ indexPath: IndexPath) -> U? {
+    return sections[indexPath.section].objects[indexPath.row]
+  }
+  
+  public override func numberOfSections() -> Int {
+    return mappedDataSource.numberOfSections()
+  }
+  
+  public override func numberOfObjectsInSection(_ section: Int) -> Int {
+    return mappedDataSource.numberOfObjectsInSection(section)
+  }
+  
+  public override func titleForSection(atIndex sectionIndex: Int) -> String? {
+    return mappedDataSource.titleForSection(atIndex: sectionIndex)
+  }
+  
+  // MARK: - Private
   
   private func subscribeForMappedSource() {
     mappedDataSource.beginUpdatesSignal.subscribeNext { [weak self] in
@@ -46,76 +67,41 @@ class MapDataAdapter<T, U>: ObjectsDataSource<U> where
 
       switch changeType {
       
-      //case .Update:
-       // _self.cha
-        //mappedObject = _self.mapper(object)
-        //_self.sections[fromIndexPath!.section].objects[fromIndexPath!.row] = mappedObject
-      
-        
       case .Deletion:
         let mappedObject = _self.sections[fromIndexPath!.section].objects[fromIndexPath!.row]
-        //_self.sections[fromIndexPath!.section].objects.remove(at: fromIndexPath!.row)
-        
-        if _self.changesPool.deletions[fromIndexPath!.section] == nil {
-          _self.changesPool.deletions[fromIndexPath!.section] = []
-        }
-        _self.changesPool.deletions[fromIndexPath!.section]?.append(fromIndexPath!.row)
+        _self.changesPool.addIndexPathForDeletion(fromIndexPath!)
         _self.didChangeObjectSignal.sendNext((object: mappedObject, changeType: changeType, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath))
         
       case .Insertion:
-
-        if _self.changesPool.insertions[toIndexPath!.section] == nil {
-          _self.changesPool.insertions[toIndexPath!.section] = []
-        }
-        _self.changesPool.insertions[toIndexPath!.section]?.append(toIndexPath!.row)
+        _self.changesPool.addIndexPathForInsert(toIndexPath!)
         _self.didChangeObjectSignal.sendNext((object: _self.mapper(object), changeType: changeType, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath))
         
       case .Update:
-        if _self.changesPool.updates[fromIndexPath!.section] == nil {
-          _self.changesPool.updates[fromIndexPath!.section] = []
-        }
-        
-        _self.changesPool.updates[fromIndexPath!.section].append(fromIndexPath!.row)
-        
-      /*case .Insertion:
-        mappedObject = _self.mapper(object)
-        _self.sections[toIndexPath!.section].objects.insert(mappedObject, at: toIndexPath!.row)
+        _self.changesPool.addIndexPathForUpdate(fromIndexPath!)
+        _self.didChangeObjectSignal.sendNext((object: _self.mapper(object), changeType: changeType, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath))
       
-      case .Move:
-        mappedObject = _self.sections[fromIndexPath!.section].objects[fromIndexPath!.row]
-        _self.sections[fromIndexPath!.section].objects.remove(at: fromIndexPath!.row)
-        _self.sections[toIndexPath!.section].objects.insert(mappedObject, at: toIndexPath!.row)
-      }
-    */
       default:
         break
       }
-      
-      //_self.didChangeObjectSignal.sendNext((object: mappedObject, changeType: changeType, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath))
       
     }.putInto(pool)
     
     mappedDataSource.didChangeSectionSignal.subscribeNext { [weak self] changeType, fromIndex, toIndex in
-      guard let _self = self else { return }
-      
-      switch changeType {
-      case .Insertion:
-        _self.sections.insert(StaticObjectsSection<U>(title: _self.mappedDataSource.titleForSection(atIndex: toIndex!), objects: []), at: toIndex!)
-      case .Deletion:
-        _self.sections.remove(at: fromIndex!)
-      default:
-        break
+      self?.didChangeSectionSignal.sendNext((changeType: changeType, fromIndex: fromIndex, toIndex: toIndex))
+      if changeType == .Insertion {
+        self?.changesPool.indexesOfInsertedSections.append(toIndex!)
       }
     }.putInto(pool)
   }
   
   private func commitChanges() {
-    //update sections from changes pool
-    print(changesPool.insertions)
-    print("OLD SECTIONS")
-    sections.map { $0.objects }.forEach { print($0) }
+    changesPool.finalize()
     
-    for (section, indexes) in changesPool.deletions {
+    //Deletions 
+    
+    for section in changesPool.indexesOfSectionsWithDeletions() {
+      let indexes = changesPool.deletionsInSection(section)
+    
       var filteredObjects = [U]()
       let s = sections[section]
       for (index, object) in s.objects.enumerated() {
@@ -126,44 +112,39 @@ class MapDataAdapter<T, U>: ObjectsDataSource<U> where
       sections[section].objects = filteredObjects
     }
     
-    //Insertions
+    //Remove deleted and insert new sections
     
-    for (section, indexes) in changesPool.insertions {
-      //var filteredObjects = [U]()
-      let s = sections[section]
+    sections = sections.filter { !$0.objects.isEmpty }
+    for index in changesPool.indexesOfInsertedSections.sorted(by: > ) {
+      sections.insert(StaticObjectsSection(title: mappedDataSource.titleForSection(atIndex: index), objects: []), at: index)
+    }
+    
+    //Inserts
+    
+    for section in changesPool.indexesOfSectionsWithInserts() {
+      let indexes = changesPool.insertsInSection(section)
 
+      let s = sections[section]
+      
       for index in indexes {
         let underlyingObject = mappedDataSource.objectAtIndexPath(IndexPath(row: index, section: section))
         s.objects.insert(mapper(underlyingObject!), at: index)
       }
-//        if !indexes.contains(index) {
-  //        filteredObjects.append(object)
-//        }
+    }
+    
+    //Updates
+    
+    for section in changesPool.indexesOfSectionsWithUpdates() {
+      let indexes = changesPool.updatesInSection(section)
+      
+      let s = sections[section]
+      indexes.forEach {
+        let underlyingObject = mappedDataSource.objectAtIndexPath(IndexPath(row: $0, section: section))
+        s.objects[$0] = mapper(underlyingObject!)
       }
-    //  sections[section].objects = filteredObjects
+    }
     
-    
-    
-    
-    print("NEW SECTIONS")
-    sections.map { $0.objects }.forEach { print($0) }
     changesPool.drain()
-  }
-  
-  override func objectAtIndexPath(_ indexPath: IndexPath) -> U? {
-    return sections[indexPath.section].objects[indexPath.row]
-  }
-  
-  override func numberOfSections() -> Int {
-    return mappedDataSource.numberOfSections()
-  }
-  
-  override func numberOfObjectsInSection(_ section: Int) -> Int {
-    return mappedDataSource.numberOfObjectsInSection(section)
-  }
-  
-  override func titleForSection(atIndex sectionIndex: Int) -> String? {
-    return mappedDataSource.titleForSection(atIndex: sectionIndex)
   }
   
   private func remapFromSource() {
@@ -184,16 +165,84 @@ class MapDataAdapter<T, U>: ObjectsDataSource<U> where
 
 fileprivate class MappedSourceChangesPool<T> {
   
-  var insertions = [Int: [Int]]()
-  var deletions = [Int: [Int]]()
-  var updates = [IndexPath]()
-  var moves = [IndexPath: T]()
+  private var insertions = [Int: [Int]]()
+  private var deletions = [Int: [Int]]()
+  private var updates = [Int: [Int]]()
+  
+  private var indexPathsForInsert = [IndexPath]()
+  private var indexPathsForDeletion = [IndexPath]()
+  private var indexPathsForUpdate = [IndexPath]()
+  var indexesOfInsertedSections = [Int]()
+  
+  // Input for changes to be finalized
+  
+  func addIndexPathForInsert(_ indexPath: IndexPath) {
+    indexPathsForInsert.append(indexPath)
+  }
+  
+  func addIndexPathForDeletion(_ indexPath: IndexPath) {
+    indexPathsForDeletion.append(indexPath)
+  }
+  
+  func addIndexPathForUpdate(_ indexPath: IndexPath) {
+    indexPathsForUpdate.append(indexPath)
+  }
+  
+  func finalize() {
+    insertions = finalizedIndexes(from: indexPathsForInsert)
+    deletions = finalizedIndexes(from: indexPathsForDeletion)
+    updates = finalizedIndexes(from: indexPathsForUpdate)
+  }
+  
+  // Access after finalization
+  
+  func insertsInSection(_ section: Int) -> [Int] {
+    return insertions[section]!
+  }
+  
+  func indexesOfSectionsWithInserts() -> [Int] {
+    return Array(insertions.keys)
+  }
+  
+  func deletionsInSection(_ section: Int) -> [Int] {
+    return deletions[section]!
+  }
+  
+  func indexesOfSectionsWithDeletions() -> [Int] {
+    return Array(deletions.keys)
+  }
+  
+  func updatesInSection(_ section: Int) -> [Int] {
+    return updates[section]!
+  }
+  
+  func indexesOfSectionsWithUpdates() -> [Int] {
+    return Array(updates.keys)
+  }
   
   func drain() {
     insertions = [:]
     deletions = [:]
-    updates = []
-    moves = [:]
+    updates = [:]
+    indexPathsForInsert = []
+    indexPathsForDeletion = []
+    indexPathsForUpdate = []
+    indexesOfInsertedSections = []
+  }
+  
+  // Private 
+  
+  private func finalizedIndexes(from indexPaths: [IndexPath]) -> [Int: [Int]]{
+    var indexesDictionary = [Int: [Int]]()
+    
+    indexPaths.forEach {
+      if indexesDictionary[$0.section] == nil {
+        indexesDictionary[$0.section] = []
+      }
+      indexesDictionary[$0.section]?.append($0.row)
+    }
+    
+    return indexesDictionary
   }
   
 }

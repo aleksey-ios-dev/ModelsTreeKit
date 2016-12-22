@@ -14,9 +14,21 @@ public class UnorderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType>
   typealias Section = (objects: [ObjectType], key: String?)
   typealias Sections = [Section]
   
-  public var groupingCriteria: ((ObjectType) -> String)?
-  public var groupsSortingCriteria: (String, String) -> Bool = { return $0 < $1 }
-  public var groupContentsSortingCriteria: ((ObjectType, ObjectType) -> Bool)?
+  public var groupingCriteria: ((ObjectType) -> String)? {
+    didSet {
+      rearrangeAndPushReload()
+    }
+  }
+  public var groupsSortingCriteria: (String, String) -> Bool = { return $0 < $1 } {
+    didSet {
+      rearrangeAndPushReload()
+    }
+  }
+  public var groupContentsSortingCriteria: ((ObjectType, ObjectType) -> Bool)? {
+    didSet {
+      rearrangeAndPushReload()
+    }
+  }
   
   private var sections = Sections()
   private let pool = AutodisposePool()
@@ -183,7 +195,8 @@ public class UnorderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType>
     }
     
     for (index, section) in sections.enumerated() {
-      if oldSections.filter({ return $0.key == section.key }).isEmpty {
+      if oldSections.filter({
+        return $0.key == section.key }).isEmpty {
         didChangeSectionSignal.sendNext((
           changeType: .Insertion,
           fromIndex: nil,

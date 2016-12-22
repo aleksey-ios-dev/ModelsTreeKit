@@ -13,41 +13,33 @@ class ViewController: UIViewController {
   @IBOutlet private weak var tableView: UITableView!
   @IBOutlet private weak var searchBar: UISearchBar!
   
-  private var adapter: TableViewAdapter<Int>!
-  private var dataAdapter: ObjectsDataSource<Int>!
-  let list1 = UnorderedList<String>(parent: nil, objects: ["7", "4", "1"])
-  let list2 = UnorderedList<Int>(parent: nil, objects: [-7, 0, 3, 15])
+  private var adapter: TableViewAdapter<String>!
+  let namesList = UnorderedList(parent: nil, objects: ["Aleksey", "Vitaly"])
+  let integerList = UnorderedList(parent: nil, objects: [1, 2, 3, 4, 5])
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-   let listAdapter1 = UnorderedListDataAdapter<String>(list: list1)
-    listAdapter1.groupContentsSortingCriteria = { $0 > $1 }
-    listAdapter1.groupingCriteria = { return NumberFormatter().number(from: $0)!.intValue > 3 ? "2" : "1" }
-    list1.replaceWith(["1", "2", "4", "7", "9"])
+    let namesListAdapter = UnorderedListDataAdapter(list: namesList)
+    namesListAdapter.groupContentsSortingCriteria = { $0 > $1 }
     
-    let mappedAdapter: MapDataAdapter<String, Int> = MapDataAdapter(mappedDataSource: listAdapter1,
-                                                                    mapper: { NumberFormatter().number(from: $0)!.intValue })
+    let integerListAdapter = UnorderedListDataAdapter(list: integerList)
+    integerListAdapter.groupingCriteria = { $0 > 3 ? "2" : "1" }
     
-    /*
-    let listAdapter2 = UnorderedListDataAdapter<Int>(list: list2)
-    listAdapter2.groupingCriteria = { return $0 > 4 ? "2" : "1" }
-    listAdapter2.groupContentsSortingCriteria = { $0 > $1 }
-    list2.replaceWith([1, 2, 3, 7, 10])
-     */
+    let mappedAdapter: MapDataAdapter<Int, String> = MapDataAdapter(mappedDataSource: integerListAdapter,
+                                                                    mapper: { String(describing: $0)})
     
-
-    //dataAdapter = CompoundDataAdapter(dataSources: [mappedAdapter, listAdapter2])
+    let compoundAdapter = CompoundDataAdapter(dataSources: [namesListAdapter, mappedAdapter])
     
-    adapter = TableViewAdapter(dataSource: mappedAdapter, tableView: tableView)
+    adapter = TableViewAdapter(dataSource: compoundAdapter, tableView: tableView)
     
     adapter.registerCellClass(TestCell.self)
     adapter.nibNameForObjectMatching = { _ in String(describing: TestCell.self) }
   }
   
   @IBAction private func addMore(sender: AnyObject?) {
-    list1.performUpdates { $0.insert(["0", "8"]); $0.delete(["1", "9", "4"]) }
-    //list2.performUpdates { $0.insert([-151, 12]) }
+    namesList.performUpdates { $0.insert(["Eugene"]) }
+    integerList.performUpdates { $0.insert([7, 8]); $0.delete([1, 4]) }
   }
   
 }
