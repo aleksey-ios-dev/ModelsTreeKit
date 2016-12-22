@@ -96,6 +96,8 @@ public class MapDataAdapter<T, U>: ObjectsDataSource<U> {
       self?.didChangeSectionSignal.sendNext((changeType: changeType, fromIndex: fromIndex, toIndex: toIndex))
       if changeType == .Insertion {
         self?.changesPool.indexesOfInsertedSections.append(toIndex!)
+      } else if changeType == .Deletion {
+        self?.changesPool.indexesOfDeletedSections.append(fromIndex!)
       }
     }.putInto(pool)
   }
@@ -120,10 +122,9 @@ public class MapDataAdapter<T, U>: ObjectsDataSource<U> {
     
     //Remove deleted and insert new sections
     
-    //sections = sections.filter { !$0.objects.isEmpty && self.changesPool.indexesOfInsertedSections }
     var filteredSections = [StaticObjectsSection<U>]()
     for (index, section) in sections.enumerated() {
-      if !section.objects.isEmpty || changesPool.indexesOfSectionsWithInserts().contains(index) {
+      if !changesPool.indexesOfDeletedSections.contains(index) {
         filteredSections.append(section)
       }
     }
@@ -137,7 +138,6 @@ public class MapDataAdapter<T, U>: ObjectsDataSource<U> {
     for section in changesPool.indexesOfSectionsWithInserts() {
       let indexes = changesPool.insertsInSection(section)
 
-      //TODO: FIX CRASH WHEN SECTION BECOMES EMPTY BUT NOT DELETED
       let s = sections[section]
       
       for index in indexes.sorted(by: < ) {
@@ -187,6 +187,7 @@ fileprivate class MappedSourceChangesPool<T> {
   private var indexPathsForDeletion = [IndexPath]()
   private var indexPathsForUpdate = [IndexPath]()
   var indexesOfInsertedSections = [Int]()
+  var indexesOfDeletedSections = [Int]()
   
   // Input for changes to be finalized
   
@@ -242,6 +243,7 @@ fileprivate class MappedSourceChangesPool<T> {
     indexPathsForDeletion = []
     indexPathsForUpdate = []
     indexesOfInsertedSections = []
+    indexesOfDeletedSections = []
   }
   
   // Private 

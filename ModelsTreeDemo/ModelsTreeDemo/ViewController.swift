@@ -14,19 +14,19 @@ class ViewController: UIViewController {
   
   private var adapter: TableViewAdapter<Wrapper>!
   let namesList = UnorderedList(parent: nil, objects: ["Aleksey", "Vitaly"])
-  let integerList = UnorderedList(parent: nil, objects: [1, 2, 3, 4, 5])
+  let integerList = UnorderedList(parent: nil, objects: [1, 4])
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     let namesListAdapter = UnorderedListDataAdapter(list: namesList)
     namesListAdapter.groupContentsSortingCriteria = { $0 > $1 }
-    namesListAdapter.groupContentsSortingCriteria = { $0 < $1 }
+    namesListAdapter.groupContentsSortingCriteria = { $0 > $1 }
     namesListAdapter.groupingCriteria = { String(describing: $0.characters.first) }
     
     let integerListAdapter = UnorderedListDataAdapter(list: integerList)
     integerListAdapter.groupingCriteria = { $0 > 3 ? "2" : "1" }
-    integerListAdapter.groupsSortingCriteria = { $0 < $1 }
+    integerListAdapter.groupsSortingCriteria = { $0 > $1 }
     integerListAdapter.groupContentsSortingCriteria = { $0 > $1 }
     
     let staticSource = StaticDataSource<String>()
@@ -46,8 +46,8 @@ class ViewController: UIViewController {
   }
   
   @IBAction private func addMore(sender: AnyObject?) {
-    namesList.performUpdates { $0.insert(["Andrew", "Vladimir"]); $0.delete(["Aleksey"]) }
-    integerList.performUpdates { $0.insert([7, 8]); $0.delete([1, 2, 3, 4]) }
+    namesList.performUpdates { $0.insert(["Oleg"]); $0.delete(["Aleksey", "Vitaly"]) }
+    integerList.performUpdates { $0.insert([2, 3, 5, 7]); $0.delete([1]) }
   }
   
 }
