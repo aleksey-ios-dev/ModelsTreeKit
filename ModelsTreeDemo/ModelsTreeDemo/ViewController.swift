@@ -11,7 +11,6 @@ import UIKit
 class ViewController: UIViewController {
   
   @IBOutlet private weak var tableView: UITableView!
-  @IBOutlet private weak var searchBar: UISearchBar!
   
   private var adapter: TableViewAdapter<String>!
   let namesList = UnorderedList(parent: nil, objects: ["Aleksey", "Vitaly"])
@@ -22,24 +21,36 @@ class ViewController: UIViewController {
     
     let namesListAdapter = UnorderedListDataAdapter(list: namesList)
     namesListAdapter.groupContentsSortingCriteria = { $0 > $1 }
+    namesListAdapter.groupContentsSortingCriteria = { $0 < $1 }
     
     let integerListAdapter = UnorderedListDataAdapter(list: integerList)
     integerListAdapter.groupingCriteria = { $0 > 3 ? "2" : "1" }
+    integerListAdapter.groupsSortingCriteria = { $0 < $1 }
+    integerListAdapter.groupContentsSortingCriteria = { $0 > $1 }
     
-    let mappedAdapter: MapDataAdapter<Int, String> = MapDataAdapter(mappedDataSource: integerListAdapter,
-                                                                    mapper: { String(describing: $0)})
-    
-    let compoundAdapter = CompoundDataAdapter(dataSources: [namesListAdapter, mappedAdapter])
-    
-    adapter = TableViewAdapter(dataSource: compoundAdapter, tableView: tableView)
-    
-    adapter.registerCellClass(TestCell.self)
-    adapter.nibNameForObjectMatching = { _ in String(describing: TestCell.self) }
+    let compoundAdapter = CompoundDataAdapter(from:
+      [namesListAdapter,
+       integerListAdapter.map { String($0) },
+       createStaticDataSource()]
+    )
+      
+      adapter = TableViewAdapter(dataSource: compoundAdapter, tableView: tableView)
+      adapter.registerCellClass(TestCell.self)
+      adapter.nibNameForObjectMatching = { _ in String(describing: TestCell.self) }
+    adapter.didSelectCell.subscribeNext { _, _, object in print(object) }.ownedBy(self)
   }
   
   @IBAction private func addMore(sender: AnyObject?) {
     namesList.performUpdates { $0.insert(["Eugene"]) }
-    integerList.performUpdates { $0.insert([7, 8]); $0.delete([1, 4]) }
+    integerList.performUpdates { $0.insert([7, 8]); $0.delete([1, 2, 3, 4]) }
+  }
+  
+  private func createStaticDataSource() -> StaticDataSource<String> {
+    let source = StaticDataSource<String>()
+    let section = StaticObjectsSection(title: "SomeTitle", objects: ["Option 1", "Option 2"])
+    source.sections = [section]
+    
+    return source
   }
   
 }

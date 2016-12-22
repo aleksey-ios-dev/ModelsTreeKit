@@ -30,7 +30,7 @@ public class UnorderedListDataAdapter<ObjectType>: ObjectsDataSource<ObjectType>
     }
   }
   
-  private var sections = Sections()
+  private(set) var sections = Sections()
   private let pool = AutodisposePool()
   
   public init(list: UnorderedList<ObjectType>) {

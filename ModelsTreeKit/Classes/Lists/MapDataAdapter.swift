@@ -6,9 +6,15 @@
 //  Copyright © 2016 Aleksey Chernish. All rights reserved.
 //
 
-public class MapDataAdapter<T, U>: ObjectsDataSource<U> where
-  T: Equatable, T: Hashable,
-  U: Equatable, U: Hashable {
+extension ObjectsDataSource {
+  
+  func map<U>(_ mapper: @escaping ((ObjectType) -> U)) -> MapDataAdapter<ObjectType, U> {
+    return MapDataAdapter(mappedDataSource: self, mapper: mapper)
+  }
+  
+}
+
+public class MapDataAdapter<T, U>: ObjectsDataSource<U> {
   
   public private(set) var sections = [StaticObjectsSection<U>]()
   
@@ -126,9 +132,9 @@ public class MapDataAdapter<T, U>: ObjectsDataSource<U> where
 
       let s = sections[section]
       
-      for index in indexes {
+      for index in indexes.sorted(by: < ) {
         let underlyingObject = mappedDataSource.objectAtIndexPath(IndexPath(row: index, section: section))
-        s.objects.insert(mapper(underlyingObject!), at: index)
+        s.objects.insert(mapper(underlyingObject!), at: index)        
       }
     }
     

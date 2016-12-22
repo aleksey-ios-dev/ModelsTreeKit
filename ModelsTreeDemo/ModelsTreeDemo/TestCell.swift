@@ -11,7 +11,7 @@ import UIKit
 class TestCell: UITableViewCell, ObjectConsuming {
   
   func applyObject(_ object: String) {
-    textLabel?.text = object
+    textLabel?.text = String(object)
   }
   
 }

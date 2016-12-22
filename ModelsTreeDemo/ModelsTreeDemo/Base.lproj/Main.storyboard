@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ar2-Kw-0Zh">
-                                <rect key="frame" x="16" y="50" width="288" height="468"/>
+                                <rect key="frame" x="16" y="20" width="288" height="498"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U20-3y-xpN">
@@ -33,11 +33,6 @@
                                     <action selector="addMoreWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jmj-io-Pec"/>
                                 </connections>
                             </button>
-                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A9t-cM-jrR">
-                                <rect key="frame" x="20" y="0.0" width="560" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -45,12 +40,11 @@
                             <constraint firstItem="ar2-Kw-0Zh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="3qW-eQ-JJ1"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ar2-Kw-0Zh" secondAttribute="bottom" constant="50" id="7wY-7e-Es9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ar2-Kw-0Zh" secondAttribute="trailing" id="dfE-ee-kpk"/>
-                            <constraint firstItem="ar2-Kw-0Zh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="50" id="dxP-zV-gvH"/>
+                            <constraint firstItem="ar2-Kw-0Zh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="20" id="dxP-zV-gvH"/>
                             <constraint firstItem="U20-3y-xpN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xZj-0V-fN6"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="searchBar" destination="A9t-cM-jrR" id="0gw-rk-Cy8"/>
                         <outlet property="tableView" destination="ar2-Kw-0Zh" id="g06-uR-W6h"/>
                     </connections>
                 </viewController>

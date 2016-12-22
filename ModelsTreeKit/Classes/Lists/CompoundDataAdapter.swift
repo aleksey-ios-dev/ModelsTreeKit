@@ -15,7 +15,7 @@ public class CompoundDataAdapter<ObjectType> : ObjectsDataSource<ObjectType> whe
   private let pool = AutodisposePool()
   private let dataSources: [ContainedDataSourceType]
   
-  public init(dataSources: [ContainedDataSourceType]) {
+  public init(from dataSources: [ContainedDataSourceType]) {
     self.dataSources = dataSources
     
     super.init()
