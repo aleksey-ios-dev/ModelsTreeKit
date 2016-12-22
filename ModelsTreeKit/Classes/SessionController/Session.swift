@@ -59,6 +59,10 @@ open class Session: Model {
     controller?.session(self, didCloseWithParams: params)
   }
   
+  public func save() {
+    controller?.sessionNeedsSave(self)
+  }
+  
   func refresh(withParams params: SessionCompletionParams) {
     credentials = SessionCredentials(params: params)
   }
