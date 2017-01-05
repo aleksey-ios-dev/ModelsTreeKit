@@ -277,6 +277,8 @@ extension Model {
       }
     }
     
+    print(output)
+    
     let models = childModels.sorted { return $0.timeStamp.compare($1.timeStamp) == .orderedAscending }
     
     models.forEach {
