@@ -289,7 +289,7 @@ public class TableViewAdapter<ObjectType>: NSObject, UITableViewDataSource, UITa
     if let footerClass = footerClassForSectionIndexMatching(section),
       let view = headerFooterInstances[String(describing: footerClass)] as? HeightCalculatingCell {
       
-      var userInfo = userInfoForSectionHeaderHeightMatching(section)
+      var userInfo = userInfoForSectionFooterHeightMatching(section)
       behaviors.forEach { userInfo.append($0.sectionFooterHeightCalculationUserInfo(forFooterAtIndex: section)) }
       
       return view.height(forObject: nil, width: tableView.frame.size.width, userInfo: userInfo)
