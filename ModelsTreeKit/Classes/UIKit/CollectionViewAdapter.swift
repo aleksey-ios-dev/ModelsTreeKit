@@ -25,6 +25,7 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     public let willSetObject = Pipe<(UICollectionViewCell, IndexPath)>()
     public let didSetObject = Pipe<(UICollectionViewCell, IndexPath)>()
     public let didScroll = Pipe<UICollectionView>()
+    public let didEndDecelerating = Pipe<UICollectionView>()
     
     public let willDisplaySupplementaryView = Pipe<(UICollectionReusableView, String, IndexPath)>()
     public let didEndDisplayingSupplementaryView = Pipe<(UICollectionReusableView, String, IndexPath)>()
@@ -215,6 +216,10 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         didScroll.sendNext(collectionView)
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        didEndDecelerating.sendNext(collectionView)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
