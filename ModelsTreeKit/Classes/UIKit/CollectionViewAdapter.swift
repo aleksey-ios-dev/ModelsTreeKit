@@ -26,6 +26,8 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
     public let didSetObject = Pipe<(UICollectionViewCell, IndexPath)>()
     public let didScroll = Pipe<UICollectionView>()
     public let didEndDecelerating = Pipe<UICollectionView>()
+    public let didEndDragging = Pipe<UICollectionView>()
+    public let willEndDragging = Pipe<(UICollectionView, CGPoint, UnsafeMutablePointer<CGPoint>)>()
     
     public let willDisplaySupplementaryView = Pipe<(UICollectionReusableView, String, IndexPath)>()
     public let didEndDisplayingSupplementaryView = Pipe<(UICollectionReusableView, String, IndexPath)>()
@@ -222,6 +224,14 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
         didEndDecelerating.sendNext(collectionView)
     }
     
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        didEndDragging.sendNext(collectionView)
+    }
+    
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        willEndDragging.sendNext((collectionView, velocity, targetContentOffset))
+    }
+    
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         didSelectCell.sendNext((
             collectionView.cellForItem(at: indexPath)!,
@@ -229,4 +239,5 @@ public class CollectionViewAdapter <ObjectType>: NSObject, UICollectionViewDeleg
             dataSource.objectAtIndexPath(indexPath)!)
         )
     }
+    
 }
