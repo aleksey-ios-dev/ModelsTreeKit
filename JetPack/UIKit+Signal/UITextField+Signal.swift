@@ -11,10 +11,12 @@ import UIKit
 extension UITextField {
   
   public var textSignal: Observable<String> {
-    let textSignal = signalForControlEvents(.allEditingEvents).map { ($0 as! UITextField).text ?? "" }.observable()
+    let textSignal = signalForControlEvents(.allEditingEvents).map {
+        ($0 as! UITextField).text ?? ""
+        }.observable()
     textSignal.value = text ?? ""
     
-    return textSignal
+    return textSignal.skipRepeating().observable()
   }
   
   public var editingSignal: Observable<Bool> {

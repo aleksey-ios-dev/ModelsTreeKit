@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController {
   
   @IBOutlet private weak var tableView: UITableView!
-  @IBOutlet private weak var searchBar: UISearchBar!
+    @IBOutlet private weak var textField: UITextField!
   
   private var adapter: TableViewAdapter<Int>!
   private var dataAdapter: ObjectsDataSource<Int>!
@@ -21,6 +21,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    textField.textSignal.subscribeNext { print($0) }
     let listAdapter1 = UnorderedListDataAdapter<Int, String>(list: list1)
     listAdapter1.groupContentsSortingCriteria = { $0 < $1 }
     listAdapter1.groupingCriteria = { return $0 > 3 ? "2" : "1" }
